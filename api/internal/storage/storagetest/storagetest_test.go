@@ -233,7 +233,7 @@ func TestStorage_ConcurrentCreate(t *testing.T) {
 			prefix := randomID()
 
 			work := make(chan int, numSecrets)
-			for i := 0; i < numSecrets; i++ {
+			for i := range numSecrets {
 				work <- i
 			}
 			close(work)
@@ -243,7 +243,7 @@ func TestStorage_ConcurrentCreate(t *testing.T) {
 			var wg sync.WaitGroup
 			wg.Add(numWorkers)
 
-			for w := 0; w < numWorkers; w++ {
+			for range numWorkers {
 				go func() {
 					defer wg.Done()
 					for idx := range work {
@@ -269,7 +269,7 @@ func TestStorage_ConcurrentCreate(t *testing.T) {
 			}
 
 			// Verify all secrets were created
-			for i := 0; i < numSecrets; i++ {
+			for i := range numSecrets {
 				_, err := store.Get(ctx, fmt.Sprintf("%s-%d", prefix, i))
 				if err != nil {
 					t.Errorf("Failed to get secret %d: %v", i, err)
@@ -305,7 +305,7 @@ func TestStorage_ConcurrentGet(t *testing.T) {
 
 			errs := make(chan error, numGets)
 
-			for i := 0; i < numGets; i++ {
+			for range numGets {
 				go func() {
 					defer wg.Done()
 
@@ -341,7 +341,7 @@ func TestStorage_ConcurrentCreateAndGet(t *testing.T) { //nolint:gocognit
 
 			// Create initial secrets
 			numInitial := 10
-			for i := 0; i < numInitial; i++ {
+			for i := range numInitial {
 				secret := &model.Secret{
 					ID:         fmt.Sprintf("%s-initial-%d", prefix, i),
 					Data:       fmt.Sprintf("initial-data-%d", i),
@@ -358,7 +358,7 @@ func TestStorage_ConcurrentCreateAndGet(t *testing.T) { //nolint:gocognit
 			numWorkers := 4
 
 			work := make(chan int, numOps)
-			for i := 0; i < numOps; i++ {
+			for i := range numOps {
 				work <- i
 			}
 			close(work)
@@ -366,7 +366,7 @@ func TestStorage_ConcurrentCreateAndGet(t *testing.T) { //nolint:gocognit
 			var wg sync.WaitGroup
 			wg.Add(numWorkers)
 
-			for w := 0; w < numWorkers; w++ {
+			for range numWorkers {
 				go func() {
 					defer wg.Done()
 					for idx := range work {
