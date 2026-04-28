@@ -1,0 +1,193 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+@use 'variables' as *;
+
+// Toggle switch
+.toggle {
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  display: block;
+  flex-shrink: 0;
+  height: 28px;
+  position: relative;
+  width: 54px;
+
+  &-input {
+    height: 0;
+    opacity: 0;
+    position: absolute;
+    width: 0;
+
+    &:focus-visible + .toggle-track {
+      outline: 2px solid var(--2fas-bg-2);
+      outline-offset: 2px;
+    }
+
+    &:checked + .toggle-track {
+      background-color: var(--2fas-bg-2);
+
+      &::after {
+        box-shadow: 0 1px 6px rgba(33, 76, 232, 0.4);
+        transform: translateX(18px);
+      }
+    }
+  }
+
+  &-track {
+    background-color: var(--2fas-toggle-track);
+    border-radius: 14px;
+    cursor: pointer;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    transition: background-color 0.3s ease;
+    width: 100%;
+
+    &::after {
+      background-color: #fff;
+      border-radius: 30px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      content: '';
+      height: 22px;
+      left: 3px;
+      position: absolute;
+      top: 3px;
+      transition:
+        transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.3s ease;
+      width: 30px;
+    }
+  }
+
+  &:active &-track::after {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Expiration select
+.select-wrapper {
+  flex-shrink: 0;
+  position: relative;
+  width: 110px;
+
+  &::after {
+    background-color: currentColor;
+    content: '';
+    height: 16px;
+    mask-image: url('../assets/chevron.svg');
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    pointer-events: none;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 17px;
+  }
+}
+
+.expiration-select {
+  appearance: none;
+  background-color: var(--2fas-box-border);
+  border: none;
+  border-radius: 8px;
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: -0.23px;
+  line-height: 1.25rem;
+  padding: 0.5rem 2.25rem 0.5rem 0.875rem;
+  width: 100%;
+
+  &:focus {
+    outline: none;
+  }
+
+  option {
+    background-color: var(--2fas-box-bg);
+    color: var(--2fas-text-color);
+
+    &:hover {
+      background-color: var(--2fas-bg-2);
+    }
+  }
+}
+
+// Password field
+.password {
+  &-field {
+    align-items: center;
+    border: 1px solid var(--2fas-box-muted);
+    border-radius: 41px;
+    display: flex;
+    margin-top: 0.75rem;
+    padding: 0 1.1875rem;
+    transition: border-color 0.2s ease;
+
+    @include small-mobile {
+      border-radius: 28px;
+      padding: 0 0.875rem;
+    }
+
+    &:focus-within {
+      border-color: var(--2fas-bg-2);
+    }
+
+    &.margin-bottom {
+      margin-bottom: 1rem;
+    }
+
+    .eye-button {
+      padding: 0.5rem;
+    }
+  }
+
+  &-input {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: -0.48px;
+    line-height: 1.25;
+    min-width: 0;
+    padding: 1.125rem 0;
+
+    @include small-mobile {
+      padding: 0.75rem 0;
+    }
+
+    &::placeholder {
+      color: var(--2fas-box-muted);
+    }
+  }
+}
+
+// Eye toggle (visibility)
+.eye {
+  &-button {
+    color: var(--2fas-box-muted);
+    flex-shrink: 0;
+    padding: 2px;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--2fas-text-color);
+    }
+  }
+
+  &-icon {
+    background-color: currentColor;
+    display: block;
+    height: 12px;
+    mask-image: url('../assets/eye.svg');
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    width: 18px;
+  }
+}

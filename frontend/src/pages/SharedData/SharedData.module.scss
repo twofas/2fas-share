@@ -1,0 +1,54 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+@use '@/styles/animations';
+
+.shared-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+.error {
+  &-animating {
+    :global(> .page-header),
+    :global(> .page-box),
+    :global(> .page-content) {
+      animation: fadeOut 0.25s ease-in forwards;
+      pointer-events: none;
+    }
+  }
+
+  &-display {
+    animation: fadeIn 0.3s ease-out both;
+    text-align: center;
+
+    h2 {
+      font-size: 2.25rem;
+      font-size: clamp(1.5rem, 5vw, 2.25rem);
+      font-weight: 700;
+      letter-spacing: -.36px;
+      line-height: 1.2222;
+    }
+
+    p {
+      font-size: 1.625rem;
+      font-size: clamp(1.125rem, 3.5vw, 1.625rem);
+      font-weight: 500;
+      letter-spacing: -.26px;
+      line-height: 1.3077;
+    }
+  }
+
+  &-sparkle {
+    fill: var(--2fas-bg-2);
+    height: 56px;
+    margin: 0 auto 1.1875rem;
+    width: auto;
+  }
+}

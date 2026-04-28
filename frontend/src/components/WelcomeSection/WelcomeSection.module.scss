@@ -1,0 +1,212 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+@use '@/styles/animations';
+@use '@/styles/variables' as *;
+@use '@/styles/pills' as *;
+
+.welcome {
+  align-items: center;
+  display: flex;
+  height: 75vh;
+  justify-content: center;
+  margin-top: -100px;
+  min-height: 500px;
+  position: relative;
+
+  @media (max-width: 1250px) {
+    height: 66vh;
+  }
+
+  @media (max-width: 1050px) {
+    height: 50vh;
+    min-height: 420px;
+  }
+
+  @include tablet {
+    margin-top: -60px;
+    padding-bottom: 2rem;
+  }
+
+  @media (max-width: 919px) {
+    min-height: 360px;
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+  }
+
+  @include mobile {
+    height: auto;
+    margin-top: -40px;
+    min-height: 0;
+    padding: 4rem 0 2rem;
+  }
+
+  @media (max-width: 500px) {
+    padding-bottom: 1.5rem;
+  }
+
+  &-circles {
+    height: 100%;
+    left: 50%;
+    mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    width: 100%;
+
+    @media (max-width: 500px) {
+      width: 125%;
+    }
+  }
+
+  &-circle {
+    animation: fadeToOpacity 1s ease-out both;
+    bottom: 0;
+    height: auto;
+    left: 50%;
+    max-width: 100%;
+    position: absolute;
+    transform: translateX(-50%);
+
+    &.outer {
+      --target-opacity: 0.2;
+      animation-delay: 0.7s;
+      width: min(100%, 82rem);
+
+      @include tablet {
+        width: 90%;
+      }
+    }
+
+    &.middle {
+      --target-opacity: 0.4;
+      animation-delay: 0.5s;
+      width: min(82%, 67.5rem);
+
+      @include tablet {
+        width: 74%;
+      }
+    }
+
+    &.inner {
+      --target-opacity: 0.8;
+      animation-delay: 0.25s;
+      width: min(63%, 51.5rem);
+
+      @include tablet {
+        width: 56%;
+      }
+    }
+  }
+
+  &-content {
+    align-items: center;
+    animation: fadeInUpShort 0.6s ease-out 0.65s both;
+    display: flex;
+    flex-direction: column;
+    margin-top: 9%;
+    position: relative;
+    text-align: center;
+    z-index: 2;
+
+    @include tablet {
+      margin-top: 8%;
+    }
+
+    @include mobile {
+      margin-top: 0;
+    }
+  }
+
+  &-title {
+    background: radial-gradient(49.7% 54.55% at 50% 50%, var(--2fas-bg-1) 60%, transparent 100%);
+    display: block;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    line-height: 1;
+    padding: 1rem 0;
+  }
+
+  &-subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-weight: 500;
+    line-height: 1.5;
+    max-width: 370px;
+    opacity: 0.85;
+  }
+
+  &-cta {
+    margin-top: 2rem;
+  }
+
+  &-pills {
+    container-type: inline-size;
+    height: 100%;
+    left: 50%;
+    max-width: 82rem;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    width: 100%;
+
+    @media (max-width: 919px) {
+      display: none;
+    }
+  }
+
+  &-pill {
+    @include pill;
+    animation: popIn 0.5s ease-out both;
+    position: absolute;
+    transform: translate(calc(-0.8125rem - 4.5px), 50%);
+
+    &.top-right {
+      animation-delay: 1.15s;
+      bottom: 36.7cqw;
+      left: 84%;
+
+      @include tablet {
+        bottom: 33.5cqw;
+        left: 80%;
+      }
+    }
+
+    &.bottom-right {
+      animation-delay: 1.3s;
+      bottom: 9.6cqw;
+      left: 79.8%;
+
+      @include tablet {
+        bottom: 10.4cqw;
+        left: 76%;
+      }
+    }
+
+    &.left {
+      animation-delay: 1.45s;
+      bottom: 24.3cqw;
+      left: 17.75%;
+      transform: translate(calc(-100% + 0.8125rem + 4.5px), 50%);
+
+      @include tablet {
+        bottom: 21.7cqw;
+        left: 20%;
+      }
+    }
+
+    &-dot {
+      @include pill-dot;
+    }
+
+    &-text {
+      @include pill-text;
+    }
+  }
+}

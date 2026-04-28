@@ -1,0 +1,170 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+@use 'variables' as *;
+
+.btn {
+  background-color: var(--2fas-bg-2);
+  border-radius: 2.6875rem;
+  color: var(--white);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: 800;
+  justify-content: center;
+  letter-spacing: .2px;
+  line-height: 1;
+  overflow: hidden;
+  padding: 1.0625rem 1.5625rem;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+
+  &:hover {
+    background-color: var(--2fas-btn-hover-bg);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &.f-w {
+    width: 100%;
+  }
+
+  &-outline {
+    border: 2px solid var(--2fas-bg-2);
+    border-radius: 1.75rem;
+    color: var(--2fas-text-color);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1rem;
+    font-weight: 800;
+    justify-content: center;
+    letter-spacing: .2px;
+    line-height: 1;
+    overflow: hidden;
+    padding: 0.9375rem 1.4375rem;
+    position: relative;
+    text-align: center;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+
+    &:hover {
+      background-color: var(--2fas-btn-alt-hover-bg);
+      color: var(--2fas-btn-alt-hover-color);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  &-ghost {
+    border: 1px solid var(--2fas-bg-2);
+    border-radius: 2rem;
+    color: var(--2fas-text-color);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1rem;
+    font-weight: 700;
+    justify-content: center;
+    line-height: normal;
+    overflow: hidden;
+    padding: 0.6875rem 1.875rem;
+    position: relative;
+    text-align: center;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+    white-space: nowrap;
+
+    @media (max-width: 500px) {
+      font-size: 0.875rem;
+      padding: 0.5625rem 1.25rem;
+    }
+
+    &:hover {
+      background-color: var(--2fas-btn-alt-hover-bg);
+      color: var(--2fas-btn-alt-hover-color);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  &-hero {
+    background-color: var(--2fas-btn-hero-bg);
+    border-radius: 2rem;
+    color: var(--2fas-btn-hero-color);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1rem;
+    font-weight: 700;
+    justify-content: center;
+    line-height: normal;
+    overflow: hidden;
+    padding: 0.6875rem 1.5rem;
+    position: relative;
+    text-align: center;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: var(--2fas-btn-hero-hover-bg);
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
+  }
+
+  &-clear {
+    color: var(--2fas-in-app-color);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1rem;
+    font-weight: 800;
+    justify-content: center;
+    letter-spacing: .2px;
+    line-height: 1;
+    padding: 1.0625rem 1.5625rem;
+    text-align: center;
+    text-transform: uppercase;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+:global(#twofas-pass-extension-container) > button {
+  align-self: center;
+  color: var(--2fas-in-app-color);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: .2px;
+  line-height: 1;
+  margin-top: 0.25rem;
+  padding: 1.0625rem 1.5625rem;
+  text-align: center;
+  text-transform: uppercase;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}

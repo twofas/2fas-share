@@ -1,0 +1,105 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+@use '@/styles/animations';
+
+.shared-data-qr {
+  align-items: center;
+  animation: fadeInRight 0.5s ease-out 0.7s both;
+  background: rgba(136, 0, 255, .24);
+  bottom: 10%;
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+  box-shadow: 4px 4px 13px 0 rgba(0, 0, 0, .25);
+  display: flex;
+  flex-direction: column;
+  max-width: 227px;
+  padding: 1.25rem 1.25rem 1.625rem;
+  position: fixed;
+  right: 0;
+  z-index: 9999;
+
+  @media (max-width: 1050px) {
+    animation: none;
+    border-radius: 16px;
+    bottom: auto;
+    margin: 1.5rem auto 0;
+    position: static;
+    right: auto;
+    width: fit-content;
+  }
+
+  &.hidden {
+    animation: fadeOutRight 0.25s ease-in forwards;
+
+    @media (max-width: 1050px) {
+      animation: none;
+      display: none;
+    }
+  }
+
+  &-title {
+    color: var(--2fas-text-color);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.2rem;
+    margin: 0 0 0.75rem;
+    padding: 0;
+    text-align: center;
+  }
+
+  &-area {
+    position: relative;
+    padding: 7px;
+
+    &-corner {
+      height: 35px;
+      position: absolute;
+      width: 35px;
+
+      &.t-l {
+        left: 0;
+        top: 0;
+      }
+
+      &.t-r {
+        right: 0;
+        top: 0;
+        transform: scaleX(-1);
+      }
+
+      &.b-l {
+        bottom: 0;
+        left: 0;
+        transform: scaleY(-1);
+      }
+
+      &.b-r {
+        bottom: 0;
+        right: 0;
+        transform: scale(-1);
+      }
+    }
+
+    canvas {
+      border-radius: 6px;
+      display: block;
+      image-rendering: pixelated;
+    }
+  }
+
+  &-description {
+    color: var(--2fas-text-color);
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 1rem;
+    margin: 0.75rem 0 0;
+    max-width: 11.875rem;
+    padding: 0;
+    text-align: center;
+  }
+}

@@ -1,0 +1,220 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+@use '@/styles/variables' as *;
+
+// Title block above the data display + bordered container + header
+.data {
+  &-title {
+    margin-bottom: 1.75rem;
+    text-align: center;
+
+    h2 {
+      font-size: 1.75rem;
+      font-size: clamp(1.5rem, 4vw, 1.75rem);
+      font-weight: 700;
+      letter-spacing: -.84px;
+      line-height: 1.2857;
+    }
+
+    p {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.25;
+      white-space: pre-wrap;
+
+      @include mobile {
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  &-container {
+    border: 1px solid var(--2fas-box-border);
+    border-radius: 21px;
+    overflow: hidden;
+  }
+
+  &-header {
+    background-color: var(--2fas-box-border);
+    padding: 0.625rem 0.9375rem;
+
+    h6 {
+      font-size: 1.125rem;
+      font-size: clamp(1rem, 2.2vw, 1.125rem);
+      font-weight: 700;
+      line-height: 1.72;
+    }
+  }
+
+  &-row {
+    align-items: flex-start;
+    border-bottom: 1px solid var(--2fas-box-border);
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem 0.8125rem;
+
+    @include mobile {
+      flex-wrap: wrap;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+// Row-based field layout
+.row {
+  &-label {
+    color: var(--2fas-box-muted);
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.48px;
+    line-height: 1.25rem;
+    text-transform: uppercase;
+    width: 9.5rem;
+
+    @include mobile {
+      width: 100%;
+    }
+  }
+
+  &-value {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    min-width: 0;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  &-actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: 0.5rem;
+  }
+}
+
+
+// Copy button
+.copy {
+  &-button {
+    align-items: center;
+    color: var(--2fas-box-muted);
+    display: inline-flex;
+    flex-shrink: 0;
+    height: 24px;
+    justify-content: center;
+    transition: color 0.2s ease;
+    width: 21px;
+
+    &:hover {
+      color: var(--2fas-text-color);
+    }
+  }
+
+  &-icon {
+    background-color: currentColor;
+    display: block;
+    height: 20px;
+    mask-image: url('../../../../assets/copy.svg');
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    width: 17px;
+  }
+}
+
+// Check icon (copied state) — size differs from .copyIcon; .copyButton has
+// fixed dimensions so the icon swap doesn't change row height.
+.check {
+  &-icon {
+    color: var(--2fas-success);
+    display: block;
+    height: 12px;
+    width: 15px;
+  }
+}
+
+// WiFi QR code block (above field rows)
+.wifi-qr {
+  border-bottom: 1px solid var(--2fas-box-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 0.8125rem;
+
+  &-canvas {
+    background-color: #fff;
+    border-radius: 8px;
+    display: inline-block;
+    padding: 0.75rem;
+
+    canvas {
+      display: block;
+    }
+
+    @include mobile {
+      max-width: 100%;
+
+      canvas {
+        max-width: 100%;
+        height: auto !important;
+      }
+    }
+  }
+
+  &-label {
+    color: var(--2fas-box-muted);
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    margin-top: 0.75rem;
+  }
+}
+
+// URI list
+.uri {
+  &-list {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  &-row {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  &-link,
+  &-text {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.25;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &-link {
+    color: var(--2fas-link);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

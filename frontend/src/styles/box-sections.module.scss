@@ -1,0 +1,271 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+@use 'variables' as *;
+
+// Note section (bordered with header)
+.note {
+  &-section {
+    border: 1px solid var(--2fas-box-border);
+    border-radius: 21px;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+  }
+
+  &-header {
+    background-color: var(--2fas-box-border);
+    border-radius: 20px 20px 0 0;
+    padding: 0.625rem 0.9375rem;
+
+    h6 {
+      font-size: 1.125rem;
+      font-size: clamp(1rem, 2.2vw, 1.125rem);
+      font-weight: 700;
+      line-height: 1.72;
+    }
+  }
+
+  &-textarea {
+    border-radius: 0 0 20px 20px;
+    display: block;
+    font-size: 1rem;
+    line-height: 1.25;
+    min-height: 13.75rem;
+    min-width: 514px;
+    padding: 1rem 0.8125rem;
+    resize: both;
+    width: 100%;
+
+    @include mobile {
+      min-width: min(526px, calc(100vw - 7.75rem - 2px));
+    }
+
+    @include small-mobile {
+      min-width: calc(100vw - 4.5rem - 2px);
+    }
+
+    &::placeholder {
+      color: var(--2fas-box-muted);
+      opacity: 0.5;
+    }
+
+    textarea {
+      width: 100%;
+    }
+  }
+}
+
+// Option layout
+.option {
+  &-row {
+    align-items: center;
+    display: flex;
+    gap: 1.25rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+
+    @include mobile {
+      gap: 0.75rem;
+    }
+  }
+
+  &-block {
+    margin-bottom: 1.875rem;
+
+    .option-row {
+      margin-bottom: 0;
+    }
+  }
+
+  &-text {
+    flex: 1;
+  }
+
+  &-title {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  &-desc {
+    color: var(--2fas-box-muted);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.25;
+  }
+}
+
+// Collapsible wrapper (CSS grid height trick)
+.password-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+
+  &.expanded {
+    grid-template-rows: 1fr;
+  }
+
+  &-inner {
+    overflow: hidden;
+  }
+}
+
+// Form fields container (used for structured content types)
+.form-fields {
+  padding: 0;
+}
+
+// Field layout
+.field {
+  &-group {
+    border-bottom: 1px solid var(--2fas-box-border);
+    padding: 0.75rem 0.9375rem;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &-label {
+    color: var(--2fas-box-muted);
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  &-input {
+    font-size: 1rem;
+    line-height: 1.25;
+    width: 100%;
+
+    &::placeholder {
+      color: var(--2fas-box-muted);
+      opacity: 0.5;
+    }
+
+    &-row {
+      align-items: center;
+      display: flex;
+      gap: 0.5rem;
+    }
+  }
+
+  &-textarea {
+    font-size: 1rem;
+    line-height: 1.25;
+    min-height: 5rem;
+    resize: both;
+    width: 100%;
+
+    &::placeholder {
+      color: var(--2fas-box-muted);
+      opacity: 0.5;
+    }
+  }
+
+  &-eye {
+    &-button {
+      color: var(--2fas-box-muted);
+      flex-shrink: 0;
+      padding: 2px;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: var(--2fas-text-color);
+      }
+    }
+
+    &-icon {
+      background-color: currentColor;
+      display: block;
+      height: 12px;
+      mask-image: url('../assets/eye.svg');
+      mask-repeat: no-repeat;
+      mask-size: contain;
+      width: 18px;
+    }
+  }
+
+  &-select {
+    appearance: none;
+    background-color: var(--2fas-box-border);
+    border: none;
+    border-radius: 6px;
+    color: inherit;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    width: 100%;
+  }
+}
+
+// URI entries for login content type
+.uri {
+  &-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &-entry {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &-input {
+    flex: 1;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    min-width: 0;
+
+    &::placeholder {
+      color: var(--2fas-box-muted);
+      opacity: 0.5;
+    }
+  }
+
+  &-match-select {
+    appearance: none;
+    background-color: var(--2fas-box-border);
+    border: none;
+    border-radius: 6px;
+    color: inherit;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.375rem 0.625rem;
+  }
+
+  &-remove-btn {
+    color: var(--2fas-box-muted);
+    flex-shrink: 0;
+    font-size: 1.125rem;
+    line-height: 1;
+    padding: 0.125rem 0.25rem;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--2fas-error, #ff4d4f);
+    }
+  }
+
+  &-add-btn {
+    color: var(--2fas-brand-blue);
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-top: 0.25rem;
+    text-align: left;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

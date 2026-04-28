@@ -1,0 +1,93 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+@use '@/styles/animations';
+@use '@/styles/variables' as *;
+
+.link-expiry {
+  animation: fadeInDown 0.3s ease-out both;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9375rem;
+  justify-content: center;
+  margin-bottom: 2.375rem;
+
+  &-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  &-single-use {
+    gap: 0.8125rem;
+  }
+
+  &-sparkle {
+    fill: var(--2fas-bg-2);
+    height: 31px;
+    width: 32px;
+  }
+
+  &-title {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 1.17px;
+    line-height: normal;
+    text-transform: uppercase;
+  }
+
+  &-subtitle {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.9375rem;
+    text-align: center;
+  }
+
+  &-label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 1.17px;
+    line-height: 1.9375rem;
+    text-transform: uppercase;
+  }
+
+  &-date-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.9375rem;
+  }
+
+  &-divider {
+    background-color: currentColor;
+    display: block;
+    height: 31px;
+    opacity: .3;
+    width: 1px;
+  }
+
+  &-track {
+    background-color: rgba(136, 0, 255, .35);
+    border-radius: 23px;
+    display: flex;
+    height: 11px;
+    justify-content: flex-end;
+    max-width: 24.25rem;
+    width: 100%;
+  }
+
+  &-fill {
+    background-color: var(--2fas-bg-2);
+    border-radius: 23px;
+    height: 100%;
+    transition: width 1s linear;
+  }
+}

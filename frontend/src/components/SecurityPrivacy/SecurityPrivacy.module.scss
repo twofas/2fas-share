@@ -1,0 +1,142 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+@use '@/styles/animations';
+@use '@/styles/variables' as *;
+
+.security-privacy {
+  margin: 11.375rem 0;
+  text-align: center;
+
+  @include tablet {
+    margin: 7.5rem 0;
+  }
+
+  @include mobile {
+    margin: 5rem 0;
+  }
+
+  &-header {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 3.9375rem;
+    opacity: 0;
+
+    @include mobile {
+      margin-bottom: 2.5rem;
+    }
+  }
+
+  &-title {
+    color: var(--2fas-text-color);
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 1.0625rem;
+
+    @include mobile {
+      font-size: 2rem;
+    }
+  }
+
+  &-subtitle {
+    color: var(--2fas-text-color);
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.5;
+    max-width: 28.3125rem;
+
+    @include mobile {
+      font-size: 1rem;
+    }
+  }
+
+  &-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    justify-content: center;
+  }
+
+  &-feature {
+    align-items: center;
+    backdrop-filter: blur(3.25px);
+    background: var(--2fas-feature-pill);
+    border-radius: 2.0625rem;
+    box-shadow: var(--2fas-card-shadow);
+    display: inline-flex;
+    gap: 0.625rem;
+    opacity: 0;
+    padding: 1.25rem;
+
+    @include mobile {
+      padding: 0.875rem 1rem;
+    }
+  }
+
+  &-icon {
+    align-items: center;
+    background: var(--2fas-bg-2);
+    border-radius: 50%;
+    display: flex;
+    flex-shrink: 0;
+    height: 1.5rem;
+    justify-content: center;
+    width: 1.5rem;
+  }
+
+
+  &-check {
+    color: var(--white);
+    height: 0.5rem;
+    width: 0.625rem;
+  }
+
+  &-label {
+    color: var(--2fas-text-color);
+    font-size: 1.125rem;
+    font-weight: 700;
+    white-space: nowrap;
+
+    @include mobile {
+      font-size: 1rem;
+    }
+
+    @include small-mobile {
+      font-size: 0.875rem;
+    }
+  }
+
+  &-suffix {
+    font-weight: 500;
+  }
+
+  &.visible &-header {
+    animation: fadeInUpShort 0.6s ease-out 0.15s both;
+  }
+
+  &.visible &-feature {
+    animation: fadeInUpScale 0.4s ease-out both;
+    animation-delay: calc(0.3s + var(--pill-i, 0) * 0.08s);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &-header {
+      opacity: 1;
+    }
+
+    &-feature {
+      opacity: 1;
+    }
+
+    &.visible &-header,
+    &.visible &-feature {
+      animation: none;
+    }
+  }
+}

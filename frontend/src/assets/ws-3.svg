@@ -1,0 +1,11 @@
+<!--
+  SPDX-License-Identifier: GPL-3.0-only
+
+  Copyright © 2026 Two Factor Authentication Service, Inc.
+
+  Licensed under the GNU General Public License v3.0.
+  See the LICENSE file for details.
+-->
+<svg viewBox="0 0 1311 655" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.5 655.5C1.49999 569.616 18.4162 484.572 51.2828 405.225C84.1493 325.878 132.323 253.782 193.052 193.052C253.782 132.323 325.878 84.1494 405.225 51.2828C484.572 18.4162 569.615 1.5 655.5 1.5C741.384 1.5 826.428 18.4162 905.775 51.2828C985.122 84.1494 1057.22 132.323 1117.95 193.052C1178.68 253.782 1226.85 325.878 1259.72 405.225C1292.58 484.572 1309.5 569.615 1309.5 655.5" stroke="#8800FF" stroke-width="3"/>
+</svg>

@@ -1,0 +1,212 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+@use '@/styles/variables' as *;
+
+// View wrappers — override .page-box constraints
+.add-box {
+  &-legal-consent {
+    color: var(--2fas-text-color);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    margin-top: 0.625rem;
+    opacity: 0.7;
+    text-align: center;
+
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  &-form {
+    box-shadow: var(--2fas-form-shadow);
+    display: inline-block;
+    max-width: 100%;
+    min-width: min(592px, 100%);
+    overflow: visible;
+  }
+
+  &-result {
+    box-shadow: var(--2fas-form-shadow);
+    display: inline-block;
+    max-width: 100%;
+    padding: 1.6875rem 2.5rem 2.6875rem;
+    width: 583px;
+
+    @include tablet {
+      max-width: 100%;
+      width: 100%;
+    }
+  }
+}
+
+// Animated error (grid-template-rows 0fr → 1fr)
+.error {
+  &-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.25s ease-out;
+
+    &.error-visible {
+      grid-template-rows: 1fr;
+    }
+  }
+
+  &-inner {
+    overflow: hidden;
+  }
+
+  // Modifier: small top gap (password errors)
+  &-field {
+    margin-top: 0.375rem;
+  }
+
+  // Modifier: submit error below button
+  &-submit {
+    margin-top: 1rem;
+    margin-bottom: 0;
+  }
+
+  // Modifier: reserves a 1.375rem slot below the animated track so the error pill
+  // always has breathing room above the next section. Applied to the grid container
+  // itself (outside the tracks) to avoid negative margins — Safari mishandles
+  // negative top margins on grid containers with grid-template-rows: 0fr.
+  &-note {
+    padding-bottom: 1.375rem;
+  }
+}
+
+// Result content
+.result-section {
+  text-align: left;
+
+  &-heading {
+    color: var(--2fas-text-color);
+    font-size: 1.125rem;
+    font-size: clamp(1rem, 2.2vw, 1.125rem);
+    font-weight: 700;
+    margin-bottom: 1.0625rem;
+    text-align: center;
+  }
+
+  // Pill-shaped link field with icon
+  &-link {
+    align-items: center;
+    border: 1px solid var(--2fas-box-border);
+    border-radius: 38px;
+    display: flex;
+    height: 48px;
+    margin-bottom: 0.75rem;
+    padding: 0 0.9375rem;
+
+    @include small-mobile {
+      word-break: break-all;
+    }
+
+    &-url {
+      flex: 1;
+      margin: 0 1.875rem;
+      min-width: 0;
+      overflow: hidden;
+
+      @include mobile {
+        margin: 0 0.75rem;
+      }
+
+      canvas {
+        display: block;
+      }
+
+      span {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  // Share settings summary
+  &-settings {
+    margin-bottom: 1.4375rem;
+
+    &-heading {
+      color: var(--2fas-box-muted);
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 1.0625rem;
+    }
+
+    &-row {
+      align-items: center;
+      display: flex;
+      gap: 0.3125rem;
+      min-height: 3.5rem;
+
+      & + & {
+        margin-top: 1.3125rem;
+      }
+    }
+
+    &-text {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 0.1875rem;
+      min-width: 0;
+      padding-left: 2px;
+    }
+
+    &-title {
+      color: var(--2fas-text-color);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.23px;
+    }
+
+    &-desc {
+      color: var(--2fas-box-muted);
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+
+    &-value {
+      color: var(--2fas-text-color);
+      flex-shrink: 0;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: -0.23px;
+      white-space: nowrap;
+    }
+
+    &-check {
+      color: var(--2fas-box-muted);
+      flex-shrink: 0;
+      height: auto;
+      padding-left: 0.875rem;
+      width: 24px;
+    }
+
+    &-copy {
+      color: var(--2fas-text-color);
+      flex-shrink: 0;
+      transition: opacity 0.15s ease;
+
+      svg {
+        display: block;
+        height: 20px;
+        width: 20px;
+      }
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+}

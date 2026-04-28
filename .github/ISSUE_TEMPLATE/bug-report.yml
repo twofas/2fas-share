@@ -1,0 +1,80 @@
+name: 🐞 Bug report
+description: Report a bug or issue.
+title: 'bug: '
+labels: ['Bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before creating a bug report, please keep the following in mind:
+
+        - Do not submit a duplicate bug report. You can review existing bug reports [here](https://github.com/twofas/2fas-share/labels/Bug).
+        - Security vulnerabilities should be reported to security@2fas.com, not on GitHub.
+  - type: dropdown
+    attributes:
+      label: Instance
+      description: Where did the bug occur?
+      options:
+        - Official instance (share.2fas.com)
+        - Self-hosted instance
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Instance URL
+      description: If self-hosted, provide the URL of your instance. Leave blank for the official instance.
+      placeholder: e.g. https://share.example.com
+  - type: input
+    attributes:
+      label: Browser
+      description: Browser name and version in which the bug occurs.
+      placeholder: e.g. Chrome (Windows) version 122.0.6261.70
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Operating system
+      description: OS and version.
+      placeholder: e.g. macOS 14.4, Windows 11, Ubuntu 22.04, iOS 17
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Bug description
+      description: |
+        - Describe the bug in detail
+        - Add steps to reproduce the bug if possible (Step 1. ... Step 2. ...)
+        - Add images or videos if necessary
+
+        ⚠️ Do not include any sensitive data, decryption keys, or full share links in your report.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Console errors
+      description: If applicable, paste any errors from the browser's developer console (DevTools → Console).
+      render: shell
+  - type: textarea
+    attributes:
+      label: Solution
+      description: If applicable, suggest a possible solution.
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Add any additional context here if necessary.
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Acknowledgements
+      description: Your bug report will be closed if you don't follow the checklist below.
+      options:
+        - label: This issue is not a duplicate of an existing bug report.
+          required: true
+        - label: I understand that security vulnerabilities should be reported to security@2fas.com instead of on GitHub.
+          required: true
+        - label: I have not included any sensitive data, decryption keys, or full share links in this report.
+          required: true
+        - label: I have chosen an appropriate title.
+          required: true
+        - label: All requested information has been provided properly.
+          required: true

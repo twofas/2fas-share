@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 2FAS Share
+    url: https://share.2fas.com
+    about: Try 2FAS Share — zero-knowledge, end-to-end encrypted data sharing.
+  - name: Security vulnerability
+    url: mailto:security@2fas.com
+    about: Report security vulnerabilities privately to security@2fas.com — do not open a public issue.
+  - name: Help center
+    url: https://2fas.com/help-center/
+    about: Check out our extensive FAQ and video guides!
+  - name: Discord
+    url: https://2fas.com/discord
+    about: Need support or have a question? Our Discord members are there to help!
+  - name: Reddit
+    url: https://www.reddit.com/r/2fas_com/
+    about: Get support and discuss 2FAS with our Reddit community!

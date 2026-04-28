@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: "gomod"
+    directory: "/api"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+    groups:
+      all-gomod-updates:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"

@@ -1,0 +1,230 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+@use 'variables' as *;
+@use 'animations';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  -webkit-tap-highlight-color: transparent;
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  appearance: none;
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  outline: none;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+* {
+  scrollbar-color: var(--2fas-scrollbar-thumb) var(--2fas-scrollbar-track);
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--2fas-scrollbar-track);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: var(--2fas-scrollbar-thumb);
+
+    &:hover {
+      background: var(--2fas-scrollbar-thumb-hover);
+    }
+  }
+}
+
+html {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  background: var(--2fas-bg-1);
+  color: var(--2fas-text-color);
+  font-family: Montserrat, sans-serif, Arial, system-ui, -apple-system, 'Segoe UI';
+  font-optical-sizing: auto;
+  line-height: 1.5;
+  overscroll-behavior: none;
+  text-rendering: optimizeLegibility;
+
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
+
+  @media (max-width: 500px) {
+    font-size: 14px;
+  }
+
+  &.system-font {
+    font-family: sans-serif, Arial, system-ui, -apple-system, 'Segoe UI';
+  }
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: max(100svh, 100dvh);
+
+  &::after {
+    animation: fadeInUp 0.5s ease-out 0.25s both;
+    background: linear-gradient(0deg, rgba(136, 0, 255, .25) 0%, rgba(136, 0, 255, 0) 100%);
+    bottom: 0;
+    content: '';
+    display: block;
+    height: 40%;
+    left: 0;
+    pointer-events: none;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+  }
+}
+
+#app {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: clip;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 82rem;
+  width: 100%;
+}
+
+main {
+  animation: fadeIn 0.5s ease-out 0.5s both;
+  color: var(--2fas-text-color);
+  flex: 1;
+  min-height: 75vh;
+  padding: 9.5rem 2.8125rem 0;
+  position: relative;
+  text-align: center;
+  z-index: 2;
+
+  @include tablet {
+    padding: 6.5rem 1.875rem 0;
+  }
+
+  @media (max-width: 1050px) and (min-width: 920px) {
+    padding-top: 11rem;
+  }
+
+  @include mobile {
+    padding: 5rem 1.875rem 0;
+  }
+
+  @include small-mobile {
+    padding: 4rem 1.25rem 0;
+  }
+
+  > .page-box {
+    background-color: var(--2fas-card-bg);
+    border-radius: 16px;
+    color: var(--2fas-text-color);
+    margin: 1.625rem auto 0;
+    padding: 2.5rem 2.375rem 2.0625rem;
+    position: relative;
+    text-align: left;
+    z-index: 3;
+
+    @include mobile {
+      padding: 2rem;
+    }
+
+    @include small-mobile {
+      padding: 2.5rem 1rem 2rem;
+    }
+
+    > button,
+    > div > button {
+      width: 100%;
+    }
+  }
+
+  > .page-header {
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: 2.25rem;
+      font-size: clamp(1.5rem, 5vw, 2.25rem);
+      font-weight: 800;
+      letter-spacing: -.36px;
+      line-height: 1.2222;
+    }
+
+    p {
+      font-size: 1.25rem;
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      font-weight: 500;
+      line-height: 1.55;
+      margin-bottom: 2.375rem;
+    }
+  }
+}
+
+img {
+  &.theme-light {
+    display: block;
+  }
+
+  &.theme-dark {
+    display: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &.theme-light {
+      display: none;
+    }
+
+    &.theme-dark {
+      display: block;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-delay: 0ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

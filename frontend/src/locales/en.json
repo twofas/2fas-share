@@ -1,0 +1,177 @@
+{
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for doesn't exist or has been moved."
+  },
+  "addNew": {
+    "title": "2FAS Share",
+    "subtitle": "Share your data securely"
+  },
+  "sharedData": {
+    "subtitle1": "Securely shared.",
+    "subtitle2": "Only for you.",
+    "errorTitle": "Error",
+    "invalidLink": "This link is invalid."
+  },
+  "header": {
+    "logoAlt": "2FAS Share Logo",
+    "shareSecurely": "Use 2FAS Share",
+    "aboutShare": "About 2FAS Share"
+  },
+  "footer": {
+    "copyright": "© {year} Two Factor Authentication Service, Inc. All rights reserved.",
+    "termsTitle": "Terms & Privacy Policy",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfUse": "Terms of Use",
+    "githubRepository": "GitHub repository"
+  },
+  "linkExpiry": {
+    "oneTimeAccess": "One time access",
+    "oneTimeAccessDesc": "Once you close this tab, you will lose access to the shared data",
+    "willExpire": "This link will expire",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat"
+  },
+  "qr": {
+    "title": "Access on mobile",
+    "description": "Scan this QR code to access the Item details on your mobile device."
+  },
+  "first": {
+    "description": "This link contains the data from 2FAS Pass",
+    "instruction": "Press continue to access the data inside",
+    "loading": "Loading...",
+    "continue": "Continue",
+    "openInApp": "Open in 2FAS Pass app"
+  },
+  "password": {
+    "description": "This link contains the data from 2FAS Pass",
+    "instruction": "Enter the password set by the sender",
+    "placeholder": "Enter password",
+    "errorRequired": "Password is required",
+    "errorMinLength": "Password must be at least 8 characters",
+    "errorWrong": "Wrong password. Please try again",
+    "decrypting": "Decrypting...",
+    "continue": "Continue"
+  },
+  "data": {
+    "title": "Shared item",
+    "description": "Copy the Item details or add it \nto the 2FAS Pass Vault.",
+    "contentType": {
+      "custom": "Secure Note",
+      "login": "Login",
+      "paymentCard": "Credit Card",
+      "secureNote": "Secure Note",
+      "wifi": "Wi-Fi Network",
+      "fallback": "Shared Data"
+    }
+  },
+  "error": {
+    "text": "Error"
+  },
+  "common": {
+    "copied": "Copied!",
+    "copyToClipboard": "Copy to clipboard",
+    "toggleVisibility": "Toggle visibility",
+    "togglePasswordVisibility": "Toggle password visibility",
+    "yes": "Yes"
+  },
+  "content": {
+    "name": "Name",
+    "username": "Username",
+    "password": "Password",
+    "urls": "URLs",
+    "notes": "Notes",
+    "note": "Note",
+    "cardholder": "Cardholder",
+    "cardNumber": "Card number",
+    "expirationDate": "Expiration date",
+    "securityCode": "Security Code",
+    "ssid": "SSID",
+    "securityType": "Security type",
+    "hiddenNetwork": "Hidden network",
+    "wifiQr": "Scan to join this network"
+  },
+  "addForm": {
+    "secureNote": "Secure Note",
+    "notePlaceholder": "Write your note here...",
+    "errorContentRequired": "Note is empty",
+    "errorPasswordMinLength": "Password must be at least 8 characters",
+    "expirationTitle": "Link expiration",
+    "expirationDesc": "The link will automatically expire after this time.",
+    "oneTimeAccessTitle": "One-time access",
+    "oneTimeAccessDesc": "The link will expire after the first data access.",
+    "passwordTitle": "Set a password for increased security",
+    "passwordDesc": "The recipient will need this password to open the link.",
+    "passwordPlaceholder": "Enter password",
+    "errorSubmit": "Failed to generate a link. Please try again.",
+    "submitting": "Sharing...",
+    "submit": "Share"
+  },
+  "expiry": {
+    "5min": "5 min",
+    "30min": "30 min",
+    "1hour": "1 hour",
+    "1day": "1 day",
+    "7days": "7 days",
+    "30days": "30 days"
+  },
+  "result": {
+    "title": "Link is ready to use",
+    "copyShareLink": "Copy link",
+    "settingsTitle": "Share settings",
+    "expirationTitle": "Link expiration",
+    "expirationDesc": "The link will automatically expire after this time.",
+    "oneTimeAccessTitle": "One time access",
+    "oneTimeAccessDesc": "The link will expire after the first data access.",
+    "passwordTitle": "Password",
+    "copyPassword": "Copy password"
+  },
+  "welcome": {
+    "title": "Secure data sharing",
+    "subtitle": "Send your passwords, cards, notes or private data with a secure link.",
+    "noAccounts": "No accounts",
+    "freeToUse": "Free and easy to use",
+    "private": "Private"
+  },
+  "howToUse": {
+    "pill": "Simple Process",
+    "subtitle": "Use 2FAS Share to easily and securely send sensitive data, with no external access and full control on your side.",
+    "step1Title": "Create a message",
+    "step1Desc": "Add the passwords, notes, or private data you want to share.",
+    "step2Title": "Customize the security",
+    "step2Desc": "Increase the security of the shared data.",
+    "step3Title": "Set up a safe password",
+    "step3Desc": "This ensures that only trusted people can access the data inside.",
+    "step4Title": "Share the data",
+    "step4Desc": "Generate the link with the data inside and send it to others.",
+    "title": "How does\nit work?"
+  },
+  "banner": {
+    "title": "Share now",
+    "subtitle": "Share your data using a secure link with no external access."
+  },
+  "securityPrivacy": {
+    "title": "Security features",
+    "subtitle": "Built on a foundation of trust, transparency and zero-knowledge design.",
+    "e2e": "End-to-End encryption",
+    "autoExpiry": "Automatic link expiration",
+    "oneTime": "One-time access links",
+    "password": "Password protection",
+    "openSource": "Open-source",
+    "zeroKnowledge": "Zero-knowledge",
+    "selfHosted": "Docker image",
+    "noExternalAccess": "No external access",
+    "selfHostedSuffix": "(coming soon)"
+  },
+  "legal": {
+    "continue": "By clicking Continue, you agree to our Terms of Use and Privacy Policy.",
+    "share": "By clicking Share, you agree to our Terms of Use and Privacy Policy.",
+    "termsOfUse": "Terms of Use",
+    "privacyPolicy": "Privacy Policy"
+  }
+}

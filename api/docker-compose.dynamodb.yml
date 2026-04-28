@@ -1,0 +1,23 @@
+services:
+  moto:
+    image: motoserver/moto:5.1.4
+    ports:
+      - "5555:5000"
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:5000/moto-api/"]
+      interval: 2s
+      timeout: 2s
+      retries: 10
+  dynamo-init:
+    image: amazon/aws-cli:2.27.28
+    depends_on:
+      moto:
+        condition: service_healthy
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - DYNAMODB_ENDPOINT=http://moto:5000
+    entrypoint: ["/bin/bash"]
+    volumes:
+      - ./scripts:/scripts
+    command: ["/scripts/local-aws-init.sh"]

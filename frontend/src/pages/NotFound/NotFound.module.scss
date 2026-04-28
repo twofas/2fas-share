@@ -1,0 +1,63 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+@use '../../styles/variables' as *;
+
+.not-found {
+  width: 100%;
+
+  &-content {
+    position: relative;
+    z-index: 2;
+
+    .decor-2 {
+      fill: var(--2fas-bg-2);
+      height: 56px;
+      margin: 1.6875rem auto 1.1875rem;
+      width: auto;
+    }
+
+    img {
+      height: auto;
+      margin: 0 auto;
+      max-width: 100%;
+      transform: translateX(3px);
+      width: 604px;
+
+      @include mobile {
+        transform: none;
+      }
+    }
+
+    h2 {
+      color: var(--2fas-text-color);
+      font-size: 2.25rem;
+      font-size: clamp(1.5rem, 5vw, 2.25rem);
+      font-weight: 700;
+      letter-spacing: -.36px;
+      line-height: 1.2222;
+      margin-bottom: 1.0625rem;
+      text-align: center;
+    }
+
+    p {
+      color: var(--2fas-text-color);
+      font-size: 1.625rem;
+      font-size: clamp(1.125rem, 3.5vw, 1.625rem);
+      font-weight: 500;
+      letter-spacing: -.26px;
+      line-height: 1.3077;
+      margin: 0 auto;
+      max-width: 33.625rem;
+      text-align: center;
+
+      @include mobile {
+        max-width: 100%;
+      }
+    }
+  }
+}

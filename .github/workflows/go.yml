@@ -1,0 +1,83 @@
+name: Build api
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop"]
+
+jobs:
+  build:
+    if: ${{ github.actor != 'dependabot[bot]' }} # Skip for dependabot, handled in separate workflow
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Test if go.mod and go.sum are up to date
+        run: |
+          go mod tidy
+          git diff --exit-code
+      - name: Check if code is formatted
+        run: |
+          make format
+          git diff --exit-code
+      - name: Run linters
+        run: make go-lint
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install moto-server
+        run: uv tool install 'moto[server]==5.1.4'
+      - name: Start moto
+        run: |
+          moto_server -p 5555 &
+          ./scripts/wait-for-moto.sh
+      - name: Unit Test once (to catch simple errors early)
+        run: go test -race ./internal/...
+      - name: Unit Test multiple times (to catch flakely tests)
+        run: go test -race -count 40 -failfast ./internal/...
+      - name: Build
+        run: |
+          go build -race ./...
+          go build -race .
+      - name: E2E (inmemory)
+        run: |
+          ./2fas-share-server &
+          go test ./e2e/... -v -count=5 -failfast
+          kill %1
+        env:
+          STORAGE_BACKEND: inmemory
+          PORT: 8081
+          SERVER_URL: http://localhost:8081
+      - name: E2E (bbolt)
+        run: |
+          ./2fas-share-server &
+          go test ./e2e/... -v -count=5 -failfast
+          kill %1
+        env:
+          STORAGE_BACKEND: bbolt
+          PORT: 8082
+          SERVER_URL: http://localhost:8082
+          WRITE_TIMEOUT: 10s
+      - name: Create DynamoDB table
+        run: bash scripts/local-aws-init.sh
+        env:
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+      - name: E2E (dynamodb)
+        run: |
+          ./2fas-share-server &
+          go test ./e2e/... -v -count=5 -failfast
+          kill %1
+        env:
+          STORAGE_BACKEND: dynamodb
+          PORT: 8083
+          SERVER_URL: http://localhost:8083
+          DYNAMODB_ENDPOINT: http://localhost:5555

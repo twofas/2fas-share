@@ -1,0 +1,177 @@
+{
+  "notFound": {
+    "title": "Nie znaleziono strony",
+    "description": "Strona, której szukasz, nie istnieje lub została przeniesiona."
+  },
+  "addNew": {
+    "title": "2FAS Share",
+    "subtitle": "Udostępnij swoje dane bezpiecznie"
+  },
+  "sharedData": {
+    "subtitle1": "Bezpiecznie udostępnione.",
+    "subtitle2": "Tylko dla Ciebie.",
+    "errorTitle": "Błąd",
+    "invalidLink": "Ten link jest nieprawidłowy."
+  },
+  "header": {
+    "logoAlt": "Logo 2FAS Share",
+    "shareSecurely": "Użyj 2FAS Share",
+    "aboutShare": "Więcej o SHARE"
+  },
+  "footer": {
+    "copyright": "© {year} Two Factor Authentication Service, Inc. Wszelkie prawa zastrzeżone.",
+    "termsTitle": "Regulamin i polityka prywatności",
+    "privacyPolicy": "Polityka prywatności",
+    "termsOfUse": "Warunki korzystania",
+    "githubRepository": "Repozytorium GitHub"
+  },
+  "linkExpiry": {
+    "oneTimeAccess": "Jednorazowy dostęp",
+    "oneTimeAccessDesc": "Po zamknięciu tej karty utracisz dostęp do udostępnionych danych",
+    "willExpire": "Ten link wygaśnie",
+    "daySun": "Ndz",
+    "dayMon": "Pon",
+    "dayTue": "Wt",
+    "dayWed": "Śr",
+    "dayThu": "Czw",
+    "dayFri": "Pt",
+    "daySat": "Sob"
+  },
+  "qr": {
+    "title": "Sprawdź na urządzeniu mobilnym",
+    "description": "Zeskanuj kod QR, aby zobaczyć szczegóły elementu na swoim urządzeniu mobilnym."
+  },
+  "first": {
+    "description": "Ten link zawiera dane z 2FAS Pass",
+    "instruction": "Naciśnij kontynuuj, aby uzyskać dostęp do danych",
+    "loading": "Ładowanie...",
+    "continue": "Kontynuuj",
+    "openInApp": "Otwórz w aplikacji 2FAS Pass"
+  },
+  "password": {
+    "description": "Ten link zawiera dane z 2FAS Pass",
+    "instruction": "Wprowadź hasło ustawione przez wysyłającego",
+    "placeholder": "Wprowadź hasło",
+    "errorRequired": "Hasło jest wymagane",
+    "errorMinLength": "Hasło musi mieć co najmniej 8 znaków",
+    "errorWrong": "Nieprawidłowe hasło. Spróbuj ponownie",
+    "decrypting": "Odszyfrowywanie...",
+    "continue": "Kontynuuj"
+  },
+  "data": {
+    "title": "Udostępniony element",
+    "description": "Skopiuj szczegóły elementu lub dodaj go \ndo sejfu 2FAS Pass.",
+    "contentType": {
+      "custom": "Bezpieczna notatka",
+      "login": "Login",
+      "paymentCard": "Karta płatnicza",
+      "secureNote": "Bezpieczna notatka",
+      "wifi": "Sieć Wi-Fi",
+      "fallback": "Udostępnione dane"
+    }
+  },
+  "error": {
+    "text": "Błąd"
+  },
+  "common": {
+    "copied": "Skopiowano!",
+    "copyToClipboard": "Kopiuj do schowka",
+    "toggleVisibility": "Widoczność hasła",
+    "togglePasswordVisibility": "Włącz/wyłącz widoczność hasła",
+    "yes": "Tak"
+  },
+  "content": {
+    "name": "Nazwa",
+    "username": "Nazwa użytkownika",
+    "password": "Hasło",
+    "urls": "Adresy URL",
+    "notes": "Notatki",
+    "note": "Notatka",
+    "cardholder": "Posiadacz karty",
+    "cardNumber": "Numer karty",
+    "expirationDate": "Data ważności",
+    "securityCode": "Kod bezpieczeństwa",
+    "ssid": "SSID",
+    "securityType": "Typ zabezpieczeń",
+    "hiddenNetwork": "Ukryta sieć",
+    "wifiQr": "Zeskanuj, aby połączyć się z tą siecią"
+  },
+  "addForm": {
+    "secureNote": "Bezpieczna notatka",
+    "notePlaceholder": "Napisz swoją notatkę tutaj...",
+    "errorContentRequired": "Notatka jest pusta",
+    "errorPasswordMinLength": "Hasło musi mieć co najmniej 8 znaków",
+    "expirationTitle": "Wygaśnięcie linku",
+    "expirationDesc": "Link automatycznie wygaśnie po tym czasie.",
+    "oneTimeAccessTitle": "Jednorazowy dostęp",
+    "oneTimeAccessDesc": "Link wygaśnie po pierwszym dostępie do danych.",
+    "passwordTitle": "Ustaw hasło dla większego bezpieczeństwa",
+    "passwordDesc": "Odbiorca będzie potrzebował tego hasła, aby otworzyć link.",
+    "passwordPlaceholder": "Wprowadź hasło",
+    "errorSubmit": "Nie udało się wygenerować linku. Spróbuj ponownie.",
+    "submitting": "Udostępnianie...",
+    "submit": "Udostępnij"
+  },
+  "expiry": {
+    "5min": "5 min",
+    "30min": "30 min",
+    "1hour": "1 godzina",
+    "1day": "1 dzień",
+    "7days": "7 dni",
+    "30days": "30 dni"
+  },
+  "result": {
+    "title": "Link jest gotowy do użycia",
+    "copyShareLink": "Kopiuj link",
+    "settingsTitle": "Ustawienia udostępniania",
+    "expirationTitle": "Wygaśnięcie linku",
+    "expirationDesc": "Link automatycznie wygaśnie po tym czasie.",
+    "oneTimeAccessTitle": "Jednorazowy dostęp",
+    "oneTimeAccessDesc": "Link wygaśnie po pierwszym dostępie do danych.",
+    "passwordTitle": "Hasło",
+    "copyPassword": "Kopiuj hasło"
+  },
+  "welcome": {
+    "title": "Bezpieczne udostępnianie danych",
+    "subtitle": "Wyślij swoje hasła, karty, notatki lub prywatne dane za pomocą bezpiecznego linku.",
+    "noAccounts": "Bez kont",
+    "freeToUse": "Darmowe i proste w użyciu",
+    "private": "Prywatne"
+  },
+  "howToUse": {
+    "pill": "Prosty proces",
+    "subtitle": "Użyj 2FAS Share, aby łatwo i bezpiecznie wysyłać poufne dane bez zewnętrznego dostępu i z pełną kontrolą po twojej stronie.",
+    "step1Title": "Utwórz wiadomość",
+    "step1Desc": "Wpisz hasło, notatkę lub prywatne dane, które chcesz udostępnić.",
+    "step2Title": "Dostosuj zabezpieczenia",
+    "step2Desc": "Zwiększ bezpieczeństwo udostępnianych danych.",
+    "step3Title": "Ustaw bezpieczne hasło",
+    "step3Desc": "To gwarantuje, że tylko zaufane osoby uzyskają dostęp do danych.",
+    "step4Title": "Udostępnij dane",
+    "step4Desc": "Wygeneruj link z danymi i wyślij go do innych.",
+    "title": "Jak to\ndziała?"
+  },
+  "banner": {
+    "title": "Udostępnij teraz",
+    "subtitle": "Udostępnij dane za pomocą bezpiecznego linku bez zewnętrznego dostępu."
+  },
+  "securityPrivacy": {
+    "title": "Funkcje bezpieczeństwa",
+    "subtitle": "Oparte na fundamencie zaufania, przejrzystości i podejścia zero-knowledge.",
+    "e2e": "Szyfrowanie End-to-End",
+    "autoExpiry": "Automatyczne wygasanie linku",
+    "oneTime": "Jednorazowe linki dostępu",
+    "password": "Ochrona hasłem",
+    "openSource": "Open-source",
+    "zeroKnowledge": "Zero-knowledge",
+    "selfHosted": "Obraz Dockera",
+    "noExternalAccess": "Brak zewnętrznego dostępu",
+    "selfHostedSuffix": "(wkrótce)"
+  },
+  "legal": {
+    "continue": "Klikając Kontynuuj, akceptujesz nasze Warunki korzystania oraz Politykę prywatności.",
+    "share": "Klikając Udostępnij, akceptujesz nasze Warunki korzystania oraz Politykę prywatności.",
+    "termsOfUse": "Warunki korzystania",
+    "privacyPolicy": "Politykę prywatności"
+  }
+}

@@ -1,0 +1,114 @@
+[
+  {
+    "package": "github.com/BurntSushi/toml",
+    "license": "MIT"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/config",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/credentials",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/feature/ec2/imds",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/internal/configsources",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/internal/endpoints/v2",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/internal/ini",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/internal/sync/singleflight",
+    "license": "BSD-3-Clause"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/service/dynamodb",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/service/internal/presigned-url",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/service/signin",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/service/sso",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/service/ssooidc",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/service/sts",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/smithy-go",
+    "license": "Apache-2.0"
+  },
+  {
+    "package": "github.com/aws/smithy-go/internal/sync/singleflight",
+    "license": "BSD-3-Clause"
+  },
+  {
+    "package": "github.com/gorilla/mux",
+    "license": "BSD-3-Clause"
+  },
+  {
+    "package": "github.com/ilyakaznacheev/cleanenv",
+    "license": "MIT"
+  },
+  {
+    "package": "github.com/jellydator/ttlcache/v3",
+    "license": "MIT"
+  },
+  {
+    "package": "github.com/joho/godotenv",
+    "license": "MIT"
+  },
+  {
+    "package": "go.etcd.io/bbolt",
+    "license": "MIT"
+  },
+  {
+    "package": "golang.org/x/sync/singleflight",
+    "license": "BSD-3-Clause"
+  },
+  {
+    "package": "golang.org/x/time/rate",
+    "license": "BSD-3-Clause"
+  },
+  {
+    "package": "gopkg.in/yaml.v3",
+    "license": "MIT"
+  },
+  {
+    "package": "olympos.io/encoding/edn",
+    "license": "BSD-3-Clause"
+  }
+]

@@ -1,0 +1,30 @@
+services:
+  app:
+    build: .
+    ports:
+      - "${PORT:-8080}:${PORT:-8080}"
+    environment:
+      # Core
+      - STORAGE_BACKEND=bbolt
+      - PORT=${PORT:-8080}
+      # Timeouts
+      - READ_TIMEOUT=${READ_TIMEOUT:-3s}
+      - WRITE_TIMEOUT=${WRITE_TIMEOUT:-5s}
+      # Limits
+      - MAX_DATA_SIZE=${MAX_DATA_SIZE:-16384}
+      - MAX_VALID_FOR_SECONDS=${MAX_VALID_FOR_SECONDS:-2592000}
+      - MAX_REQUEST_BODY_SIZE=${MAX_REQUEST_BODY_SIZE:-32768}
+      # Rate limiting (0 = disabled)
+      - HTTP_SERVER_ALLOWED_QPS=${HTTP_SERVER_ALLOWED_QPS:-0}
+      - HTTP_SERVER_ALLOWED_BURST=${HTTP_SERVER_ALLOWED_BURST:-0}
+      # BBolt storage
+      - BBOLT_PATH=/data/share.db
+      - BBOLT_CLEANUP_INTERVAL=${BBOLT_CLEANUP_INTERVAL:-60s}
+    healthcheck:
+      test: ["CMD", "/healthcheck"]
+      interval: 5s
+      timeout: 1s
+      start_period: 5s
+      retries: 3
+    volumes:
+      - ${BBOLT_HOST_DIR:-./data}:/data
