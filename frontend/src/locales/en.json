@@ -23,7 +23,8 @@
     "termsTitle": "Terms & Privacy Policy",
     "privacyPolicy": "Privacy Policy",
     "termsOfUse": "Terms of Use",
-    "githubRepository": "GitHub repository"
+    "githubRepository": "GitHub repository",
+    "openSourceLicenses": "Open Source Licenses"
   },
   "linkExpiry": {
     "oneTimeAccess": "One time access",
@@ -173,5 +174,17 @@
     "share": "By clicking Share, you agree to our Terms of Use and Privacy Policy.",
     "termsOfUse": "Terms of Use",
     "privacyPolicy": "Privacy Policy"
+  },
+  "openSourceLicenses": {
+    "title": "Open Source Licenses",
+    "intro": "2FAS Share is built on the work of the open-source community. \nWe thank the authors and maintainers of the libraries listed below.",
+    "frontendSection": "Frontend dependencies",
+    "frontendDesc": "JavaScript packages used to build the web client (npm).",
+    "backendSection": "Backend dependencies",
+    "backendDesc": "Go modules used by the server.",
+    "colPackage": "Package",
+    "colVersion": "Version",
+    "colSource": "Source",
+    "viewSource": "View source"
   }
 }
