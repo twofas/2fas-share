@@ -15,6 +15,7 @@ import ValidatedRoute from './components/ValidatedRoute';
 import NotFound from './pages/NotFound';
 import TermsOfUse from './pages/TermsOfUse';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import OpenSourceLicenses from './pages/OpenSourceLicenses';
 import Footer from './components/Footer';
 
 /**
@@ -31,6 +32,7 @@ export default function App() {
         <Route path='/add' component={AddNew} />
         <Route path='/terms-of-use' component={TermsOfUse} />
         <Route path='/privacy-policy' component={PrivacyPolicy} />
+        <Route path='/open-source-licenses' component={OpenSourceLicenses} />
         <Route path='/:id/:type/:nonce/:key' component={ValidatedRoute} />
         <Route component={NotFound} />
       </Switch>

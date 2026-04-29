@@ -1,0 +1,149 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+@use '@/styles/variables' as *;
+
+.licenses {
+  text-align: center;
+
+  &-content {
+    max-width: 64rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    text-align: left;
+
+    @include mobile {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.intro {
+  white-space: pre-line;
+
+  @include mobile {
+    white-space: normal;
+  }
+}
+
+.section {
+  margin-bottom: 2.5rem;
+
+  h2 {
+    color: var(--2fas-text-color);
+    font-size: 1.375rem;
+    font-size: clamp(1.125rem, 3vw, 1.375rem);
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    line-height: 1.3;
+    margin: 0 0 0.5rem;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  @include mobile {
+    margin-bottom: 2rem;
+  }
+}
+
+.sectionDesc {
+  color: var(--2fas-box-muted);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+
+  @include mobile {
+    font-size: 0.8125rem;
+  }
+}
+
+.tableWrap {
+  border: 1px solid var(--2fas-box-border);
+  border-radius: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  width: 100%;
+
+  thead {
+    background-color: var(--2fas-hero-pill);
+  }
+
+  th,
+  td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    color: var(--2fas-text-color);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.36px;
+    line-height: 1.4;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-top: 1px solid var(--2fas-box-border);
+  }
+
+  tbody tr:hover {
+    background-color: var(--2fas-hero-pill);
+  }
+
+  td {
+    color: var(--2fas-text-color);
+    line-height: 1.45;
+  }
+
+  @include mobile {
+    font-size: 0.8125rem;
+
+    th,
+    td {
+      padding: 0.625rem 0.75rem;
+    }
+  }
+}
+
+.pkg {
+  font-family: ui-monospace, 'SF Mono', SFMono-Regular, 'Roboto Mono', Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  word-break: break-word;
+
+  @include mobile {
+    font-size: 0.75rem;
+  }
+}
+
+.versionCell {
+  color: var(--2fas-box-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.colSource {
+  text-align: right;
+  white-space: nowrap;
+  width: 1%;
+}
+
+.sourceLink {
+  color: var(--2fas-link);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
