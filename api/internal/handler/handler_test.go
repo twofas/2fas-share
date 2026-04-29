@@ -368,11 +368,11 @@ func TestHandler_ConcurrentCreateSecrets(t *testing.T) {
 
 	results := make(chan int, numRequests)
 
-	for i := 0; i < numRequests; i++ {
+	for i := range numRequests {
 		go func(idx int) {
 			defer wg.Done()
 
-			data := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("data%d", idx)))
+			data := base64.StdEncoding.EncodeToString(fmt.Appendf(nil, "data%d", idx))
 			reqBody := fmt.Sprintf(`{"data":"%s","validForSeconds":3600,"singleUse":false}`, data)
 			req := httptest.NewRequest(http.MethodPost, "/api/secret", strings.NewReader(reqBody))
 			req.Header.Set("Content-Type", "application/json")
@@ -420,7 +420,7 @@ func TestHandler_ConcurrentGetSameSecret(t *testing.T) {
 
 	results := make(chan int, numRequests)
 
-	for i := 0; i < numRequests; i++ {
+	for range numRequests {
 		go func() {
 			defer wg.Done()
 
@@ -469,7 +469,7 @@ func TestHandler_ConcurrentSingleUseSecret_OnlyOneSucceeds(t *testing.T) {
 
 	results := make(chan int, numRequests)
 
-	for i := 0; i < numRequests; i++ {
+	for range numRequests {
 		go func() {
 			defer wg.Done()
 
@@ -523,11 +523,11 @@ func createSecretsForTest(t *testing.T, srv http.Handler, numCreates int) []stri
 	createdIDs := make(chan string, numCreates)
 
 	wg.Add(numCreates)
-	for i := 0; i < numCreates; i++ {
+	for i := range numCreates {
 		go func(idx int) {
 			defer wg.Done()
 
-			data := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("data%d", idx)))
+			data := base64.StdEncoding.EncodeToString(fmt.Appendf(nil, "data%d", idx))
 			reqBody := fmt.Sprintf(`{"data":"%s","validForSeconds":3600,"singleUse":false}`, data)
 			req := httptest.NewRequest(http.MethodPost, "/api/secret", strings.NewReader(reqBody))
 			req.Header.Set("Content-Type", "application/json")

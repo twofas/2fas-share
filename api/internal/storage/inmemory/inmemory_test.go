@@ -31,7 +31,7 @@ func TestStorage_MaxSize(t *testing.T) {
 	ctx := context.Background()
 
 	numSecrets := 10
-	for i := 0; i < numSecrets; i++ {
+	for i := range numSecrets {
 		// Cost of each entry is 88 + 2 * [key size] + [data size]
 		// In this case this is 112.
 		secret := &model.Secret{
@@ -49,7 +49,7 @@ func TestStorage_MaxSize(t *testing.T) {
 
 	// Count how many secrets are still retrievable
 	found := 0
-	for i := 0; i < numSecrets; i++ {
+	for i := range numSecrets {
 		_, err := store.Get(ctx, fmt.Sprintf("%2d", i))
 		if err == nil {
 			found++
@@ -73,7 +73,7 @@ func TestStorage_Expiration(t *testing.T) {
 
 		// Create secrets with 1 hour TTL
 		numSecrets := 5
-		for i := 0; i < numSecrets; i++ {
+		for i := range numSecrets {
 			secret := &model.Secret{
 				ID:         fmt.Sprintf("secret-%d", i),
 				Data:       "test-data",

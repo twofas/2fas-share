@@ -110,7 +110,7 @@ func TestStorage_Expiration(t *testing.T) {
 
 		// Create secrets with 1 hour TTL
 		numSecrets := 5
-		for i := 0; i < numSecrets; i++ {
+		for i := range numSecrets {
 			secret := &model.Secret{
 				ID:         fmt.Sprintf("secret-%d", i),
 				Data:       "test-data",
