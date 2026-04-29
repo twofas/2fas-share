@@ -125,7 +125,7 @@
   }
 
   &-title {
-    background: radial-gradient(49.7% 54.55% at 50% 50%, var(--2fas-bg-1) 60%, transparent 100%);
+    background: radial-gradient(40% 44% at 50% 50%, var(--2fas-bg-1) 60%, transparent 100%);
     display: block;
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 700;
@@ -134,11 +134,37 @@
   }
 
   &-subtitle {
+    background: radial-gradient(45% 60% at 50% 50%, var(--2fas-bg-1) 50%, transparent 100%);
+    color: color-mix(in srgb, var(--2fas-text-color) 85%, transparent);
     font-size: clamp(1rem, 2.5vw, 1.25rem);
     font-weight: 500;
     line-height: 1.5;
     max-width: 370px;
-    opacity: 0.85;
+    position: relative;
+
+    &::before,
+    &::after {
+      background: radial-gradient(40% 32% at 50% 45%, var(--2fas-bg-1) 20%, transparent 100%);
+      bottom: -50%;
+      content: '';
+      pointer-events: none;
+      position: absolute;
+      top: -50%;
+      width: 100%;
+      z-index: -1;
+
+      @media (max-width: 600px) {
+        display: none;
+      }
+    }
+
+    &::before {
+      left: -37.5%;
+    }
+
+    &::after {
+      right: -37.5%;
+    }
   }
 
   &-cta {

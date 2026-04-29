@@ -23,7 +23,8 @@
     "termsTitle": "Regulamin i polityka prywatności",
     "privacyPolicy": "Polityka prywatności",
     "termsOfUse": "Warunki korzystania",
-    "githubRepository": "Repozytorium GitHub"
+    "githubRepository": "Repozytorium GitHub",
+    "openSourceLicenses": "Licencje Open Source"
   },
   "linkExpiry": {
     "oneTimeAccess": "Jednorazowy dostęp",
@@ -173,5 +174,17 @@
     "share": "Klikając Udostępnij, akceptujesz nasze Warunki korzystania oraz Politykę prywatności.",
     "termsOfUse": "Warunki korzystania",
     "privacyPolicy": "Politykę prywatności"
+  },
+  "openSourceLicenses": {
+    "title": "Licencje Open Source",
+    "intro": "2FAS Share opiera się na pracy społeczności open-source. \nDziękujemy autorom i opiekunom poniższych bibliotek.",
+    "frontendSection": "Zależności frontendu",
+    "frontendDesc": "Pakiety JavaScript używane w kliencie webowym (npm).",
+    "backendSection": "Zależności backendu",
+    "backendDesc": "Moduły Go używane przez serwer.",
+    "colPackage": "Pakiet",
+    "colVersion": "Wersja",
+    "colSource": "Źródło",
+    "viewSource": "Zobacz źródło"
   }
 }
