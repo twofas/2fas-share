@@ -10,6 +10,16 @@ updates:
         patterns:
           - "*"
 
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+    groups:
+      all-npm-updates:
+        patterns:
+          - "*"
+
   - package-ecosystem: "docker"
     directory: "/"
     target-branch: "develop"

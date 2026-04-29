@@ -12,7 +12,7 @@
  * to verify Montserrat is actually rendering (not just falling through).
  * @returns {boolean} Whether Montserrat renders with working font weights
  */
-export function isMontserratWorking() {
+export function isMontserratWorking () {
   const el = document.createElement('span');
   el.textContent = 'BESbswy';
   el.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;font-size:300px';
