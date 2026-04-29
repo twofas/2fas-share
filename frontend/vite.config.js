@@ -16,14 +16,20 @@ import path from 'path';
  * Vite plugin that adds Subresource Integrity (SRI) hashes to script and link tags.
  * Computes SHA-384 hashes of each JS/CSS asset and injects integrity attributes
  * into the built HTML so browsers can verify file authenticity.
- * @returns {import('vite').Plugin}
+ * @returns {import('vite').Plugin} Vite plugin definition.
  */
-function sri() {
+function sri () {
   return {
     name: 'vite-plugin-sri',
     enforce: 'post',
     apply: 'build',
-    generateBundle(_options, bundle) {
+    /**
+     * Compute SRI hashes for emitted JS/CSS chunks and inject integrity attributes
+     * into HTML assets in the bundle.
+     * @param {object} _options Rollup output options (unused).
+     * @param {object} bundle Map of emitted asset/chunk objects.
+     */
+    generateBundle (_options, bundle) {
       const htmlAssets = Object.entries(bundle)
         .filter(([key]) => key.endsWith('.html'));
 
@@ -68,6 +74,11 @@ export default defineConfig({
       '/api': {
         target: 'https://share.2fas.com/api',
         changeOrigin: true,
+        /**
+         * Strip the /api prefix from proxied request paths.
+         * @param {string} p Original request path.
+         * @returns {string} Path with the /api prefix removed.
+         */
         rewrite: (p) => p.replace(/^\/api/, '')
       }
     }
