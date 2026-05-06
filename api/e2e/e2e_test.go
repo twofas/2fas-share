@@ -304,7 +304,7 @@ func TestE2E_CreateSecret_InvalidJSON(t *testing.T) {
 func TestE2E_MultipleSecretsIndependent(t *testing.T) {
 	const numberOfRequests = 10
 	secrets := make([]model.Secret, numberOfRequests)
-	for i := 0; i < numberOfRequests; i++ {
+	for i := range numberOfRequests {
 		req := model.CreateSecretRequest{
 			Data:            encodeBase64(fmt.Sprintf("secret%d", i)),
 			ValidForSeconds: 3600,
@@ -333,7 +333,7 @@ func TestE2E_ConcurrentCreateSecrets(t *testing.T) {
 	var wg sync.WaitGroup
 	wg.Add(numRequests)
 
-	for i := 0; i < numRequests; i++ {
+	for i := range numRequests {
 		go func(idx int) {
 			defer wg.Done()
 
@@ -371,7 +371,7 @@ func TestE2E_ConcurrentGetSameSecret(t *testing.T) {
 	var wg sync.WaitGroup
 	wg.Add(numRequests)
 
-	for i := 0; i < numRequests; i++ {
+	for i := range numRequests {
 		go func(idx int) {
 			defer wg.Done()
 			status, err := get("/api/secret/"+created.ID, nil)
@@ -403,7 +403,7 @@ func TestE2E_ConcurrentSingleUseSecret(t *testing.T) {
 
 	results := make(chan int, numRequests)
 
-	for i := 0; i < numRequests; i++ {
+	for range numRequests {
 		go func() {
 			defer wg.Done()
 			status, err := get("/api/secret/"+created.ID, nil)
@@ -445,7 +445,7 @@ func TestE2E_ConcurrentCreateAndGet(t *testing.T) {
 	writes := make(chan struct{}, numSecrets)
 	reads := make(chan string, numSecrets)
 
-	for i := 0; i < numSecrets; i++ {
+	for range numSecrets {
 		writes <- struct{}{}
 	}
 	close(writes)
@@ -456,7 +456,7 @@ func TestE2E_ConcurrentCreateAndGet(t *testing.T) {
 	var readersDone sync.WaitGroup
 	readersDone.Add(numReaders)
 
-	for i := 0; i < numWriters; i++ {
+	for range numWriters {
 		go runWriter(t, writes, reads, &writersDone)
 	}
 
@@ -465,7 +465,7 @@ func TestE2E_ConcurrentCreateAndGet(t *testing.T) {
 		close(reads)
 	}()
 
-	for i := 0; i < numReaders; i++ {
+	for range numReaders {
 		go runReader(t, reads, &readersDone)
 	}
 
@@ -513,7 +513,7 @@ func TestE2E_ConcurrentMixedOperations(t *testing.T) {
 	initialSecrets := 10
 	ids := make([]string, 0, initialSecrets)
 
-	for i := 0; i < initialSecrets; i++ {
+	for i := range initialSecrets {
 		created := mustCreateSecret(t, model.CreateSecretRequest{
 			Data:            encodeBase64(fmt.Sprintf("initial-secret-%d", i)),
 			ValidForSeconds: 3600,
@@ -527,7 +527,7 @@ func TestE2E_ConcurrentMixedOperations(t *testing.T) {
 	var wg sync.WaitGroup
 	wg.Add(numOperations)
 
-	for i := 0; i < numOperations; i++ {
+	for i := range numOperations {
 		go func(idx int) {
 			defer wg.Done()
 			runMixedOp(t, idx, ids)

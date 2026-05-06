@@ -36,6 +36,13 @@ export default function Footer () {
               >
                 {t('footer.termsOfUse')}
               </Link>
+
+              <Link
+                className={S.footerLink}
+                href='/open-source-licenses'
+              >
+                {t('footer.openSourceLicenses')}
+              </Link>
             </nav>
           </div>
 
