@@ -6,10 +6,11 @@
 
 FROM node:22-alpine AS frontendbuilder
 
-WORKDIR /app
+WORKDIR /frontend
 
 # Copy dependency files first for better cache utilization
 COPY frontend/package.json frontend/yarn.lock ./
+
 RUN corepack enable && corepack prepare --activate && yarn install --immutable
 
 # Copy source code after dependencies are cached
@@ -17,9 +18,10 @@ COPY frontend .
 
 ARG VITE_UNIVERSAL_LINK_PROTOCOL="twofaspass"
 
+COPY api/licenses.json ../api/licenses.json
 RUN yarn build-ci
 
-FROM golang:1.26.0-alpine AS gobuilder
+FROM golang:1.26.2-alpine AS gobuilder
 
 WORKDIR /go/src/2fas-share
 
@@ -45,7 +47,7 @@ FROM gcr.io/distroless/static-debian12:nonroot
 
 COPY --from=gobuilder /go/bin/2fas-share-server /
 COPY --from=gobuilder /go/bin/healthcheck /
-COPY --from=frontendbuilder /app/dist /dist
+COPY --from=frontendbuilder /frontend/dist /dist
 
 ENV FRONTEND_DIR=/dist
 CMD ["/2fas-share-server"]
