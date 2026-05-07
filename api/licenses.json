@@ -28,12 +28,12 @@
     "license": "Apache-2.0"
   },
   {
-    "package": "github.com/aws/aws-sdk-go-v2/internal/ini",
-    "license": "Apache-2.0"
-  },
-  {
     "package": "github.com/aws/aws-sdk-go-v2/internal/sync/singleflight",
     "license": "BSD-3-Clause"
+  },
+  {
+    "package": "github.com/aws/aws-sdk-go-v2/internal/v4a",
+    "license": "Apache-2.0"
   },
   {
     "package": "github.com/aws/aws-sdk-go-v2/service/dynamodb",
