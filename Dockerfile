@@ -21,7 +21,7 @@ ARG VITE_UNIVERSAL_LINK_PROTOCOL="twofaspass"
 COPY api/licenses.json ../api/licenses.json
 RUN yarn build-ci
 
-FROM golang:1.26.0-alpine AS gobuilder
+FROM golang:1.26.2-alpine AS gobuilder
 
 WORKDIR /go/src/2fas-share
 
