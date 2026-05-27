@@ -5,7 +5,7 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import { Link } from 'wouter-preact';
+import PrefetchLink from '@/components/PrefetchLink';
 import bS from '@/styles/buttons.module.scss';
 import Sparkle from '@/assets/decor2.svg?react';
 import S from '../SharedDataBox.module.scss';
@@ -46,9 +46,9 @@ export default function SharedDataBoxFirst (props) {
 
       <p className={S.sharedDataBoxLegalConsent}>
         {beforeTerms}
-        <Link href='/terms-of-use'>{termsText}</Link>
+        <PrefetchLink href='/terms-of-use'>{termsText}</PrefetchLink>
         {betweenLinks}
-        <Link href='/privacy-policy'>{privacyText}</Link>
+        <PrefetchLink href='/privacy-policy'>{privacyText}</PrefetchLink>
         {afterPrivacy}
       </p>
     </>
