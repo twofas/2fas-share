@@ -10,43 +10,30 @@ import preact from '@preact/preset-vite';
 import svgr from 'vite-plugin-svgr';
 import { compression } from 'vite-plugin-compression2';
 import { createHash } from 'node:crypto';
+import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'path';
 
-/**
- * Vite plugin that adds Subresource Integrity (SRI) hashes to script and link tags.
- * Computes SHA-384 hashes of each JS/CSS asset and injects integrity attributes
- * into the built HTML so browsers can verify file authenticity.
- * @returns {import('vite').Plugin} Vite plugin definition.
- */
+// Rolldown (Vite 8) injects __vite__mapDeps into entry chunks after
+// generateBundle, so hashing chunk.code there produces stale digests.
+// writeBundle runs after the final files are on disk — hash those instead.
 function sri () {
   return {
     name: 'vite-plugin-sri',
     enforce: 'post',
     apply: 'build',
-    /**
-     * Compute SRI hashes for emitted JS/CSS chunks and inject integrity attributes
-     * into HTML assets in the bundle.
-     * @param {object} _options Rollup output options (unused).
-     * @param {object} bundle Map of emitted asset/chunk objects.
-     */
-    generateBundle (_options, bundle) {
-      const htmlAssets = Object.entries(bundle)
-        .filter(([key]) => key.endsWith('.html'));
+    writeBundle (options, bundle) {
+      const outDir = options.dir;
+      const htmlFiles = Object.keys(bundle).filter(k => k.endsWith('.html'));
 
-      for (const [, htmlAsset] of htmlAssets) {
-        let html = typeof htmlAsset.source === 'string'
-          ? htmlAsset.source
-          : new TextDecoder().decode(htmlAsset.source);
+      for (const htmlFile of htmlFiles) {
+        const htmlPath = path.join(outDir, htmlFile);
+        let html = readFileSync(htmlPath, 'utf-8');
 
-        for (const [fileName, chunk] of Object.entries(bundle)) {
-          if (!fileName.endsWith('.js') && !fileName.endsWith('.css')) {
-            continue;
-          }
+        for (const fileName of Object.keys(bundle)) {
+          if (!fileName.endsWith('.js') && !fileName.endsWith('.css')) continue;
 
-          const content = chunk.type === 'chunk' ? chunk.code : chunk.source;
-          const hash = createHash('sha384')
-            .update(typeof content === 'string' ? content : Buffer.from(content))
-            .digest('base64');
+          const content = readFileSync(path.join(outDir, fileName));
+          const hash = createHash('sha384').update(content).digest('base64');
           const escaped = `/${fileName}`.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
           html = html.replace(
@@ -55,7 +42,7 @@ function sri () {
           );
         }
 
-        htmlAsset.source = html;
+        writeFileSync(htmlPath, html);
       }
     }
   };

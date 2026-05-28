@@ -7,7 +7,7 @@
 
 import S from './Header.module.scss';
 import bS from '@/styles/buttons.module.scss';
-import { Link } from 'wouter-preact';
+import PrefetchLink from '@/components/PrefetchLink';
 import { useHashLocation } from 'wouter-preact/use-hash-location';
 import { useState, useEffect, useRef } from 'preact/hooks';
 import { t } from '@/i18n';
@@ -90,7 +90,7 @@ export default function Header () {
         <img src="/images/logo-light.svg" alt={t('header.logoAlt')} className='theme-light' />
         <img src="/images/logo-dark.svg" alt={t('header.logoAlt')} className='theme-dark' />
       </div>
-      <Link
+      <PrefetchLink
         href={isHome ? '/add' : '/'}
         className={bS.btnGhost}
       >
@@ -100,7 +100,7 @@ export default function Header () {
         >
           {shownIsHome ? t('header.shareSecurely') : t('header.aboutShare')}
         </span>
-      </Link>
+      </PrefetchLink>
     </header>
   );
 }

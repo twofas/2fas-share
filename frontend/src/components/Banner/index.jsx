@@ -8,7 +8,7 @@
 import { useRef } from 'preact/hooks';
 import { useParallax } from '@/utils/parallax';
 import { useInView } from '@/utils/inView';
-import { Link } from 'wouter-preact';
+import PrefetchLink from '@/components/PrefetchLink';
 import { t } from '@/i18n';
 import S from './Banner.module.scss';
 import bS from '@/styles/buttons.module.scss';
@@ -38,12 +38,12 @@ export default function Banner () {
         <div className={S.bannerContent}>
           <h2 className={S.bannerTitle}>{t('banner.title')}</h2>
           <p className={S.bannerSubtitle}>{t('banner.subtitle')}</p>
-          <Link
+          <PrefetchLink
             href='/add'
             className={`${bS.btnHero} ${S.bannerCta}`}
           >
             {t('header.shareSecurely')}
-          </Link>
+          </PrefetchLink>
         </div>
       </section>
     </div>

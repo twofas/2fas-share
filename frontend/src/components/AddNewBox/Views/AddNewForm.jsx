@@ -16,7 +16,7 @@ import {
   deriveKeyFromPassword,
   encryptData
 } from '@/crypto/encrypt';
-import { Link } from 'wouter-preact';
+import PrefetchLink from '@/components/PrefetchLink';
 import B from '@/styles/box-sections.module.scss';
 import C from '@/styles/controls.module.scss';
 import S from '../AddNewBox.module.scss';
@@ -241,9 +241,9 @@ export default function AddNewForm({ onSuccess }) {
         return (
           <p className={S.addBoxLegalConsent}>
             {beforeTerms}
-            <Link href='/terms-of-use'>{terms}</Link>
+            <PrefetchLink href='/terms-of-use'>{terms}</PrefetchLink>
             {betweenLinks}
-            <Link href='/privacy-policy'>{privacy}</Link>
+            <PrefetchLink href='/privacy-policy'>{privacy}</PrefetchLink>
             {afterPrivacy}
           </p>
         );
