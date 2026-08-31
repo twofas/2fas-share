@@ -25,6 +25,7 @@
     "build": "yarn generate-license-info && vite build",
     "build-ci": "vite build",
     "preview": "vite preview",
+    "test": "node --test 'src/**/*.test.js'",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "generate-license-info-html": "npx -y license-report --output=html >> open-source-licenses.html",
