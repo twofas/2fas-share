@@ -13,7 +13,6 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
-	"sync/atomic"
 	"testing"
 	"testing/synctest"
 	"time"
@@ -123,7 +122,7 @@ func TestStorage_Expiration(t *testing.T) {
 		}
 
 		// Verify no evictions yet
-		if evicted := atomic.LoadUint64(&store.numberOfEvicted); evicted != 0 {
+		if evicted := store.numberOfEvicted.Load(); evicted != 0 {
 			t.Errorf("Expected 0 evictions before expiration, got %d", evicted)
 		}
 
@@ -131,7 +130,7 @@ func TestStorage_Expiration(t *testing.T) {
 		time.Sleep(time.Hour + time.Minute + time.Second)
 
 		// Verify all secrets were evicted
-		if evicted := atomic.LoadUint64(&store.numberOfEvicted); evicted != uint64(numSecrets) {
+		if evicted := store.numberOfEvicted.Load(); evicted != uint64(numSecrets) {
 			t.Errorf("Expected %d evictions after expiration, got %d", numSecrets, evicted)
 		}
 	})
