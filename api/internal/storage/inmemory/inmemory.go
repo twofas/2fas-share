@@ -30,7 +30,7 @@ func (c Config) Validate() error {
 // Storage implements storage.Storage interface using in-memory ttlcache.
 type Storage struct {
 	cache           *ttlcache.Cache[string, *model.Secret]
-	numberOfEvicted uint64
+	numberOfEvicted atomic.Uint64
 }
 
 // secretCost calculates the memory cost of storing a secret.
@@ -60,7 +60,7 @@ func New(cfg Config) *Storage {
 
 	cache.OnEviction(func(_ context.Context, reason ttlcache.EvictionReason, _ *ttlcache.Item[string, *model.Secret]) {
 		if reason == ttlcache.EvictionReasonExpired {
-			atomic.AddUint64(&s.numberOfEvicted, 1)
+			s.numberOfEvicted.Add(1)
 		}
 	})
 
