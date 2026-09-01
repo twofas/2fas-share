@@ -8,6 +8,7 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -22,7 +23,8 @@ func TestHandler_Throttle_NoOpWhenDisabled(t *testing.T) {
 	srv := h.Handler()
 
 	for range 20 {
-		req := httptest.NewRequest(http.MethodPost, "/api/secret", strings.NewReader(reqBody))
+		req := httptest.NewRequestWithContext(context.Background(),
+			http.MethodPost, "/api/secret", strings.NewReader(reqBody))
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 		srv.ServeHTTP(w, req)
@@ -43,7 +45,8 @@ func TestHandler_Throttle_Returns429WhenOverLimit(t *testing.T) {
 	srv := h.Handler()
 
 	// First request consumes the burst token.
-	req := httptest.NewRequest(http.MethodPost, "/api/secret", strings.NewReader(reqBody))
+	req := httptest.NewRequestWithContext(context.Background(),
+		http.MethodPost, "/api/secret", strings.NewReader(reqBody))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 	srv.ServeHTTP(w, req)
@@ -53,7 +56,8 @@ func TestHandler_Throttle_Returns429WhenOverLimit(t *testing.T) {
 	}
 
 	// Second request should be throttled.
-	req = httptest.NewRequest(http.MethodPost, "/api/secret", strings.NewReader(reqBody))
+	req = httptest.NewRequestWithContext(context.Background(),
+		http.MethodPost, "/api/secret", strings.NewReader(reqBody))
 	req.Header.Set("Content-Type", "application/json")
 	w = httptest.NewRecorder()
 	srv.ServeHTTP(w, req)
@@ -73,7 +77,7 @@ func TestHandler_Throttle_DoesNotThrottleHealth(t *testing.T) {
 	srv := h.Handler()
 
 	// Exhaust the rate limiter via a secret request.
-	req := httptest.NewRequest(http.MethodPost, "/api/secret", strings.NewReader(reqBody))
+	req := httptest.NewRequestWithContext(context.Background(), http.MethodPost, "/api/secret", strings.NewReader(reqBody))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 	srv.ServeHTTP(w, req)
@@ -84,7 +88,7 @@ func TestHandler_Throttle_DoesNotThrottleHealth(t *testing.T) {
 
 	// Health endpoint should still work.
 	for range 10 {
-		req = httptest.NewRequest(http.MethodGet, "/api/health", nil)
+		req = httptest.NewRequestWithContext(context.Background(), http.MethodGet, "/api/health", nil)
 		w = httptest.NewRecorder()
 		srv.ServeHTTP(w, req)
 
@@ -104,7 +108,7 @@ func TestHandler_Throttle_DoesNotThrottleOptions(t *testing.T) {
 	srv := h.Handler()
 
 	// Exhaust the rate limiter via a secret request.
-	req := httptest.NewRequest(http.MethodPost, "/api/secret", strings.NewReader(reqBody))
+	req := httptest.NewRequestWithContext(context.Background(), http.MethodPost, "/api/secret", strings.NewReader(reqBody))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 	srv.ServeHTTP(w, req)
@@ -114,7 +118,7 @@ func TestHandler_Throttle_DoesNotThrottleOptions(t *testing.T) {
 	}
 
 	// OPTIONS preflight should still work (handled by CORS before reaching the router).
-	req = httptest.NewRequest(http.MethodOptions, "/api/secret", nil)
+	req = httptest.NewRequestWithContext(context.Background(), http.MethodOptions, "/api/secret", nil)
 	w = httptest.NewRecorder()
 	srv.ServeHTTP(w, req)
 

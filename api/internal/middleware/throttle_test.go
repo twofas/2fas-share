@@ -8,6 +8,7 @@
 package middleware
 
 import (
+	"context"
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
@@ -23,7 +24,8 @@ func TestThrottle_NoOpWhenQPSZero(t *testing.T) {
 
 	for range 100 {
 		rec := httptest.NewRecorder()
-		h.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/secret/abc", nil))
+		h.ServeHTTP(rec, httptest.NewRequestWithContext(context.Background(), http.MethodGet,
+			"/secret/abc", nil))
 		if rec.Code != http.StatusOK {
 			t.Fatalf("expected 200, got %d", rec.Code)
 		}
@@ -39,7 +41,7 @@ func TestThrottle_AllowsRequestsUnderLimit(t *testing.T) {
 
 	// First request should always succeed (within burst).
 	rec := httptest.NewRecorder()
-	h.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/secret/abc", nil))
+	h.ServeHTTP(rec, httptest.NewRequestWithContext(context.Background(), http.MethodGet, "/secret/abc", nil))
 	if rec.Code != http.StatusOK {
 		t.Fatalf("expected 200, got %d", rec.Code)
 	}
@@ -55,14 +57,14 @@ func TestThrottle_Returns429WhenOverLimit(t *testing.T) {
 
 	// First request consumes the burst token.
 	rec := httptest.NewRecorder()
-	h.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/secret/abc", nil))
+	h.ServeHTTP(rec, httptest.NewRequestWithContext(context.Background(), http.MethodGet, "/secret/abc", nil))
 	if rec.Code != http.StatusOK {
 		t.Fatalf("expected 200, got %d", rec.Code)
 	}
 
 	// Second request should be throttled.
 	rec = httptest.NewRecorder()
-	h.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/secret/abc", nil))
+	h.ServeHTTP(rec, httptest.NewRequestWithContext(context.Background(), http.MethodGet, "/secret/abc", nil))
 	if rec.Code != http.StatusTooManyRequests {
 		t.Fatalf("expected 429, got %d", rec.Code)
 	}
@@ -83,7 +85,8 @@ func TestThrottle_BurstAllowsMultipleImmediateRequests(t *testing.T) {
 
 	for i := range 5 {
 		rec := httptest.NewRecorder()
-		h.ServeHTTP(rec, httptest.NewRequest(http.MethodPost, "/secret", nil))
+		h.ServeHTTP(rec, httptest.NewRequestWithContext(context.Background(),
+			http.MethodPost, "/secret", nil))
 		if rec.Code != http.StatusOK {
 			t.Fatalf("request %d: expected 200, got %d", i, rec.Code)
 		}
@@ -91,7 +94,8 @@ func TestThrottle_BurstAllowsMultipleImmediateRequests(t *testing.T) {
 
 	// 6th should be throttled.
 	rec := httptest.NewRecorder()
-	h.ServeHTTP(rec, httptest.NewRequest(http.MethodPost, "/secret", nil))
+	h.ServeHTTP(rec, httptest.NewRequestWithContext(context.Background(),
+		http.MethodPost, "/secret", nil))
 	if rec.Code != http.StatusTooManyRequests {
 		t.Fatalf("expected 429, got %d", rec.Code)
 	}
