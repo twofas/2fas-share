@@ -10,7 +10,15 @@ import './env';
 import { render } from 'preact';
 import App from './app';
 import { isMontserratWorking } from './utils/isMontserratWorking';
+import { currentLang } from './i18n';
 import './styles/global.scss';
+
+/**
+ * index.html ships lang="en" as the pre-JS fallback; correct it to the
+ * language the UI actually renders in, so screen readers pick the right
+ * voice and the browser offers translation only when it makes sense.
+ */
+document.documentElement.lang = currentLang;
 
 /**
  * Detect when Montserrat fails to render correctly (e.g. iOS Lockdown Mode
