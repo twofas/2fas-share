@@ -1,0 +1,190 @@
+{
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "description": "Die gesuchte Seite existiert nicht oder wurde verschoben."
+  },
+  "addNew": {
+    "title": "2FAS Share",
+    "subtitle": "Teile deine Daten sicher"
+  },
+  "sharedData": {
+    "subtitle1": "Sicher geteilt.",
+    "subtitle2": "Nur für dich.",
+    "errorTitle": "Fehler",
+    "invalidLink": "Dieser Link ist ungültig."
+  },
+  "header": {
+    "logoAlt": "2FAS Share Logo",
+    "shareSecurely": "2FAS Share verwenden",
+    "aboutShare": "Über 2FAS Share"
+  },
+  "footer": {
+    "copyright": "© {year} Two Factor Authentication Service, Inc. Alle Rechte vorbehalten.",
+    "termsTitle": "Nutzungsbedingungen & Datenschutz",
+    "privacyPolicy": "Datenschutzerklärung",
+    "termsOfUse": "Nutzungsbedingungen",
+    "githubRepository": "GitHub-Repository",
+    "openSourceLicenses": "Open-Source-Lizenzen"
+  },
+  "linkExpiry": {
+    "oneTimeAccess": "Einmaliger Zugriff",
+    "oneTimeAccessDesc": "Sobald du diesen Tab schließt, verlierst du den Zugriff auf die geteilten Daten",
+    "willExpire": "Dieser Link läuft ab",
+    "daySun": "So",
+    "dayMon": "Mo",
+    "dayTue": "Di",
+    "dayWed": "Mi",
+    "dayThu": "Do",
+    "dayFri": "Fr",
+    "daySat": "Sa"
+  },
+  "qr": {
+    "title": "Auf Mobilgerät öffnen",
+    "description": "Scanne diesen QR-Code, um die Details des Eintrags auf deinem Mobilgerät zu öffnen."
+  },
+  "first": {
+    "description": "Dieser Link enthält Daten aus 2FAS Pass",
+    "instruction": "Tippe auf Weiter, um auf die Daten zuzugreifen",
+    "loading": "Laden...",
+    "continue": "Weiter",
+    "openInApp": "In der 2FAS Pass App öffnen"
+  },
+  "password": {
+    "description": "Dieser Link enthält Daten aus 2FAS Pass",
+    "instruction": "Gib das vom Absender festgelegte Passwort ein",
+    "placeholder": "Passwort eingeben",
+    "errorRequired": "Passwort ist erforderlich",
+    "errorMinLength": "Passwort muss mindestens 8 Zeichen lang sein",
+    "errorWrong": "Falsches Passwort. Bitte erneut versuchen",
+    "decrypting": "Entschlüsseln...",
+    "continue": "Weiter"
+  },
+  "data": {
+    "title": "Geteilter Eintrag",
+    "description": "Kopiere die Details des Eintrags oder füge ihn \ndem 2FAS Pass Tresor hinzu.",
+    "contentType": {
+      "custom": "Sichere Notiz",
+      "login": "Login",
+      "paymentCard": "Kreditkarte",
+      "secureNote": "Sichere Notiz",
+      "wifi": "Wi-Fi-Netzwerk",
+      "fallback": "Geteilte Daten"
+    }
+  },
+  "error": {
+    "text": "Fehler"
+  },
+  "common": {
+    "copied": "Kopiert!",
+    "copyToClipboard": "In Zwischenablage kopieren",
+    "toggleVisibility": "Sichtbarkeit umschalten",
+    "togglePasswordVisibility": "Passwortsichtbarkeit umschalten",
+    "yes": "Ja"
+  },
+  "content": {
+    "name": "Name",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "urls": "URLs",
+    "notes": "Notizen",
+    "note": "Notiz",
+    "cardholder": "Karteninhaber",
+    "cardNumber": "Kartennummer",
+    "expirationDate": "Ablaufdatum",
+    "securityCode": "Sicherheitscode",
+    "ssid": "SSID",
+    "securityType": "Sicherheitstyp",
+    "hiddenNetwork": "Verstecktes Netzwerk",
+    "wifiQr": "Scannen, um diesem Netzwerk beizutreten"
+  },
+  "addForm": {
+    "secureNote": "Sichere Notiz",
+    "notePlaceholder": "Schreibe deine Notiz hier...",
+    "errorContentRequired": "Notiz ist leer",
+    "errorPasswordMinLength": "Passwort muss mindestens 8 Zeichen lang sein",
+    "expirationTitle": "Link-Ablauf",
+    "expirationDesc": "Der Link läuft nach dieser Zeit automatisch ab.",
+    "oneTimeAccessTitle": "Einmaliger Zugriff",
+    "oneTimeAccessDesc": "Der Link läuft nach dem ersten Datenzugriff ab.",
+    "passwordTitle": "Passwort für mehr Sicherheit festlegen",
+    "passwordDesc": "Der Empfänger benötigt dieses Passwort, um den Link zu öffnen.",
+    "passwordPlaceholder": "Passwort eingeben",
+    "errorSubmit": "Link konnte nicht erstellt werden. Bitte erneut versuchen.",
+    "submitting": "Wird geteilt...",
+    "submit": "Teilen"
+  },
+  "expiry": {
+    "5min": "5 Min.",
+    "30min": "30 Min.",
+    "1hour": "1 Stunde",
+    "1day": "1 Tag",
+    "7days": "7 Tage",
+    "30days": "30 Tage"
+  },
+  "result": {
+    "title": "Link ist einsatzbereit",
+    "copyShareLink": "Link kopieren",
+    "settingsTitle": "Freigabeeinstellungen",
+    "expirationTitle": "Link-Ablauf",
+    "expirationDesc": "Der Link läuft nach dieser Zeit automatisch ab.",
+    "oneTimeAccessTitle": "Einmaliger Zugriff",
+    "oneTimeAccessDesc": "Der Link läuft nach dem ersten Datenzugriff ab.",
+    "passwordTitle": "Passwort",
+    "copyPassword": "Passwort kopieren"
+  },
+  "welcome": {
+    "title": "Sicheres Teilen von Daten",
+    "subtitle": "Sende deine Passwörter, Karten, Notizen oder privaten Daten über einen sicheren Link.",
+    "noAccounts": "Keine Konten",
+    "freeToUse": "Kostenlos und einfach",
+    "private": "Privat"
+  },
+  "howToUse": {
+    "pill": "Einfacher Ablauf",
+    "subtitle": "Mit 2FAS Share sendest du sensible Daten einfach und sicher – ohne externen Zugriff und mit voller Kontrolle.",
+    "step1Title": "Nachricht erstellen",
+    "step1Desc": "Füge Passwörter, Notizen oder private Daten hinzu, die du teilen möchtest.",
+    "step2Title": "Sicherheit anpassen",
+    "step2Desc": "Erhöhe die Sicherheit der geteilten Daten.",
+    "step3Title": "Sicheres Passwort festlegen",
+    "step3Desc": "So können nur vertrauenswürdige Personen auf die Daten zugreifen.",
+    "step4Title": "Daten teilen",
+    "step4Desc": "Erstelle einen Link mit den Daten und sende ihn an andere.",
+    "title": "Wie\nfunktioniert es?"
+  },
+  "banner": {
+    "title": "Jetzt teilen",
+    "subtitle": "Teile deine Daten über einen sicheren Link ohne externen Zugriff."
+  },
+  "securityPrivacy": {
+    "title": "Sicherheitsfunktionen",
+    "subtitle": "Auf Vertrauen, Transparenz und Zero-Knowledge-Design aufgebaut.",
+    "e2e": "End-to-End-Verschlüsselung",
+    "autoExpiry": "Automatischer Link-Ablauf",
+    "oneTime": "Links mit einmaligem Zugriff",
+    "password": "Passwortschutz",
+    "openSource": "Open-source",
+    "zeroKnowledge": "Zero-knowledge",
+    "selfHosted": "Docker-Image",
+    "noExternalAccess": "Kein externer Zugriff",
+    "selfHostedSuffix": "(demnächst)"
+  },
+  "legal": {
+    "continue": "Mit Klick auf Weiter stimmst du unseren Nutzungsbedingungen und unserer Datenschutzerklärung zu.",
+    "share": "Mit Klick auf Teilen stimmst du unseren Nutzungsbedingungen und unserer Datenschutzerklärung zu.",
+    "termsOfUse": "Nutzungsbedingungen",
+    "privacyPolicy": "Datenschutzerklärung"
+  },
+  "openSourceLicenses": {
+    "title": "Open-Source-Lizenzen",
+    "intro": "2FAS Share basiert auf der Arbeit der Open-Source-Community. \nWir danken den Autoren und Maintainern der unten aufgeführten Bibliotheken.",
+    "frontendSection": "Frontend-Abhängigkeiten",
+    "frontendDesc": "JavaScript-Pakete zum Erstellen des Webclients (npm).",
+    "backendSection": "Backend-Abhängigkeiten",
+    "backendDesc": "Go-Module, die der Server verwendet.",
+    "colPackage": "Paket",
+    "colVersion": "Version",
+    "colSource": "Quelle",
+    "viewSource": "Quelle anzeigen"
+  }
+}

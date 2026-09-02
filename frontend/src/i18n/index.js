@@ -7,9 +7,10 @@
 
 import en from '../locales/en.json';
 import pl from '../locales/pl.json';
+import de from '../locales/de.json';
 
 /** @type {Record<string, object>} */
-const translations = { en, pl };
+const translations = { en, pl, de };
 
 const fallbackLang = 'en';
 
@@ -34,7 +35,9 @@ function detectLanguage () {
   return fallbackLang;
 }
 
-const currentLang = detectLanguage();
+/** @type {string} Resolved language code for the current session. */
+export const currentLang = detectLanguage();
+
 const dict = translations[currentLang] || translations[fallbackLang];
 
 /**
