@@ -27,7 +27,7 @@
     "openSourceLicenses": "Open-Source-Lizenzen"
   },
   "linkExpiry": {
-    "oneTimeAccess": "Einmaliger Zugriff",
+    "oneTimeAccess": "Einmal Zugriff",
     "oneTimeAccessDesc": "Sobald du diesen Tab schließt, verlierst du den Zugriff auf die geteilten Daten",
     "willExpire": "Dieser Link läuft ab",
     "daySun": "So",
@@ -54,7 +54,7 @@
     "instruction": "Gib das vom Absender festgelegte Passwort ein",
     "placeholder": "Passwort eingeben",
     "errorRequired": "Passwort ist erforderlich",
-    "errorMinLength": "Passwort muss mindestens 8 Zeichen lang sein",
+    "errorMinLength": "Das Passwort muss mindestens 8 Zeichen lang sein",
     "errorWrong": "Falsches Passwort. Bitte erneut versuchen",
     "decrypting": "Entschlüsseln...",
     "continue": "Weiter"
@@ -100,12 +100,12 @@
   "addForm": {
     "secureNote": "Sichere Notiz",
     "notePlaceholder": "Schreibe deine Notiz hier...",
-    "errorContentRequired": "Notiz ist leer",
-    "errorPasswordMinLength": "Passwort muss mindestens 8 Zeichen lang sein",
+    "errorContentRequired": "Die Notiz ist leer",
+    "errorPasswordMinLength": "Das Passwort muss mindestens 8 Zeichen lang sein",
     "expirationTitle": "Link-Ablauf",
     "expirationDesc": "Der Link läuft nach dieser Zeit automatisch ab.",
-    "oneTimeAccessTitle": "Einmaliger Zugriff",
-    "oneTimeAccessDesc": "Der Link läuft nach dem ersten Datenzugriff ab.",
+    "oneTimeAccessTitle": "Einmal Zugriff",
+    "oneTimeAccessDesc": "Der Link läuft nach dem ersten Zugriff ab.",
     "passwordTitle": "Passwort für mehr Sicherheit festlegen",
     "passwordDesc": "Der Empfänger benötigt dieses Passwort, um den Link zu öffnen.",
     "passwordPlaceholder": "Passwort eingeben",
@@ -127,8 +127,8 @@
     "settingsTitle": "Freigabeeinstellungen",
     "expirationTitle": "Link-Ablauf",
     "expirationDesc": "Der Link läuft nach dieser Zeit automatisch ab.",
-    "oneTimeAccessTitle": "Einmaliger Zugriff",
-    "oneTimeAccessDesc": "Der Link läuft nach dem ersten Datenzugriff ab.",
+    "oneTimeAccessTitle": "Einmal Zugriff",
+    "oneTimeAccessDesc": "Der Link läuft nach dem ersten Zugriff ab.",
     "passwordTitle": "Passwort",
     "copyPassword": "Passwort kopieren"
   },
@@ -167,11 +167,11 @@
     "zeroKnowledge": "Zero-knowledge",
     "selfHosted": "Docker-Image",
     "noExternalAccess": "Kein externer Zugriff",
-    "selfHostedSuffix": "(demnächst)"
+    "selfHostedSuffix": "(Bald verfügbar)"
   },
   "legal": {
-    "continue": "Mit Klick auf Weiter stimmst du unseren Nutzungsbedingungen und unserer Datenschutzerklärung zu.",
-    "share": "Mit Klick auf Teilen stimmst du unseren Nutzungsbedingungen und unserer Datenschutzerklärung zu.",
+    "continue": "Durch das Klicken auf Weiter stimmst du unseren Nutzungsbedingungen und unserer Datenschutzerklärung zu.",
+    "share": "Durch das Klicken auf Teilen stimmst du unseren Nutzungsbedingungen und unserer Datenschutzerklärung zu.",
     "termsOfUse": "Nutzungsbedingungen",
     "privacyPolicy": "Datenschutzerklärung"
   },
