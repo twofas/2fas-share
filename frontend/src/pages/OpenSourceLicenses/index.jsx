@@ -147,7 +147,7 @@ export default function OpenSourceLicenses () {
           <tbody role='rowgroup'>
             {sortedFrontend.map((dep) => {
               const url = cleanLink(dep.link);
-              const version = cleanVersion(dep.definedVersion);
+              const version = cleanVersion(dep.installedVersion || dep.definedVersion);
 
               return (
                 <tr key={dep.name} className={S.row} role='row'>
