@@ -33,7 +33,6 @@
     "generate-license-info": "yarn generate-license-info-html && yarn generate-license-info-json"
   },
   "dependencies": {
-    "canvas-confetti": "^1.9.4",
     "preact": "^10.29.8",
     "qrcode": "^1.5.4",
     "ua-parser-js": "^2.0.10",

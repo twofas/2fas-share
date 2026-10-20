@@ -6,46 +6,45 @@
 // See the LICENSE file for details.
 
 import { useRef } from 'preact/hooks';
-import { useParallax } from '@/utils/parallax';
 import { useInView } from '@/utils/inView';
 import PrefetchLink from '@/components/PrefetchLink';
+import Benefits from '@/components/WelcomeSection/Benefits';
 import { t } from '@/i18n';
+import btn from '@/styles/ds/button.module.scss';
 import S from './Banner.module.scss';
-import bS from '@/styles/buttons.module.scss';
-import Decor from '@/assets/decor.svg?react';
+import { requestGeneratorFocus } from '@/utils/generatorFocus';
 
 /**
- * CTA banner section with decorative cross elements and a share button.
- * Animations trigger once the section scrolls into view.
+ * Section / 06 Final CTA: the three benefits, a two-tone heading (first word
+ * in text/primary, the rest in text/secondary), the lead and the big CTA.
  * @returns {import('preact').JSX.Element} The banner component.
  */
 export default function Banner () {
-  const bannerRef = useRef(null);
-  useParallax(bannerRef);
-  const visible = useInView(bannerRef, 0.25);
+  const ref = useRef(null);
+  const visible = useInView(ref, 0.25);
+  const [first, ...rest] = t('v2.banner.title').split(' ');
 
   return (
-    <div className='container'>
-      <section className={`${S.banner} ${visible ? S.visible : ''}`} ref={bannerRef}>
-        <div className={S.bannerDecors} aria-hidden='true'>
-          <Decor className={`${S.bannerDecor} ${S.small} ${S.p1}`} data-dx='3' data-dy='-3' />
-          <Decor className={`${S.bannerDecor} ${S.large} ${S.p2}`} data-dx='-6' data-dy='6' />
-          <Decor className={`${S.bannerDecor} ${S.medium} ${S.p3}`} data-dx='-4' data-dy='-4' />
-          <Decor className={`${S.bannerDecor} ${S.small} ${S.p4}`} data-dx='3' data-dy='3' />
-          <Decor className={`${S.bannerDecor} ${S.large} ${S.p5}`} data-dx='6' data-dy='-6' />
+    <section ref={ref} className={`${S.banner} ${visible ? S.visible : ''}`} aria-labelledby='final-cta-title'>
+      <div className={S.card}>
+        <div className={S.content}>
+          <div className={S.benefits}>
+            <Benefits />
+          </div>
+          <div className={S.copy}>
+            <h2 id='final-cta-title' className={S.title}>
+              {first}
+              {rest.length > 0 && <span className={S.titleRest}> {rest.join(' ')}</span>}
+            </h2>
+            <p className={S.lead}>{t('v2.banner.subtitle')}</p>
+          </div>
+          <div className={S.action}>
+            <PrefetchLink href='/add' className={`${btn.cta} ${btn.ctaBig} ${S.cta}`} onClick={requestGeneratorFocus}>
+              {t('v2.header.shareSecurely')}
+            </PrefetchLink>
+          </div>
         </div>
-
-        <div className={S.bannerContent}>
-          <h2 className={S.bannerTitle}>{t('banner.title')}</h2>
-          <p className={S.bannerSubtitle}>{t('banner.subtitle')}</p>
-          <PrefetchLink
-            href='/add'
-            className={`${bS.btnHero} ${S.bannerCta}`}
-          >
-            {t('header.shareSecurely')}
-          </PrefetchLink>
-        </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }

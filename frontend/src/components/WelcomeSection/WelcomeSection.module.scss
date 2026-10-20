@@ -5,234 +5,116 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-@use '@/styles/animations';
-@use '@/styles/variables' as *;
-@use '@/styles/pills' as *;
+// Section / 01 Hero, generator.
+// Mobile (< 1024): window on top, text column under it, left aligned.
+// Tablet (1024-1279): stacked, the window 10 columns wide and centered.
+// Desktop (1280+): text column (6 columns) beside the window (6 columns),
+// both centered vertically in a section at least one screen high.
 
-.welcome {
-  align-items: center;
-  display: flex;
-  height: 75vh;
-  justify-content: center;
-  margin-top: -100px;
-  min-height: 500px;
+@use '@/styles/variables' as *;
+@use '@/pages/Home/sections' as *;
+
+// Page-load entrance (Figma E · Motion, 01 hero): badges at 0.14 / 0.26 /
+// 0.38 s, H1 at 0.10 s, lead at 0.46 s, the generator window from 0.40 s.
+@include motion-keyframes;
+
+.hero {
+  overflow-x: clip;
+  padding-block: var(--space-page-top) var(--space-20);
   position: relative;
 
-  @media (max-width: 1250px) {
-    height: 66vh;
+  // Bottom padding: 32 px on a phone, 40 px at 1024, 64 px at 1440.
+  @include from(tablet) {
+    padding-block-end: var(--space-16);
   }
 
-  @media (max-width: 1050px) {
-    height: 50vh;
-    min-height: 420px;
-  }
-
-  @include tablet {
-    margin-top: -60px;
-    padding-bottom: 2rem;
-  }
-
-  @media (max-width: 919px) {
-    min-height: 360px;
-    padding-bottom: 1rem;
-    padding-top: 1rem;
-  }
-
-  @include mobile {
-    height: auto;
-    margin-top: -40px;
-    min-height: 0;
-    padding: 4rem 0 2rem;
-  }
-
-  @media (max-width: 500px) {
-    padding-bottom: 1.5rem;
-  }
-
-  &-circles {
-    height: 100%;
-    left: 50%;
-    mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
-    overflow: hidden;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    transform: translateX(-50%);
-    width: 100%;
-
-    @media (max-width: 500px) {
-      width: 125%;
-    }
-  }
-
-  &-circle {
-    animation: fadeToOpacity 1s ease-out both;
-    bottom: 0;
-    height: auto;
-    left: 50%;
-    max-width: 100%;
-    position: absolute;
-    transform: translateX(-50%);
-
-    &.outer {
-      --target-opacity: 0.2;
-      animation-delay: 0.7s;
-      width: min(100%, 82rem);
-
-      @include tablet {
-        width: 90%;
-      }
-    }
-
-    &.middle {
-      --target-opacity: 0.4;
-      animation-delay: 0.5s;
-      width: min(82%, 67.5rem);
-
-      @include tablet {
-        width: 74%;
-      }
-    }
-
-    &.inner {
-      --target-opacity: 0.8;
-      animation-delay: 0.25s;
-      width: min(63%, 51.5rem);
-
-      @include tablet {
-        width: 56%;
-      }
-    }
-  }
-
-  &-content {
+  @include from(desktop) {
     align-items: center;
-    animation: fadeInUpShort 0.6s ease-out 0.65s both;
     display: flex;
-    flex-direction: column;
-    margin-top: 9%;
-    position: relative;
-    text-align: center;
-    z-index: 2;
+    min-block-size: 100svh;
+    padding-block-start: var(--space-page-top-window);
+  }
+}
 
-    @include tablet {
-      margin-top: 8%;
-    }
+.inner {
+  @include container;
+  @include grid;
 
-    @include mobile {
-      margin-top: 0;
-    }
+  position: relative;
+  // Window to the text column: 48 px on a phone (8 px gap + 40 px padding of
+  // copy-column), 40 px in the Tablet layout.
+  row-gap: calc(var(--space-32) + var(--space-2));
+  z-index: 1;
+
+  @include from(tablet) {
+    row-gap: var(--space-16);
   }
 
-  &-title {
-    background: radial-gradient(40% 44% at 50% 50%, var(--2fas-bg-1) 60%, transparent 100%);
-    display: block;
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 700;
-    line-height: 1;
-    padding: 1rem 0;
+  @include from(desktop) {
+    align-items: center;
+    row-gap: var(--space-12);
+  }
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  grid-row: 2;
+  min-inline-size: 0;
+
+  @include from(desktop) {
+    grid-column: 1 / span 6;
+    grid-row: 1;
+  }
+}
+
+.benefits {
+  margin-block-end: var(--space-6);
+
+  > li {
+    @include enter-small(calc(0.14s + var(--i, 0) * var(--motion-duration-stagger)), $on: null);
+  }
+}
+
+.title {
+  @include typ('display-h1');
+  @include enter-heading(0.1s, $on: null);
+
+  color: var(--theme-text-primary);
+  text-wrap: balance;
+}
+
+// Display/H1 is two-tone: the statement in text/primary, the rest in text/secondary.
+.titleEnd {
+  color: var(--theme-text-secondary);
+}
+
+.lead {
+  @include typ('body-lg');
+  @include enter-lead(0.46s, $on: null);
+
+  color: var(--theme-text-primary);
+  margin-block-start: var(--space-12);
+  max-inline-size: 40rem;
+}
+
+.place {
+  // Generator window: X +88 → 0 on the spring, opacity 0.45 s.
+  @include enter(0.4s, $x: 5.5rem, $move: (entrance, spring), $on: null);
+
+  display: flex;
+  grid-row: 1;
+  min-inline-size: 0;
+
+  > * {
+    flex: 1;
   }
 
-  &-subtitle {
-    background: radial-gradient(45% 60% at 50% 50%, var(--2fas-bg-1) 50%, transparent 100%);
-    color: color-mix(in srgb, var(--2fas-text-color) 85%, transparent);
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
-    font-weight: 500;
-    line-height: 1.5;
-    max-width: 370px;
-    position: relative;
-
-    &::before,
-    &::after {
-      background: radial-gradient(40% 32% at 50% 45%, var(--2fas-bg-1) 20%, transparent 100%);
-      bottom: -50%;
-      content: '';
-      pointer-events: none;
-      position: absolute;
-      top: -50%;
-      width: 100%;
-      z-index: -1;
-
-      @media (max-width: 600px) {
-        display: none;
-      }
-    }
-
-    &::before {
-      left: -37.5%;
-    }
-
-    &::after {
-      right: -37.5%;
-    }
+  @include from(layout) {
+    grid-column: 2 / span 10;
   }
 
-  &-cta {
-    margin-top: 2rem;
-  }
-
-  &-pills {
-    container-type: inline-size;
-    height: 100%;
-    left: 50%;
-    max-width: 82rem;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    transform: translateX(-50%);
-    width: 100%;
-
-    @media (max-width: 919px) {
-      display: none;
-    }
-  }
-
-  &-pill {
-    @include pill;
-    animation: popIn 0.5s ease-out both;
-    position: absolute;
-    transform: translate(calc(-0.8125rem - 4.5px), 50%);
-
-    &.top-right {
-      animation-delay: 1.15s;
-      bottom: 36.7cqw;
-      left: 84%;
-
-      @include tablet {
-        bottom: 33.5cqw;
-        left: 80%;
-      }
-    }
-
-    &.bottom-right {
-      animation-delay: 1.3s;
-      bottom: 9.6cqw;
-      left: 79.8%;
-
-      @include tablet {
-        bottom: 10.4cqw;
-        left: 76%;
-      }
-    }
-
-    &.left {
-      animation-delay: 1.45s;
-      bottom: 24.3cqw;
-      left: 17.75%;
-      transform: translate(calc(-100% + 0.8125rem + 4.5px), 50%);
-
-      @include tablet {
-        bottom: 21.7cqw;
-        left: 20%;
-      }
-    }
-
-    &-dot {
-      @include pill-dot;
-    }
-
-    &-text {
-      @include pill-text;
-    }
+  @include from(desktop) {
+    grid-column: 7 / span 6;
   }
 }

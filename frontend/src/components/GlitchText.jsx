@@ -46,7 +46,7 @@ function getPrefixLength(text) {
 
 /**
  * Build a fresh chars array for animation.
- * @param {string} displayText - Text to render (may include trailing "...").
+ * @param {string} displayText - Text to render.
  * @param {number} prefixLen - Number of leading chars to lock (domain prefix).
  * @returns {Array<Object>} Character state objects.
  */
@@ -64,24 +64,55 @@ function buildChars(displayText, prefixLen = 0) {
 }
 
 /**
- * Compute visible text, truncating with "..." if needed.
- * @param {string} text - Full text.
- * @param {number} maxChars - Maximum characters that fit.
- * @returns {string} Text to display.
+ * Read the theme text colour from the design tokens.
+ * @returns {string} CSS colour of --theme-text-primary.
  */
-function truncate(text, maxChars) {
-  if (text.length <= maxChars) {
-    return text;
+function readTextColor() {
+  return getComputedStyle(document.documentElement).getPropertyValue('--theme-text-primary').trim() || 'currentColor';
+}
+
+/**
+ * Split the text into lines that fit the available width. A line prefers to
+ * break after a "/" in its second half, otherwise it breaks between any two
+ * characters (a URL has no spaces).
+ * @param {string} text - Full text.
+ * @param {number[]} widths - Width of every character.
+ * @param {number} availW - Available width in px.
+ * @returns {Array<{start: number, end: number}>} Character ranges per line.
+ */
+function wrapLines(text, widths, availW) {
+  const lines = [];
+  let start = 0;
+
+  while (start < text.length) {
+    let w = 0;
+    let end = start;
+
+    while (end < text.length && (w + widths[end] <= availW || end === start)) {
+      w += widths[end];
+      end++;
+    }
+
+    if (end < text.length) {
+      const slash = text.lastIndexOf('/', end - 1);
+
+      if (slash >= start && slash - start >= (end - start) / 2) {
+        end = slash + 1;
+      }
+    }
+
+    lines.push({ start, end });
+    start = end;
   }
 
-  const keep = Math.max(0, maxChars - 3);
-  return text.slice(0, keep) + '...';
+  return lines;
 }
 
 /**
  * Canvas-based glitch-scramble text effect.
- * Fills its parent width; truncates with "..." when the URL
- * is too long. Reacts to window resize via ResizeObserver.
+ * Fills its parent width and wraps onto as many lines as the text needs,
+ * using the font of the parent element. Reacts to resizes through a
+ * ResizeObserver and follows the theme colour (--theme-text-primary).
  * @param {Object} props
  * @param {string} props.text - The text to display.
  * @param {boolean} props.revealed - Whether to show the real text.
@@ -107,19 +138,10 @@ export default function GlitchText({ text, revealed }) {
 
     const ctx = canvas.getContext('2d');
     const dpr = Math.max(devicePixelRatio || 1, 1);
-    const fontSize = 12;
-    const font = `400 ${fontSize}px ui-monospace, SFMono-Regular, Menlo, monospace`;
-    const padY = Math.round(fontSize * 0.25);
-    const h = fontSize + padY * 2;
-
-    // Measure average char width (before any canvas resize resets ctx)
-    ctx.font = font;
-    const charW = ctx.measureText(text).width / text.length;
-
     const prefixLen = getPrefixLength(text);
 
     /**
-     * Resize canvas to fit parent and rebuild visible chars.
+     * Resize the canvas to the parent, measure the font and rebuild the lines.
      */
     function layout() {
       const availW = parent.clientWidth;
@@ -128,9 +150,15 @@ export default function GlitchText({ text, revealed }) {
         return;
       }
 
-      const maxChars = Math.floor(availW / charW);
-      const displayText = truncate(text, maxChars);
-      const visiblePrefix = Math.min(prefixLen, displayText.length);
+      const cs = getComputedStyle(parent);
+      const font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      const fontSize = parseFloat(cs.fontSize) || 16;
+      const lineH = parseFloat(cs.lineHeight) || Math.round(fontSize * 1.5);
+
+      ctx.font = font;
+      const widths = Array.from(text, (ch) => ctx.measureText(ch).width);
+      const lines = wrapLines(text, widths, availW);
+      const h = lines.length * lineH;
 
       canvas.width = Math.ceil(availW * dpr);
       canvas.height = Math.ceil(h * dpr);
@@ -138,8 +166,19 @@ export default function GlitchText({ text, revealed }) {
       canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+      const pos = [];
+
+      lines.forEach(({ start, end }, row) => {
+        let x = 0;
+
+        for (let i = start; i < end; i++) {
+          pos[i] = { x, y: row * lineH + lineH / 2 };
+          x += widths[i];
+        }
+      });
+
       const wasHovered = state.current?.hovered || false;
-      const chars = buildChars(displayText, visiblePrefix);
+      const chars = buildChars(text, prefixLen);
 
       if (wasHovered) {
         chars.forEach((c) => {
@@ -149,8 +188,16 @@ export default function GlitchText({ text, revealed }) {
       }
 
       const blurVal = wasHovered ? 0 : 1.5;
-      const textColor = getComputedStyle(document.documentElement).getPropertyValue('--2fas-text-color').trim();
-      state.current = { chars, charW, w: availW, h, font, hovered: wasHovered, last: 0, prefixLen: visiblePrefix, blur: blurVal, targetBlur: blurVal, textColor };
+      state.current = { chars, pos, w: availW, h, font, hovered: wasHovered, last: 0, prefixLen, blur: blurVal, targetBlur: blurVal, textColor: readTextColor() };
+    }
+
+    /**
+     * Re-read the theme colour after a theme change.
+     */
+    function syncColor() {
+      if (state.current) {
+        state.current.textColor = readTextColor();
+      }
     }
 
     layout();
@@ -159,9 +206,13 @@ export default function GlitchText({ text, revealed }) {
     ro.observe(parent);
 
     const mq = matchMedia('(prefers-color-scheme: dark)');
-    mq.addEventListener('change', layout);
+    mq.addEventListener('change', syncColor);
+    window.addEventListener('themechange', syncColor);
 
-    let raf;
+    const mo = new MutationObserver(syncColor);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  let raf;
 
     /**
      * Animation frame callback — draws every character.
@@ -191,7 +242,6 @@ export default function GlitchText({ text, revealed }) {
       ctx.clearRect(0, 0, s.w, s.h);
       ctx.font = s.font;
       ctx.textBaseline = 'middle';
-      const y = s.h / 2;
 
       // Prefix chars are never blurred; non-prefix chars blur when s.blur > 0
       ctx.filter = s.prefixLen > 0 ? 'none' : (s.blur > 0 ? `blur(${s.blur}px)` : 'none');
@@ -201,7 +251,7 @@ export default function GlitchText({ text, revealed }) {
           ctx.filter = s.blur > 0 ? `blur(${s.blur}px)` : 'none';
         }
         const c = s.chars[i];
-        const x = i * s.charW;
+        const { x, y } = s.pos[i];
 
         c.timer += dt;
 
@@ -269,7 +319,9 @@ export default function GlitchText({ text, revealed }) {
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
-      mq.removeEventListener('change', layout);
+      mo.disconnect();
+      mq.removeEventListener('change', syncColor);
+      window.removeEventListener('themechange', syncColor);
     };
   }, [text]);
 
@@ -319,7 +371,7 @@ export default function GlitchText({ text, revealed }) {
     return (
       <span
         style={{
-          font: '400 12px ui-monospace, SFMono-Regular, Menlo, monospace',
+          overflowWrap: 'anywhere',
           opacity: revealed ? 1 : 0.4,
           filter: revealed ? 'none' : 'blur(1.5px)'
         }}

@@ -5,149 +5,198 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-@use '@/styles/animations';
+// Section / 02 How it works and Section / 03 Four steps.
+
 @use '@/styles/variables' as *;
-@use '@/styles/pills' as *;
+@use '@/pages/Home/sections' as *;
 
-.how-to-use {
+// Entrance (Figma E · Motion, 02 and 03): times from each block's trigger.
+@include motion-keyframes;
+
+.howToUse {
+  @include anchor;
+
+  background: var(--theme-bg-surface);
+  border-start-end-radius: var(--radius-lg);
+  border-start-start-radius: var(--radius-lg);
+}
+
+// ── 02 How it works ─────────────────────────────────────────
+.head {
+  border-block-end: var(--stroke-1) solid var(--theme-border-default);
+}
+
+.headInner {
+  @include band-inner;
+}
+
+.eyebrow {
+  @include eyebrow;
+  @include aside;
+  @include enter-small(0s);
+
+  align-self: start;
+  color: var(--theme-text-primary);
+  padding-block: var(--space-section-block) 0;
+
+  @include from(layout) {
+    padding-block-end: var(--space-section-block);
+  }
+}
+
+.headMain {
+  @include main;
+
   display: flex;
-  gap: clamp(4rem, calc(100vw - 62rem), 16rem);
-  margin: 0 auto;
-  max-width: 82rem;
-  padding-top: clamp(3rem, 12vw, 10.0625rem);
-  text-align: left;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding-block: var(--space-section-block);
+}
 
-  @include tablet {
-    flex-direction: column;
-    gap: 2.5rem;
+.title {
+  @include heading;
+  @include enter-heading(0.05s);
+
+  color: var(--theme-text-primary);
+}
+
+// ── 03 Four steps ───────────────────────────────────────────
+.steps {
+  padding-block: var(--space-section-block-sm) var(--space-section-block);
+}
+
+.stepsInner {
+  @include container;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+// Mobile stacked, Tablet (768–1279) 2 × 2, Desktop four in a row.
+.list {
+  display: grid;
+  gap: var(--space-12);
+  list-style: none;
+
+  @include from(tablet) {
+    column-gap: var(--space-page-gutter);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--space-16);
   }
 
-  @include mobile {
-    gap: 2rem;
+  @include from(desktop) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+}
 
-  &-left {
-    align-self: flex-start;
-    animation: fadeInUp 0.6s ease-out 2s both;
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    gap: 1.125rem;
-    position: sticky;
-    top: 2rem;
-    width: 370px;
+// Card: opacity 0.45 s, Y +32 → 0 in 0.65 s ease-out, 0.12 s stagger (--i).
+.step {
+  padding-block-end: var(--space-8);
+  position: relative;
 
-    @include tablet {
-      position: static;
-      width: 100%;
-    }
-  }
+  @include enter(calc(var(--i, 0) * var(--motion-duration-stagger)), $y: 2rem, $move: (entrance, out));
 
-  &-pill {
-    @include pill;
-    align-self: flex-start;
-    color: var(--2fas-text-color);
-
-    &-dot {
-      @include pill-dot;
-    }
-
-    &-text {
-      @include pill-text;
-    }
-  }
-
-  &-title {
-    font-size: 3rem;
-    font-weight: 700;
-    line-height: 1;
-    white-space: pre-line;
-
-    @include tablet {
-      font-size: 2.25rem;
-      white-space: normal;
-    }
-
-    @include mobile {
-      font-size: clamp(2rem, 5vw, 2.5rem);
-    }
-  }
-
-  &-subtitle {
-    font-size: 1.25rem;
-    font-weight: 500;
-    line-height: 1.5;
-
-    @include mobile {
-      font-size: 1.0625rem;
-    }
-  }
-
-  &-cards {
-    display: grid;
-    gap: 1.25rem;
-    grid-template-columns: repeat(2, 1fr);
-
-    @media (max-width: 600px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  &-card {
-    animation: fadeInUp 0.6s ease-out both;
-    background: var(--2fas-card-bg);
-    border-radius: 21px;
-    box-shadow: var(--2fas-htu-card-shadow);
-    display: flex;
-    flex-direction: column;
-    gap: 2.8125rem;
-    padding: 1.375rem;
-
-    &:nth-child(1) { animation-delay: 2.6s; }
-    &:nth-child(2) { animation-delay: 2.75s; }
-    &:nth-child(3) { animation-delay: 2.9s; }
-    &:nth-child(4) { animation-delay: 3.05s; }
-
-    &-head {
-      align-items: flex-start;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    &-number {
-      font-size: 2.5rem;
-      font-weight: 400;
-      line-height: 1;
-      opacity: 0.2;
-    }
-
-    &-icon {
-      height: 49px;
-      width: 49px;
-
-      @include mobile {
-        height: 40px;
-        width: 40px;
+  // Hover (fine pointer): the card and the thumbnail frame stay still; only
+  // the components inside the thumbnail window zoom in slightly (StepPreview
+  // reads --preview-inner-zoom). Off with reduced motion.
+  @media (prefers-reduced-motion: no-preference) {
+    @include hover {
+      .thumb {
+        --preview-inner-zoom: 1.06;
+        --preview-inner-lift: -0.25rem;
       }
-    }
-
-    &-body {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    &-title {
-      font-size: 1.125rem;
-      font-weight: 700;
-      line-height: 1.4;
-    }
-
-    &-desc {
-      font-size: 1rem;
-      font-weight: 600;
-      line-height: 1.5;
-      opacity: 0.7;
     }
   }
 }
+
+.stepBody {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: var(--space-10);
+}
+
+.stepText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-inline-end: var(--space-6);
+  position: relative;
+}
+
+// "Optional" above the step 3 title (Caption, text/accent): in the flow on
+// mobile, from 768 px hung 1 px above the title in the gap under the
+// thumbnail (Figma: absolute, top −17 px), so the titles stay aligned.
+.optional {
+  @include typ('caption');
+  @include enter-small(calc(0.2s + var(--i, 0) * var(--motion-duration-stagger)));
+
+  color: var(--theme-text-accent);
+
+  @include from(tablet) {
+    inset-block-end: calc(100% + 1px);
+    inset-inline-start: 0;
+    position: absolute;
+  }
+}
+
+.stepTitle {
+  @include typ('heading-h3');
+  @include enter-small(calc(0.2s + var(--i, 0) * var(--motion-duration-stagger)));
+
+  color: var(--theme-text-primary);
+}
+
+.stepDesc {
+  @include typ('body-lg');
+  @include enter-fade(calc(0.32s + var(--i, 0) * var(--motion-duration-stagger)));
+
+  color: var(--theme-text-secondary);
+}
+
+// Security note after the thumbnails' sequence: fade at 3.75 s, its badge
+// scales 0.6 → 1 on the spring.
+.note {
+  @include typ('body-sm');
+  @include enter-fade(3.75s);
+
+  color: var(--theme-text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  @include from(tablet) {
+    align-items: center;
+    flex-direction: row;
+  }
+}
+
+// "your browser" in text/primary on the text/secondary line.
+.noteEmphasis {
+  color: var(--theme-text-primary);
+}
+
+// Icon badge: CTA gradient, radius/md, 16 px glyph on accent.
+.badge {
+  align-items: center;
+  background:
+    linear-gradient(180deg, var(--theme-page-cta-bg-start), var(--theme-page-cta-bg-end)) padding-box,
+    linear-gradient(180deg, var(--theme-page-cta-border-start), var(--theme-page-cta-border-end)) border-box;
+  block-size: 2rem;
+  border: var(--stroke-1) solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--theme-text-on-accent);
+  display: inline-flex;
+  flex-shrink: 0;
+  inline-size: 2rem;
+  justify-content: center;
+
+  @include enter(3.75s, $scale: 0.6, $fade: false, $hide: false);
+
+  svg {
+    block-size: 1rem;
+    inline-size: 1rem;
+  }
+}
+

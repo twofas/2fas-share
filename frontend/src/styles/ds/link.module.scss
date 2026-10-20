@@ -1,0 +1,93 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Link / inline (Tone=Subtle, Tone=Accent) and Link / nav.
+// Links inherit the font of the text they sit in; <a> always needs an href.
+
+@use '../variables' as *;
+
+// ── Link / inline ───────────────────────────────────────────
+// Subtle: gray, underline on hover only (footer, document navigation).
+.link {
+  @include interactive;
+
+  border-radius: var(--radius-full);
+  color: var(--theme-text-secondary);
+  text-decoration-color: transparent;
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--stroke-1);
+  text-underline-offset: 0.2em;
+
+  @include hover {
+    color: var(--theme-text-primary);
+    text-decoration-color: currentColor;
+  }
+}
+
+// Accent: in content and under a window, underlined at rest.
+.linkAccent {
+  color: var(--theme-text-accent);
+  text-decoration-color: currentColor;
+
+  @include hover {
+    color: var(--theme-text-primary);
+  }
+}
+
+// ── Link / nav ──────────────────────────────────────────────
+// On the navigation bar; the section in view carries aria-current="location".
+.navLink {
+  @include typ('label-nav');
+  @include interactive(color);
+
+  align-items: center;
+  border-radius: var(--radius-xs);
+  color: var(--theme-text-on-accent);
+  display: inline-flex;
+  gap: 0.5rem;
+  position: relative;
+
+  // 1 px rule under the text.
+  &::after {
+    background: var(--theme-nav-link-hover);
+    block-size: var(--stroke-1);
+    content: '';
+    inset-block-end: 0;
+    inset-inline: 0;
+    opacity: 0;
+    position: absolute;
+    transition:
+      opacity var(--motion-duration-hover) var(--motion-easing-standard),
+      background-color var(--motion-duration-hover) var(--motion-easing-standard);
+  }
+
+  @include hover {
+    color: var(--theme-nav-link-hover);
+
+    &::after {
+      opacity: 0.2;
+    }
+  }
+
+  &[aria-current='location'] {
+    color: var(--theme-text-on-accent);
+
+    &::after {
+      background: var(--theme-nav-cta-highlight);
+      opacity: 1;
+    }
+  }
+
+  @include focus-ring(var(--focus-ring-on-nav));
+
+  // External link arrow (arrow-right-up-line, 16 px, fixed 8 px gap).
+  svg {
+    block-size: 1rem;
+    flex-shrink: 0;
+    inline-size: 1rem;
+  }
+}

@@ -5,216 +5,136 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
+// 2FAS Pass content types inside Recipient / window: a stack of labelled
+// read-only fields (Field / password look, State=Readonly), eye toggles and
+// copy adornments, the Wi-Fi QR on a white tile.
+
 @use '@/styles/variables' as *;
 
-// Title block above the data display + bordered container + header
-.data {
-  &-title {
-    margin-bottom: 1.75rem;
-    text-align: center;
-
-    h2 {
-      font-size: 1.75rem;
-      font-size: clamp(1.5rem, 4vw, 1.75rem);
-      font-weight: 700;
-      letter-spacing: -.84px;
-      line-height: 1.2857;
-    }
-
-    p {
-      font-size: 1rem;
-      font-weight: 400;
-      line-height: 1.25;
-      white-space: pre-wrap;
-
-      @include mobile {
-        font-size: 0.875rem;
-      }
-    }
-  }
-
-  &-container {
-    border: 1px solid var(--2fas-box-border);
-    border-radius: 21px;
-    overflow: hidden;
-  }
-
-  &-header {
-    background-color: var(--2fas-box-border);
-    padding: 0.625rem 0.9375rem;
-
-    h6 {
-      font-size: 1.125rem;
-      font-size: clamp(1rem, 2.2vw, 1.125rem);
-      font-weight: 700;
-      line-height: 1.72;
-    }
-  }
-
-  &-row {
-    align-items: flex-start;
-    border-bottom: 1px solid var(--2fas-box-border);
-    display: flex;
-    gap: 0.5rem;
-    padding: 1rem 0.8125rem;
-
-    @include mobile {
-      flex-wrap: wrap;
-    }
-
-    &:last-child {
-      border-bottom: none;
-    }
-  }
-}
-
-// Row-based field layout
-.row {
-  &-label {
-    color: var(--2fas-box-muted);
-    flex-shrink: 0;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.48px;
-    line-height: 1.25rem;
-    text-transform: uppercase;
-    width: 9.5rem;
-
-    @include mobile {
-      width: 100%;
-    }
-  }
-
-  &-value {
-    flex: 1;
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.25rem;
-    min-width: 0;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-
-  &-actions {
-    display: flex;
-    flex-shrink: 0;
-    gap: 0.5rem;
-  }
-}
-
-
-// Copy button
-.copy {
-  &-button {
-    align-items: center;
-    color: var(--2fas-box-muted);
-    display: inline-flex;
-    flex-shrink: 0;
-    height: 24px;
-    justify-content: center;
-    transition: color 0.2s ease;
-    width: 21px;
-
-    &:hover {
-      color: var(--2fas-text-color);
-    }
-  }
-
-  &-icon {
-    background-color: currentColor;
-    display: block;
-    height: 20px;
-    mask-image: url('../../../../assets/copy.svg');
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    width: 17px;
-  }
-}
-
-// Check icon (copied state) — size differs from .copyIcon; .copyButton has
-// fixed dimensions so the icon swap doesn't change row height.
-.check {
-  &-icon {
-    color: var(--2fas-success);
-    display: block;
-    height: 12px;
-    width: 15px;
-  }
-}
-
-// WiFi QR code block (above field rows)
-.wifi-qr {
-  border-bottom: 1px solid var(--2fas-box-border);
+.fields {
   display: flex;
   flex-direction: column;
+  gap: var(--space-4);
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-inline-size: 0;
+}
+
+.row-label {
+  @include typ('label-sm');
+
+  color: var(--theme-text-secondary);
+}
+
+// Read-only box: bg/surface, border/subtle, radius/sm, 48 px.
+.box {
   align-items: center;
-  padding: 1.5rem 0.8125rem;
+  background: var(--theme-bg-surface);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-sm);
+  display: flex;
+  gap: var(--space-3);
+  min-block-size: 3rem;
+  padding-block: var(--space-3);
+  padding-inline: var(--space-4) var(--space-3);
+}
 
-  &-canvas {
-    background-color: #fff;
-    border-radius: 8px;
-    display: inline-block;
-    padding: 0.75rem;
+.box-multiline {
+  align-items: flex-start;
+}
 
-    canvas {
-      display: block;
-    }
+.row-value {
+  @include typ('body-base');
 
-    @include mobile {
-      max-width: 100%;
+  color: var(--theme-text-primary);
+  flex: 1;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  user-select: text;
+  white-space: pre-wrap;
+}
 
-      canvas {
-        max-width: 100%;
-        height: auto !important;
-      }
-    }
-  }
+.row-masked {
+  font-size: 0.75em;
+  letter-spacing: 0.12em;
+}
 
-  &-label {
-    color: var(--2fas-box-muted);
-    font-size: 0.875rem;
-    font-weight: 400;
-    line-height: 1.4;
-    margin-top: 0.75rem;
+.row-actions {
+  align-items: center;
+  align-self: flex-start;
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-4);
+  min-block-size: 1.5rem;
+}
+
+// Login URIs: one box per address, link on one line with an ellipsis.
+.uri-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.uri-link {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// A link fills the height of its 48 px box, so the target is 44 px+ on touch.
+a.uri-link {
+  align-self: stretch;
+  line-height: 3rem;
+  margin-block: calc(-1 * var(--space-3));
+}
+
+// Wi-Fi: QR on a white tile (scanners need dark on light in both themes).
+.wifi-qr {
+  align-items: center;
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+
+  @include from(tablet) {
+    flex-direction: row;
+    gap: var(--space-6);
   }
 }
 
-// URI list
-.uri {
-  &-list {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 0.25rem;
-    min-width: 0;
+.wifi-qr-canvas {
+  background: var(--color-base-white);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  padding: var(--space-3);
+
+  canvas {
+    block-size: 8.5rem !important;
+    display: block;
+    inline-size: 8.5rem !important;
   }
+}
 
-  &-row {
-    align-items: center;
-    display: flex;
-    gap: 0.5rem;
-    min-width: 0;
-    overflow: hidden;
-  }
+.wifi-qr-label {
+  @include typ('label-strong');
 
-  &-link,
-  &-text {
-    flex: 1;
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.25;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  align-items: center;
+  color: var(--theme-text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  text-align: center;
 
-  &-link {
-    color: var(--2fas-link);
-
-    &:hover {
-      text-decoration: underline;
-    }
+  @include from(tablet) {
+    align-items: flex-start;
+    text-align: start;
   }
 }

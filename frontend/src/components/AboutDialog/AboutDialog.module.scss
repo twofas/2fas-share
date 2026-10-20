@@ -1,0 +1,173 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Dialog / about: a double frame like the generator window, but the ring sits
+// on bg/surface (glass turns gray over the scrim). Opening: scrim by opacity
+// in 320 ms, window by opacity and scale 0.98 → 1 in 400 ms; closing 320 ms.
+
+@use '@/styles/variables' as *;
+
+.dialog {
+  background: var(--theme-bg-surface);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--elevation-dialog);
+  color: var(--theme-text-primary);
+  inline-size: min(var(--size-column-narrow), calc(100vw - 2 * var(--space-page-margin)));
+  margin: auto;
+  max-block-size: calc(100dvh - 2 * var(--space-6));
+  max-inline-size: none;
+  opacity: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-4);
+  scale: 0.98;
+  transition:
+    opacity var(--motion-duration-hover) var(--motion-easing-standard),
+    scale var(--motion-duration-hover) var(--motion-easing-standard),
+    overlay var(--motion-duration-hover) allow-discrete,
+    display var(--motion-duration-hover) allow-discrete;
+
+  &[open] {
+    opacity: 1;
+    scale: 1;
+    transition-duration: var(--motion-duration-expand);
+
+    @starting-style {
+      opacity: 0;
+      scale: 0.98;
+    }
+  }
+
+  &::backdrop {
+    background: var(--theme-overlay-scrim);
+    opacity: 0;
+    transition:
+      opacity var(--motion-duration-hover) var(--motion-easing-standard),
+      overlay var(--motion-duration-hover) allow-discrete,
+      display var(--motion-duration-hover) allow-discrete;
+  }
+
+  &[open]::backdrop {
+    opacity: 1;
+
+    @starting-style {
+      opacity: 0;
+    }
+  }
+}
+
+.card {
+  background: var(--theme-bg-raised);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+
+  @include from(tablet) {
+    border-radius: var(--radius-lg);
+  }
+}
+
+.header {
+  align-items: center;
+  display: flex;
+  gap: var(--space-4);
+  justify-content: space-between;
+}
+
+.title {
+  @include typ('heading-h3');
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.close {
+  background: var(--theme-bg-muted);
+
+  // 44 px touch target in Layout=Mobile (doubled class: wins over Button / icon).
+  &.close {
+    @include below(layout) {
+      block-size: 2.75rem;
+      inline-size: 2.75rem;
+    }
+  }
+}
+
+.lead {
+  @include typ('body-base');
+
+  color: var(--theme-text-secondary);
+}
+
+// Numbered steps: the number in a 24 px muted disc.
+.steps {
+  @include typ('body-sm');
+
+  counter-reset: step;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  list-style: none;
+
+  li {
+    counter-increment: step;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 1.5rem 1fr;
+
+    &::before {
+      @include typ('caption');
+
+      align-items: center;
+      background: var(--theme-bg-muted);
+      block-size: 1.5rem;
+      border: var(--stroke-1) solid var(--theme-border-subtle);
+      border-radius: var(--radius-full);
+      color: var(--theme-text-primary);
+      content: counter(step);
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
+
+.footer {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-block: var(--space-4) var(--space-6);
+}
+
+.back {
+  width: 100%;
+
+  // CTA Big is 48 px high in Layout=Mobile.
+  &.back {
+    @include below(layout) {
+      min-block-size: 3rem;
+    }
+  }
+}
+
+// Body/sm link with a 24 px touch target, 44 px in Layout=Mobile.
+.github {
+  @include typ('body-sm');
+
+  padding-block: 0.125rem;
+
+  @include below(layout) {
+    align-items: center;
+    display: inline-flex;
+    min-block-size: 2.75rem;
+  }
+}

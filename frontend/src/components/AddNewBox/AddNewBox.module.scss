@@ -5,208 +5,366 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
+// Generator / dialog: six states (Empty, Creating, Error, Custom, Ready,
+// Copied) in one glass window. The window height is a min-height token, the
+// content field takes the free space, a message or the custom block grows
+// the window instead of shrinking the field.
+
 @use '@/styles/variables' as *;
+@use '@/styles/animations';
 
-// View wrappers — override .page-box constraints
-.add-box {
-  &-legal-consent {
-    color: var(--2fas-text-color);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    line-height: 1.25rem;
-    margin-top: 0.625rem;
-    opacity: 0.7;
-    text-align: center;
+// ── Window ──────────────────────────────────────────────────
+.window {
+  margin-inline: auto;
+}
 
-    a {
-      text-decoration: underline;
-    }
+.hero {
+  min-block-size: var(--size-generator-height);
+}
+
+.full {
+  max-inline-size: var(--size-column-generator);
+  min-block-size: var(--size-generator-full-height);
+}
+
+.content,
+.view {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.card {
+  flex: 1;
+}
+
+// First section of the card: the content field and the expiry choice.
+.main {
+  flex: 1;
+}
+
+.noteStack {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+// The stack gap (8 px) already separates the message from the field.
+.stackMessage.stackMessage {
+  margin-block-start: 0;
+}
+
+.note {
+  field-sizing: content;
+  flex: 1 0 auto;
+  max-block-size: 60vh;
+  overflow-y: auto;
+  resize: none;
+}
+
+// ── Expiry (Segmented / expiry and Generator / custom expiry) ──
+.group {
+  border: 0;
+  margin: 0;
+  min-inline-size: 0;
+  padding: 0;
+
+  &:disabled .track {
+    opacity: var(--opacity-disabled);
+  }
+}
+
+.groupLabel {
+  @include typ('label-strong');
+
+  color: var(--theme-text-primary);
+  float: inline-start;
+  margin-block-end: var(--space-1);
+  padding: 0;
+  width: 100%;
+}
+
+.track {
+  clear: both;
+}
+
+// Custom track: 4 px gap between pills (Figma options frame).
+.trackCustom {
+  gap: var(--space-1);
+}
+
+.custom {
+  // Room for the focus ring of the pills inside the clipped block.
+  margin: -0.25rem;
+  padding: 0.25rem;
+
+  .groupLabel {
+    margin-block-end: var(--space-2);
+  }
+}
+
+// The block sits in the section stack; when collapsed it gives back its gap.
+.collapse.customCollapse {
+  margin-block-start: calc(-1 * var(--space-4));
+  transition:
+    grid-template-rows var(--motion-duration-expand) var(--motion-easing-standard),
+    margin-block-start var(--motion-duration-expand) var(--motion-easing-standard);
+
+  &.expanded {
+    margin-block-start: 0;
+  }
+}
+
+// Short pill labels below 768 px ("1 h", "24 h", "7 days"), full ones above.
+.labelShort {
+  @include from(tablet) {
+    display: none;
+  }
+}
+
+.labelLong {
+  @include below(tablet) {
+    display: none;
+  }
+}
+
+// ── Generator / option row ──────────────────────────────────
+.option {
+  gap: 0;
+}
+
+.optionRow {
+  align-items: center;
+  display: flex;
+  gap: var(--space-4);
+  justify-content: space-between;
+
+  &:has(:disabled) .optionText {
+    opacity: var(--opacity-disabled);
+  }
+}
+
+.optionText {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.optionTitle {
+  @include typ('body-sm');
+
+  color: var(--theme-text-primary);
+}
+
+// "(optional)" after the password title, in text/secondary.
+.optional {
+  color: var(--theme-text-secondary);
+}
+
+.optionDesc {
+  @include typ('body-xs');
+
+  color: var(--theme-text-secondary);
+}
+
+// Password field under the row, expanded in 400 ms.
+.collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--motion-duration-expand) var(--motion-easing-standard);
+}
+
+.expanded {
+  grid-template-rows: 1fr;
+}
+
+.collapseInner {
+  min-block-size: 0;
+  overflow: hidden;
+
+  // Keep the focus glow of the field visible inside the clipped area.
+  margin-inline: -0.25rem;
+  padding-inline: 0.25rem;
+}
+
+// Padding lives inside the clipped content, so it grows with the animation
+// instead of appearing in one step.
+.collapseBody {
+  padding-block: var(--space-3) 0.25rem;
+}
+
+// ── Footer ──────────────────────────────────────────────────
+.footer {
+  margin-block-start: auto;
+}
+
+.cta {
+  inline-size: 100%;
+
+  // Error: aria-disabled carries the semantics, the look stays Default.
+  &[aria-disabled='true']:not([aria-busy='true']) {
+    cursor: pointer;
+    opacity: 1;
+  }
+}
+
+.submitError {
+  align-self: stretch;
+  text-align: start;
+
+  &:empty {
+    display: none;
   }
 
-  &-form {
-    box-shadow: var(--2fas-form-shadow);
-    display: inline-block;
-    max-width: 100%;
-    min-width: min(592px, 100%);
-    overflow: visible;
+  > p {
+    margin-block-start: 0;
+  }
+}
+
+.legal {
+  @include typ('body-xs');
+
+  color: var(--theme-text-primary);
+  text-wrap: balance;
+}
+
+// ── Ready / Copied ──────────────────────────────────────────
+.ready {
+  align-items: center;
+  gap: var(--space-6);
+  justify-content: center;
+  position: relative;
+  text-align: center;
+}
+
+.readyStar {
+  block-size: 1.5rem;
+  color: var(--theme-text-primary);
+  inline-size: 1.5rem;
+  inset-block-start: var(--space-6);
+  inset-inline-end: var(--space-6);
+  position: absolute;
+}
+
+.success {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.readyTitle {
+  @include typ('heading-h3');
+
+  color: var(--theme-text-primary);
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.readyCaption {
+  @include typ('body-sm');
+
+  color: var(--theme-text-secondary);
+}
+
+// Link field: Field / textarea State=Readonly; the 44 px copy button sits
+// 12 px from the top right corner, the text keeps 68 px clear of it.
+.linkField {
+  align-self: stretch;
+  background: var(--theme-bg-surface);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-sm);
+  min-block-size: 3.5rem;
+  padding: var(--space-4) 4.25rem var(--space-4) var(--space-4);
+  position: relative;
+  text-align: start;
+}
+
+.linkValue {
+  @include typ('body-base');
+
+  color: var(--theme-text-primary);
+  flex: 1;
+  min-inline-size: 0;
+
+  canvas {
+    display: block;
+  }
+}
+
+.linkCopy.linkCopy {
+  block-size: 2.75rem;
+  inline-size: 2.75rem;
+  inset-block-start: 0.75rem;
+  inset-inline-end: 0.75rem;
+  position: absolute;
+
+  svg {
+    block-size: 1.5rem;
+    inline-size: 1.5rem;
+  }
+}
+
+.facts {
+  justify-content: center;
+}
+
+// Password chip (Tone=Accent) with its own copy button.
+.chipAction {
+  padding-inline-end: 0.25rem;
+}
+
+.chipButton {
+  @include interactive(color, background-color);
+
+  align-items: center;
+  block-size: 1.5rem;
+  border-radius: var(--radius-full);
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  inline-size: 1.5rem;
+  justify-content: center;
+  position: relative;
+
+  &::after {
+    content: '';
+    inset: -0.625rem;
+    position: absolute;
   }
 
-  &-result {
-    box-shadow: var(--2fas-form-shadow);
-    display: inline-block;
-    max-width: 100%;
-    padding: 1.6875rem 2.5rem 2.6875rem;
-    width: 583px;
+  @include hover {
+    background: var(--theme-bg-raised);
+    color: var(--theme-text-primary);
+  }
 
-    @include tablet {
-      max-width: 100%;
-      width: 100%;
+  @include focus-ring;
+}
+
+// Ready footer: 12 px between the CTA and "Create new link"; on a phone
+// the link is a 44 px touch target and the footer ends 4 px lower.
+.footerReady {
+  gap: 0.75rem;
+
+  // Doubled class: wins over the padding of WindowFooter.
+  &.footerReady {
+    @include below(layout) {
+      padding-block-end: 0.25rem;
     }
   }
 }
 
-// Animated error (grid-template-rows 0fr → 1fr)
-.error {
-  &-wrap {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.25s ease-out;
+.newLink {
+  @include typ('body-sm');
 
-    &.error-visible {
-      grid-template-rows: 1fr;
-    }
-  }
+  cursor: pointer;
 
-  &-inner {
-    overflow: hidden;
-  }
+  @include focus-ring;
 
-  // Modifier: small top gap (password errors)
-  &-field {
-    margin-top: 0.375rem;
-  }
-
-  // Modifier: submit error below button
-  &-submit {
-    margin-top: 1rem;
-    margin-bottom: 0;
-  }
-
-  // Modifier: reserves a 1.375rem slot below the animated track so the error pill
-  // always has breathing room above the next section. Applied to the grid container
-  // itself (outside the tracks) to avoid negative margins — Safari mishandles
-  // negative top margins on grid containers with grid-template-rows: 0fr.
-  &-note {
-    padding-bottom: 1.375rem;
-  }
-}
-
-// Result content
-.result-section {
-  text-align: left;
-
-  &-heading {
-    color: var(--2fas-text-color);
-    font-size: 1.125rem;
-    font-size: clamp(1rem, 2.2vw, 1.125rem);
-    font-weight: 700;
-    margin-bottom: 1.0625rem;
-    text-align: center;
-  }
-
-  // Pill-shaped link field with icon
-  &-link {
-    align-items: center;
-    border: 1px solid var(--2fas-box-border);
-    border-radius: 38px;
-    display: flex;
-    height: 48px;
-    margin-bottom: 0.75rem;
-    padding: 0 0.9375rem;
-
-    @include small-mobile {
-      word-break: break-all;
-    }
-
-    &-url {
-      flex: 1;
-      margin: 0 1.875rem;
-      min-width: 0;
-      overflow: hidden;
-
-      @include mobile {
-        margin: 0 0.75rem;
-      }
-
-      canvas {
-        display: block;
-      }
-
-      span {
-        display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
-  }
-
-  // Share settings summary
-  &-settings {
-    margin-bottom: 1.4375rem;
-
-    &-heading {
-      color: var(--2fas-box-muted);
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 500;
-      margin-bottom: 1.0625rem;
-    }
-
-    &-row {
-      align-items: center;
-      display: flex;
-      gap: 0.3125rem;
-      min-height: 3.5rem;
-
-      & + & {
-        margin-top: 1.3125rem;
-      }
-    }
-
-    &-text {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-      gap: 0.1875rem;
-      min-width: 0;
-      padding-left: 2px;
-    }
-
-    &-title {
-      color: var(--2fas-text-color);
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: -0.23px;
-    }
-
-    &-desc {
-      color: var(--2fas-box-muted);
-      font-size: 1rem;
-      line-height: 1.25;
-    }
-
-    &-value {
-      color: var(--2fas-text-color);
-      flex-shrink: 0;
-      font-size: 0.875rem;
-      font-weight: 500;
-      letter-spacing: -0.23px;
-      white-space: nowrap;
-    }
-
-    &-check {
-      color: var(--2fas-box-muted);
-      flex-shrink: 0;
-      height: auto;
-      padding-left: 0.875rem;
-      width: 24px;
-    }
-
-    &-copy {
-      color: var(--2fas-text-color);
-      flex-shrink: 0;
-      transition: opacity 0.15s ease;
-
-      svg {
-        display: block;
-        height: 20px;
-        width: 20px;
-      }
-
-      &:hover {
-        opacity: 0.7;
-      }
-    }
+  @include below(layout) {
+    min-block-size: 2.75rem;
   }
 }

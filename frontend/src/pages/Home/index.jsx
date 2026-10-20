@@ -7,21 +7,25 @@
 
 import WelcomeSection from '../../components/WelcomeSection';
 import HowToUse from '../../components/HowToUse';
+import EncryptionBand from '../../components/EncryptionBand';
+import Features from '../../components/Features';
+import Faq from '../../components/Faq';
 import Banner from '../../components/Banner';
-import SecurityPrivacy from '../../components/SecurityPrivacy';
-import { t } from '@/i18n';
 
 /**
- * Home landing page.
+ * Home landing page: hero with the generator, then sections 02–06
+ * (how it works and the four steps, encryption band, features, FAQ, final CTA).
  * @returns {import('preact').JSX.Element} The home page.
  */
-export default function Home() {
+export default function Home () {
   return (
     <main>
       <WelcomeSection />
       <HowToUse />
+      <EncryptionBand />
+      <Features />
+      <Faq />
       <Banner />
-      <SecurityPrivacy />
     </main>
   );
 }

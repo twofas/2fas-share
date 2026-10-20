@@ -1,0 +1,43 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Row of benefits with the star mark: a column on a phone, a row from 768 px.
+
+@use '@/styles/variables' as *;
+
+.benefits {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+
+  @include from(tablet) {
+    column-gap: var(--space-5);
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+.centered {
+  align-items: center;
+  justify-content: center;
+}
+
+.item {
+  @include typ('body-base');
+
+  align-items: center;
+  color: var(--theme-text-primary);
+  display: inline-flex;
+  gap: var(--space-2);
+}
+
+.star {
+  block-size: 0.9375rem;
+  flex-shrink: 0;
+  inline-size: 0.9375rem;
+}

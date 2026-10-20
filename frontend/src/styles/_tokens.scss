@@ -1,0 +1,487 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Design tokens from the Figma file "Share", collections theme, type-scale,
+// space-scale and motion. Names follow the Figma code syntax (WEB), so
+// `theme/text/primary` is `var(--theme-text-primary)`. Components bind to
+// theme/* tokens only; color/* primitives exist for the theme layer.
+
+// ── Primitives ─────────────────────────────────────────────
+:root {
+  --color-base-black: #0b0712;
+  --color-base-black-a60: #0b071299;
+  --color-base-black-a80: #0b0712cc;
+  --color-base-white: #ffffff;
+  --color-base-white-a08: #ffffff14;
+  --color-base-white-a12: #ffffff1f;
+  --color-base-white-a20: #ffffff33;
+  --color-base-white-a80: #ffffffcc;
+  --color-gray-50: #f8f8f8;
+  --color-gray-100: #f0f0f1;
+  --color-gray-200: #e4e4e5;
+  --color-gray-300: #d1d0d2;
+  --color-gray-400: #aaa8ac;
+  --color-gray-450: #8a888e;
+  --color-gray-500: #807e84;
+  --color-gray-550: #636268;
+  --color-gray-600: #5e5b63;
+  --color-gray-700: #413e46;
+  --color-gray-800: #28252e;
+  --color-gray-800-a85: #28252ed9;
+  --color-gray-900: #17131e;
+  --color-gray-950: #0b0712;
+  --color-red-50: #fef3f2;
+  --color-red-200: #fecdca;
+  --color-red-400: #ff8a85;
+  --color-red-500: #e5484d;
+  --color-red-600: #d92d20;
+  --color-red-700: #b42318;
+  --color-red-900: #7a271a;
+  --color-red-950: #55160c;
+  --color-violet-50: #f5ebff;
+  --color-violet-100: #e8d1ff;
+  --color-violet-200: #d2a6ff;
+  --color-violet-300: #b975ff;
+  --color-violet-300-a65: #b975ffa6;
+  --color-violet-400: #a047ff;
+  --color-violet-450: #931aff;
+  --color-violet-500: #8800ff;
+  --color-violet-500-a25: #8800ff40;
+  --color-violet-500-a45: #8800ff73;
+  --color-violet-600: #7400da;
+  --color-violet-700: #5e00b0;
+  --color-violet-800: #4a008c;
+  --color-violet-900: #3a006e;
+  --color-violet-950: #25004a;
+
+  // Typography
+  --type-family-sans: Inter, 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --type-weight-regular: 400;
+  --type-weight-medium: 500;
+
+  // Stroke
+  --stroke-0: 0;
+  --stroke-hairline: 0.5px;
+  --stroke-1: 1px;
+  --stroke-2: 2px;
+  --stroke-4: 4px;
+
+  // Radius
+  --radius-none: 0;
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-base: 1rem;
+  --radius-md: 1.5rem;
+  --radius-control: 1.75rem;
+  --radius-lg: 2rem;
+  --radius-xl: 2.25rem;
+  --radius-2xl: 3rem;
+  --radius-full: 9999px;
+
+  // State
+  --opacity-disabled: 0.5;
+}
+
+// ── Motion ─────────────────────────────────────────────────
+// One standard curve for every microinteraction; duration grows with distance.
+:root {
+  --motion-duration-press: 120ms;
+  --motion-duration-stagger: 120ms;
+  --motion-duration-hover: 320ms;
+  --motion-duration-toggle: 320ms;
+  --motion-duration-expand: 400ms;
+  --motion-duration-reveal: 450ms;
+  --motion-duration-layout: 480ms;
+  --motion-duration-entrance: 650ms;
+  --motion-duration-scroll: 800ms;
+
+  --motion-easing-standard: cubic-bezier(0.4, 0, 0.6, 1);
+  --motion-easing-out: cubic-bezier(0, 0, 0.58, 1);
+  --motion-easing-in: cubic-bezier(0.42, 0, 1, 1);
+  --motion-easing-in-out: cubic-bezier(0.42, 0, 0.58, 1);
+  --motion-easing-overshoot: cubic-bezier(0.22, 1.2, 0.36, 1);
+  // Figma spring, bounce 0.24 (damping 0.76), sampled for a 650 ms entrance.
+  --motion-easing-spring: linear(0, 0.03, 0.105, 0.205, 0.317, 0.431, 0.539, 0.638, 0.725, 0.798, 0.859, 0.908, 0.946, 0.974, 0.995, 1.009, 1.018, 1.023, 1.025, 1.025, 1.024, 1.021, 1.019, 1.016, 1);
+}
+
+// ── Theme: Light (default) ─────────────────────────────────
+:root {
+  color-scheme: light;
+
+  --theme-accent-border: var(--color-violet-450);
+  --theme-accent-border-strong: var(--color-violet-400);
+  --theme-accent-default: var(--color-violet-450);
+  --theme-accent-surface: var(--color-violet-600);
+  --theme-accent-surface-end: var(--color-violet-450);
+  --theme-bg-canvas: var(--color-base-white);
+  --theme-bg-inverse: var(--color-gray-950);
+  --theme-bg-muted: var(--color-gray-50);
+  --theme-bg-nav: var(--color-gray-800-a85);
+  --theme-bg-nav-scrolled: #060506;
+  --theme-bg-raised: var(--color-base-white);
+  --theme-bg-surface: var(--color-gray-50);
+  --theme-border-default: var(--color-gray-200);
+  --theme-border-focus: var(--color-violet-500);
+  --theme-border-subtle: var(--color-gray-100);
+  --theme-button-ghost-bg-hover: var(--color-gray-100);
+  --theme-button-ghost-bg-pressed: var(--color-gray-200);
+  --theme-button-ghost-text: var(--color-gray-950);
+  --theme-button-secondary-bg: var(--color-base-white);
+  --theme-button-secondary-bg-hover: var(--color-gray-100);
+  --theme-button-secondary-bg-pressed: var(--color-gray-200);
+  --theme-button-secondary-border: var(--color-gray-200);
+  --theme-button-secondary-text: var(--color-gray-950);
+  --theme-control-knob: var(--color-base-white);
+  --theme-control-track: var(--color-gray-200);
+  --theme-control-track-off: var(--color-gray-450);
+  --theme-control-track-off-hover: var(--color-gray-500);
+  --theme-control-track-on: var(--color-violet-450);
+  --theme-control-track-on-hover: var(--color-violet-600);
+  --theme-decor-arc-light: var(--color-violet-500-a45);
+  --theme-feedback-error: var(--color-red-600);
+  --theme-feedback-error-border: var(--color-red-200);
+  --theme-feedback-error-surface: var(--color-red-50);
+  --theme-feedback-error-text: var(--color-red-700);
+  --theme-feedback-info-border: var(--color-violet-100);
+  --theme-feedback-info-ring: var(--color-violet-50);
+  --theme-feedback-info-surface: var(--color-violet-50);
+  --theme-field-border: var(--color-gray-300);
+  --theme-field-border-hover: var(--color-gray-450);
+  --theme-field-focus-glow: var(--color-violet-500-a25);
+  --theme-glass-fill: var(--color-base-white-a08);
+  --theme-nav-border: var(--color-base-white-a12);
+  --theme-nav-control-bg-hover: var(--color-base-white-a08);
+  --theme-nav-control-bg-pressed: var(--color-base-white-a12);
+  --theme-nav-control-border: var(--color-base-white-a20);
+  --theme-nav-cta-bg-end: var(--color-violet-600);
+  --theme-nav-cta-bg-end-hover: var(--color-violet-700);
+  --theme-nav-cta-bg-end-pressed: var(--color-violet-800);
+  --theme-nav-cta-bg-start: var(--color-violet-450);
+  --theme-nav-cta-bg-start-hover: var(--color-violet-600);
+  --theme-nav-cta-bg-start-pressed: var(--color-violet-700);
+  --theme-nav-cta-highlight: var(--color-violet-300);
+  --theme-nav-link-hover: var(--color-violet-200);
+  --theme-overlay-scrim: var(--color-base-black-a60);
+  --theme-page-cta-bg-end: var(--color-violet-600);
+  --theme-page-cta-bg-end-hover: var(--color-violet-700);
+  --theme-page-cta-bg-end-pressed: var(--color-violet-800);
+  --theme-page-cta-bg-start: var(--color-violet-450);
+  --theme-page-cta-bg-start-hover: var(--color-violet-600);
+  --theme-page-cta-bg-start-pressed: var(--color-violet-700);
+  --theme-page-cta-border-end: var(--color-violet-700);
+  --theme-page-cta-border-start: var(--color-violet-450);
+  --theme-page-cta-focus: var(--color-violet-600);
+  --theme-page-cta-highlight: var(--color-violet-300);
+  --theme-shadow-color: #0000001f;
+  --theme-text-accent: var(--color-violet-600);
+  --theme-text-inverse: var(--color-base-white);
+  --theme-text-on-accent: var(--color-base-white);
+  --theme-text-primary: var(--color-gray-950);
+  --theme-text-secondary: var(--color-gray-600);
+  --theme-text-subtle: var(--color-gray-550);
+}
+
+// ── Theme: Dark ────────────────────────────────────────────
+// Follows the system unless the page pins a theme with data-theme.
+@mixin theme-dark {
+  color-scheme: dark;
+  --theme-accent-border: var(--color-violet-500);
+  --theme-accent-default: var(--color-violet-500);
+  --theme-accent-surface: var(--color-violet-700);
+  --theme-accent-surface-end: var(--color-violet-500);
+  --theme-bg-canvas: var(--color-gray-950);
+  --theme-bg-inverse: var(--color-base-white);
+  --theme-bg-muted: var(--color-gray-700);
+  --theme-bg-nav-scrolled: #28252e;
+  --theme-bg-raised: var(--color-gray-800);
+  --theme-bg-surface: var(--color-gray-900);
+  --theme-border-default: var(--color-base-white-a12);
+  --theme-border-focus: var(--color-violet-400);
+  --theme-border-subtle: var(--color-base-white-a08);
+  --theme-button-ghost-bg-hover: var(--color-gray-800);
+  --theme-button-ghost-bg-pressed: var(--color-gray-700);
+  --theme-button-ghost-text: var(--color-gray-50);
+  --theme-button-secondary-bg: var(--color-gray-800);
+  --theme-button-secondary-bg-hover: var(--color-gray-700);
+  --theme-button-secondary-bg-pressed: var(--color-gray-600);
+  --theme-button-secondary-border: var(--color-gray-700);
+  --theme-button-secondary-text: var(--color-gray-50);
+  --theme-control-knob: var(--color-gray-50);
+  --theme-control-track: var(--color-gray-900);
+  --theme-control-track-off: var(--color-gray-500);
+  --theme-control-track-off-hover: var(--color-gray-400);
+  --theme-control-track-on: var(--color-violet-500);
+  --theme-decor-arc-light: var(--color-violet-300-a65);
+  --theme-feedback-error: var(--color-red-500);
+  --theme-feedback-error-border: var(--color-red-700);
+  --theme-feedback-error-surface: var(--color-red-950);
+  --theme-feedback-error-text: var(--color-red-400);
+  --theme-feedback-info-border: var(--color-violet-700);
+  --theme-feedback-info-ring: var(--color-violet-500-a25);
+  --theme-feedback-info-surface: var(--color-violet-950);
+  --theme-field-border: var(--color-gray-800);
+  --theme-field-border-hover: var(--color-gray-550);
+  --theme-overlay-scrim: var(--color-base-black-a80);
+  --theme-page-cta-bg-end: var(--color-violet-700);
+  --theme-page-cta-bg-end-hover: var(--color-violet-800);
+  --theme-page-cta-bg-end-pressed: var(--color-violet-900);
+  --theme-page-cta-bg-start: var(--color-violet-500);
+  --theme-page-cta-border-end: var(--color-violet-450);
+  --theme-page-cta-border-start: var(--color-violet-400);
+  --theme-page-cta-focus: var(--color-violet-300);
+  --theme-shadow-color: #0000008c;
+  --theme-text-accent: var(--color-violet-300);
+  --theme-text-inverse: var(--color-gray-950);
+  --theme-text-primary: var(--color-gray-50);
+  --theme-text-secondary: var(--color-gray-400);
+  --theme-text-subtle: var(--color-gray-450);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include theme-dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  @include theme-dark;
+}
+
+// ── Elevation and focus ────────────────────────────────────
+// Effect styles Elevation/* and Focus/*. Figma drop-shadow radius maps 1:1 to
+// CSS blur; Figma background blur maps to half the radius in backdrop-filter.
+:root {
+  --elevation-sm: 0 0 4px var(--theme-shadow-color);
+  --elevation-md: 0 4px 12px var(--theme-shadow-color);
+  --elevation-lg: 0 8px 24px var(--theme-shadow-color);
+  --elevation-xl: 0 32px 56px var(--theme-shadow-color);
+  --elevation-nav: var(--elevation-lg);
+  --elevation-dialog: var(--elevation-xl);
+
+  --blur-nav: 8px;
+  --blur-nav-scrolled: 14px;
+  --blur-dialog: 2px;
+
+  // Ring = 2 px gap in the surface color, then the focus color out to 4 px.
+  --focus-ring-accent: 0 0 0 2px var(--theme-bg-canvas), 0 0 0 4px var(--theme-border-focus);
+  --focus-ring-on-nav: 0 0 0 2px var(--theme-bg-nav), 0 0 0 4px var(--theme-nav-cta-highlight);
+  --focus-ring-page-cta: 0 0 0 2px var(--theme-bg-canvas), 0 0 0 4px var(--theme-page-cta-focus);
+  --focus-ring-on-track: 0 0 0 2px var(--theme-control-track), 0 0 0 4px var(--theme-border-focus);
+  --focus-ring-on-track-raised: var(--focus-ring-on-track), var(--elevation-sm);
+  --focus-field: 0 0 10px 2px var(--theme-field-focus-glow);
+}
+
+// ── Type scale ─────────────────────────────────────────────
+// Mobile first: 390 → 768 tablet → 1280 desktop → 1920 wide → 2560 ultrawide.
+:root {
+  --size-display-hero: 2.75rem;
+  --line-height-display-hero: 2.75rem;
+  --size-display-h1: 2rem;
+  --line-height-display-h1: 2rem;
+  --size-h2: 1.75rem;
+  --line-height-h2: 1.75rem;
+  --size-h3: 1.5rem;
+  --line-height-h3: 1.75rem;
+  --size-title-lg: 1.25rem;
+  --line-height-title-lg: 1.75rem;
+  --size-body-lg: 1rem;
+  --line-height-body-lg: 1.5rem;
+  --size-body-base: 1rem;
+  --line-height-body-base: 1.5rem;
+  --size-body-sm: 0.875rem;
+  --line-height-body-sm: 1.25rem;
+  --size-body-xs: 0.75rem;
+  --line-height-body-xs: 1rem;
+  --size-caption: 0.75rem;
+  --line-height-control: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --size-display-hero: 6rem;
+    --line-height-display-hero: 6rem;
+    --size-display-h1: 3rem;
+    --line-height-display-h1: 3rem;
+    --size-h2: 2.25rem;
+    --line-height-h2: 2.25rem;
+    --size-h3: 2rem;
+    --line-height-h3: 2.5rem;
+    --size-body-lg: 1.125rem;
+    --line-height-body-lg: 1.75rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --size-display-hero: 9.5rem;
+    --line-height-display-hero: 9.5rem;
+    --size-display-h1: 4.5rem;
+    --line-height-display-h1: 4.5rem;
+    --size-h2: 3.25rem;
+    --line-height-h2: 3.5rem;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --size-display-hero: 12.75rem;
+    --line-height-display-hero: 12.75rem;
+    --size-display-h1: 5.25rem;
+    --line-height-display-h1: 5.25rem;
+    --size-h2: 4.5rem;
+    --line-height-h2: 4.75rem;
+    --size-h3: 2.75rem;
+    --line-height-h3: 3.25rem;
+    --size-title-lg: 1.75rem;
+    --line-height-title-lg: 2.25rem;
+  }
+}
+
+@media (min-width: 2560px) {
+  :root {
+    --size-display-hero: 14.75rem;
+    --line-height-display-hero: 14.75rem;
+    --size-display-h1: 6rem;
+    --line-height-display-h1: 6rem;
+    --size-h2: 5rem;
+    --line-height-h2: 5.25rem;
+    --size-h3: 3rem;
+    --line-height-h3: 3.5rem;
+    --size-title-lg: 2rem;
+    --line-height-title-lg: 2.75rem;
+  }
+}
+
+// ── Space scale and layout ─────────────────────────────────
+// 4 px steps; reach for the neighbouring step instead of adding new values.
+:root {
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.5rem;
+  --space-4: 0.75rem;
+  --space-5: 0.75rem;
+  --space-6: 1rem;
+  --space-8: 1rem;
+  --space-10: 1.25rem;
+  --space-12: 1.5rem;
+  --space-16: 1.5rem;
+  --space-20: 2rem;
+  --space-24: 2rem;
+  --space-32: 2.5rem;
+  --space-page-margin: 1.5rem;
+  --space-page-gutter: 1rem;
+  --space-page-content-max: 21.375rem;
+  --space-page-top: 5rem;
+  --space-page-top-window: 6rem;
+  --size-generator-height: 39.25rem;
+  --size-generator-full-height: 39.25rem;
+  --size-column-narrow: 21.375rem;
+  --size-column-generator: 21.375rem;
+  --size-column-prose: 21.375rem;
+  --size-control-nav: 2.75rem;
+  --space-section-block: var(--space-20);
+  --space-section-block-sm: var(--space-16);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1rem;
+    --space-6: 1.25rem;
+    --space-8: 1.5rem;
+    --space-10: 2rem;
+    --space-12: 2rem;
+    --space-16: 2.5rem;
+    --space-20: 3rem;
+    --space-24: 3.5rem;
+    --space-32: 4.5rem;
+    --space-page-margin: 2.5rem;
+    --space-page-content-max: 59rem;
+    --space-page-top: 5.25rem;
+    --space-page-top-window: 7.5rem;
+    --size-generator-height: 34.25rem;
+    --size-generator-full-height: 39.5rem;
+    --size-column-narrow: 39rem;
+    --size-column-generator: 39rem;
+    --size-column-prose: 39rem;
+    --size-control-nav: 2.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-20: 5rem;
+    --space-24: 6rem;
+    --space-32: 8rem;
+    --space-page-margin: 3.75rem;
+    --space-page-gutter: 1.5rem;
+    --space-page-content-max: 82.5rem;
+    --space-page-top: 5.5rem;
+    --space-page-top-window: 8rem;
+    --size-generator-height: 39.5rem;
+    --size-column-narrow: 40.5rem;
+    --size-column-generator: 54.5rem;
+    --size-column-prose: 40.5rem;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --space-3: 1rem;
+    --space-4: 1.25rem;
+    --space-5: 1.5rem;
+    --space-6: 1.75rem;
+    --space-8: 2.5rem;
+    --space-10: 3.5rem;
+    --space-12: 4.25rem;
+    --space-16: 5.75rem;
+    --space-20: 7rem;
+    --space-24: 8.5rem;
+    --space-32: 11.25rem;
+    --space-page-margin: 10rem;
+    --space-page-gutter: 2rem;
+    --space-page-content-max: 100rem;
+    --space-page-top: 5.75rem;
+    --space-page-top-window: 9.5rem;
+    --size-generator-height: 43rem;
+    --size-column-narrow: 49rem;
+    --size-column-prose: 42.5rem;
+  }
+}
+
+@media (min-width: 2560px) {
+  :root {
+    --space-2: 0.75rem;
+    --space-3: 1.25rem;
+    --space-4: 1.5rem;
+    --space-5: 2rem;
+    --space-6: 2.25rem;
+    --space-8: 3rem;
+    --space-10: 5rem;
+    --space-12: 6rem;
+    --space-16: 8rem;
+    --space-20: 10rem;
+    --space-24: 12rem;
+    --space-32: 16rem;
+    --space-page-margin: 21.25rem;
+    --space-page-gutter: 2.5rem;
+    --space-page-content-max: 117.5rem;
+    --space-page-top: 6.25rem;
+    --space-page-top-window: 11rem;
+    --size-generator-height: 46.5rem;
+    --size-column-prose: 45rem;
+    --size-control-nav: 3rem;
+  }
+}

@@ -5,98 +5,53 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useState, useEffect, useRef, useContext } from 'preact/hooks';
+import { InfoRow } from '@/components/SharedDataBox/Parts';
+import { AnnounceContext } from '@/components/SharedDataBox/Parts/context';
+import TimeIcon from '@/assets/icons/time-line.svg?react';
+import { formatRemaining, formatDay, formatClock, isLastMinutes } from './expiryText';
 import S from './LinkExpiry.module.scss';
-import Sparkle from '@/assets/decor2.svg?react';
-import { t } from '@/i18n';
+import { t, currentLang } from '@/i18n';
 
-const DAY_NAMES = [
-  t('linkExpiry.daySun'),
-  t('linkExpiry.dayMon'),
-  t('linkExpiry.dayTue'),
-  t('linkExpiry.dayWed'),
-  t('linkExpiry.dayThu'),
-  t('linkExpiry.dayFri'),
-  t('linkExpiry.daySat')
-];
+const LAST_MINUTES_ANNOUNCE_MS = 5000;
 
 /**
- * Format a Date as "DD.MM.YY".
- * @param {Date} date - The date to format.
- * @returns {string} Formatted date string.
+ * Title of the row for the remaining time.
+ * @param {number} remaining - Remaining time in ms.
+ * @returns {string} "The link disappears in 56 minutes." or the expired text.
  */
-function formatDate (date) {
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = String(date.getFullYear()).slice(-2);
-  return `${day}.${month}.${year}`;
-}
-
-/**
- * Format a Date as "HH:MM".
- * @param {Date} date - The date to format.
- * @returns {string} Formatted time string.
- */
-function formatTime (date) {
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  return `${hours}:${minutes}`;
-}
-
-/**
- * Compute the remaining percentage of time based on total lifespan.
- * @param {number} expiresMs - Expiry timestamp in ms.
- * @param {number} totalDuration - Total lifespan in ms (validUntil - createdAt).
- * @returns {number} Percentage from 0 to 100.
- */
-function computePercent (expiresMs, totalDuration) {
-  const remaining = expiresMs - Date.now();
-
-  if (totalDuration <= 0 || remaining <= 0) {
-    return 0;
+function remainingTitle (remaining) {
+  if (remaining <= 0) {
+    return t('recipient.expired');
   }
 
-  return Math.min(100, (remaining / totalDuration) * 100);
+  return t('recipient.expiresIn', { relative: formatRemaining(remaining, currentLang) });
 }
 
 /**
- * Link expiry indicator with date display and live countdown progress bar,
- * or a single-use access notice.
+ * Expiry row of Recipient / window (the "Expires in" row): a time medallion,
+ * "The link disappears in 56 minutes." and "Today at 12:15." with the date
+ * in <time datetime>. No aria-live: the row updates silently; one message
+ * goes to the page status region when the link enters its last 5 minutes.
  * @param {Object} props - Component props.
- * @param {boolean} [props.singleUse] - Whether the link is single-use.
- * @param {string} [props.createdAt] - ISO date string when the link was created.
- * @param {string} [props.validUntil] - ISO date string when the link expires.
+ * @param {string} props.validUntil - ISO date string when the link expires.
  * @param {string} [props.className] - Additional CSS class for the root element.
- * @returns {import('preact').JSX.Element} The link expiry display.
+ * @returns {import('preact').JSX.Element} The expiry row.
  */
-export default function LinkExpiry ({ singleUse, createdAt, validUntil, className }) {
-  if (singleUse) {
-    return (
-      <div className={`${S.linkExpiry}${className ? ` ${className}` : ''}`}>
-        <Sparkle className={S.linkExpirySparkle} />
-        <div className={`${S.linkExpiryInfo} ${S.linkExpirySingleUse}`}>
-          <span className={S.linkExpiryTitle}>{t('linkExpiry.oneTimeAccess')}</span>
-          <span className={S.linkExpirySubtitle}>{t('linkExpiry.oneTimeAccessDesc')}</span>
-        </div>
-      </div>
-    );
-  }
-
+export default function LinkExpiry ({ validUntil, className }) {
   const expiresDate = new Date(validUntil);
   const expiresMs = expiresDate.getTime();
-  const createdMs = new Date(createdAt).getTime();
-
-  /** @type {{ current: number }} Total lifespan of the link (validUntil - createdAt). */
-  const totalRef = useRef(expiresMs - createdMs);
-
-  const [percent, setPercent] = useState(() => computePercent(expiresMs, totalRef.current));
+  const [now, setNow] = useState(() => Date.now());
+  const announce = useContext(AnnounceContext);
+  const announcedRef = useRef(false);
+  const remaining = expiresMs - now;
 
   useEffect(() => {
     const id = setInterval(() => {
-      const next = computePercent(expiresMs, totalRef.current);
-      setPercent(next);
+      const next = Date.now();
+      setNow(next);
 
-      if (next <= 0) {
+      if (next >= expiresMs) {
         clearInterval(id);
       }
     }, 1000);
@@ -104,25 +59,30 @@ export default function LinkExpiry ({ singleUse, createdAt, validUntil, classNam
     return () => clearInterval(id);
   }, [expiresMs]);
 
+  // One message when the link enters its last 5 minutes.
+  useEffect(() => {
+    if (!announcedRef.current && isLastMinutes(remaining)) {
+      announcedRef.current = true;
+      announce(remainingTitle(remaining), LAST_MINUTES_ANNOUNCE_MS);
+    }
+  }, [remaining, announce]);
+
+  const iso = Number.isNaN(expiresMs) ? undefined : expiresDate.toISOString();
+
   return (
     <div className={`${S.linkExpiry}${className ? ` ${className}` : ''}`}>
-      <div className={S.linkExpiryInfo}>
-        <span className={S.linkExpiryLabel}>{t('linkExpiry.willExpire')}</span>
-        <div className={S.linkExpiryDateRow}>
-          <span>{DAY_NAMES[expiresDate.getDay()]}</span>
-          <span className={S.linkExpiryDivider} />
-          <span>{formatDate(expiresDate)}</span>
-          <span className={S.linkExpiryDivider} />
-          <span>{formatTime(expiresDate)}</span>
-        </div>
-      </div>
-
-      <div className={S.linkExpiryTrack}>
-        <div
-          className={S.linkExpiryFill}
-          style={{ width: `${percent}%` }}
-        />
-      </div>
+      <InfoRow
+        icon={TimeIcon}
+        title={remainingTitle(remaining)}
+        body={iso && (
+          <time dateTime={iso}>
+            {t('recipient.expiresAt', {
+              day: formatDay(expiresDate, new Date(now), currentLang),
+              time: formatClock(expiresDate, currentLang)
+            })}
+          </time>
+        )}
+      />
     </div>
   );
 }

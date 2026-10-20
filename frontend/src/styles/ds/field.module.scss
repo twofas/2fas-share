@@ -1,0 +1,213 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Field / textarea, Field / password and Field / message.
+//
+// A field takes focus with a 2 px accent border and the Focus/field glow
+// instead of a ring with a gap: a click into a field means typing.
+// Error: aria-invalid="true" on the control, message linked by
+// aria-describedby. Readonly: the readonly attribute.
+
+@use '../variables' as *;
+@use '../animations';
+
+@mixin field-surface {
+  @include interactive(border-color, background-color, color);
+
+  background: var(--theme-bg-surface);
+  border: var(--stroke-1) solid var(--theme-field-border);
+  border-radius: var(--radius-sm);
+  color: var(--theme-text-primary);
+
+  @include hover {
+    border-color: var(--theme-field-border-hover);
+  }
+}
+
+// 2 px border without a layout shift: the 1 px border plus a 1 px inset line.
+@mixin field-focus {
+  border-color: var(--theme-accent-default);
+  box-shadow: inset 0 0 0 var(--stroke-1) var(--theme-accent-default), var(--focus-field);
+  outline: none;
+}
+
+@mixin field-error {
+  border-color: var(--theme-feedback-error);
+}
+
+@mixin field-disabled {
+  background: var(--theme-control-track);
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+}
+
+// ── Field / textarea ────────────────────────────────────────
+// <textarea class={field.textarea}>; min-height instead of height.
+.textarea {
+  @include field-surface;
+  @include typ('body-base');
+
+  display: block;
+  min-block-size: 8.8125rem;
+  // Figma draws the stroke inside the box: the border takes its width from the padding.
+  padding: calc(var(--space-4) - var(--stroke-1));
+  resize: vertical;
+  width: 100%;
+
+  &::placeholder {
+    color: var(--theme-text-subtle);
+    opacity: 1;
+  }
+
+  &:focus-visible,
+  &:focus {
+    @include field-focus;
+  }
+
+  &[aria-invalid='true'] {
+    @include field-error;
+  }
+
+  &:disabled {
+    @include field-disabled;
+  }
+
+  // Readonly: selectable text, quiet border, no hover, no resize handle.
+  &[readonly] {
+    border-color: var(--theme-border-subtle);
+    resize: none;
+
+    @include hover {
+      border-color: var(--theme-border-subtle);
+    }
+
+    &:focus,
+    &:focus-visible {
+      border-color: var(--theme-border-subtle);
+      box-shadow: var(--focus-ring-accent);
+    }
+  }
+}
+
+// ── Field / password (and any single-line field with adornments) ──
+// <div class={field.control}><input class={field.input} />
+// <button class={field.adornment} aria-pressed aria-label="Show password" /></div>
+.control {
+  @include field-surface;
+
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  // Field / password is 48 px at every width (the 24 px line centred).
+  min-block-size: 3rem;
+  padding-block: 0;
+  padding-inline: calc(var(--space-4) - var(--stroke-1)) calc(var(--space-3) - var(--stroke-1));
+  position: relative;
+
+  &:focus-within {
+    @include field-focus;
+  }
+
+  &:has([aria-invalid='true']) {
+    @include field-error;
+  }
+
+  &:has(:disabled) {
+    @include field-disabled;
+  }
+}
+
+.input {
+  @include typ('body-base');
+
+  background: transparent;
+  color: inherit;
+  flex: 1;
+  min-inline-size: 0;
+
+  &::placeholder {
+    color: var(--theme-text-subtle);
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+// Eye button: 24 px glyph, 44 × 44 px click area inside the 48 px field.
+.adornment {
+  @include interactive(color);
+
+  align-items: center;
+  block-size: 1.5rem;
+  border-radius: var(--radius-xs);
+  color: var(--theme-text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  inline-size: 1.5rem;
+  justify-content: center;
+  position: relative;
+
+  &::after {
+    content: '';
+    inset: -0.625rem;
+    position: absolute;
+  }
+
+  @include hover {
+    color: var(--theme-text-primary);
+  }
+
+  svg {
+    block-size: 1.5rem;
+    inline-size: 1.5rem;
+  }
+}
+
+// ── Field / message ─────────────────────────────────────────
+// <p id class={field.message}> under the field; the field keeps its height,
+// the container grows. Expands in 400 ms; reduced motion makes it a jump.
+.message {
+  animation: expandIn var(--motion-duration-expand) var(--motion-easing-standard);
+  display: grid;
+  margin-block-start: var(--space-2);
+
+  // Clipped for the expand animation, with 2 px of room so the medallion
+  // pulse (scale 1.08) is not cut to a square; the negative margin keeps
+  // the layout unchanged.
+  > * {
+    margin: -0.125rem;
+    overflow: hidden;
+    padding: 0.125rem;
+  }
+}
+
+.messageRow {
+  align-items: flex-start;
+  display: flex;
+  gap: var(--space-2);
+}
+
+.messageText {
+  display: flex;
+  flex-direction: column;
+}
+
+.messageTitle {
+  @include typ('label-strong');
+
+  color: var(--theme-feedback-error-text);
+}
+
+.messageBody,
+.hint {
+  @include typ('body-xs');
+
+  color: var(--theme-text-secondary);
+}

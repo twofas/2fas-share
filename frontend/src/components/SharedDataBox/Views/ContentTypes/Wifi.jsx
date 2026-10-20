@@ -7,6 +7,7 @@
 
 import FieldRow from './FieldRow';
 import WifiQr from './WifiQr';
+import S from './ContentTypes.module.scss';
 import { t } from '@/i18n';
 
 /**
@@ -23,7 +24,7 @@ import { t } from '@/i18n';
  */
 export default function ContentWifi ({ content }) {
   return (
-    <>
+    <div className={S.fields}>
       <WifiQr content={content} />
       <FieldRow label={t('content.name')} value={content.name} />
       <FieldRow label={t('content.ssid')} value={content.ssid} />
@@ -39,7 +40,7 @@ export default function ContentWifi ({ content }) {
         <FieldRow label={t('content.hiddenNetwork')} value={t('common.yes')} />
       )}
 
-      <FieldRow label={t('content.notes')} value={content.notes} />
-    </>
+      <FieldRow label={t('content.notes')} value={content.notes} multiline />
+    </div>
   );
 }

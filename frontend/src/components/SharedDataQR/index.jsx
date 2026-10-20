@@ -7,17 +7,19 @@
 
 import { useRef, useEffect } from 'preact/hooks';
 import QRCode from 'qrcode';
-import QrCorner from '@/assets/qr-corner.svg?react';
+import { Window } from '@/components/Window';
 import S from './SharedDataQR.module.scss';
 import { t } from '@/i18n';
 
 /**
- * Renders a QR code encoding the current page URL with decorative corner brackets.
+ * Small window with a QR code of the current page URL, to open the link on a
+ * phone (desktop only).
  * @param {Object} props - Component props.
  * @param {boolean} [props.hidden] - Whether to animate out and hide the QR code.
- * @returns {import('preact').JSX.Element} QR code canvas with title, corners, and subtitle
+ * @param {string} [props.className] - Placement class from the page.
+ * @returns {import('preact').JSX.Element} QR code window with title and description.
  */
-export default function SharedDataQR ({ hidden }) {
+export default function SharedDataQR ({ hidden, className }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -34,20 +36,22 @@ export default function SharedDataQR ({ hidden }) {
   }, []);
 
   return (
-    <div class={`${S.sharedDataQr}${hidden ? ` ${S.hidden}` : ''}`}>
-      <p class={S.sharedDataQrTitle}>{t('qr.title')}</p>
+    <Window
+      as='aside'
+      className={`${S.qr}${hidden ? ` ${S.hidden}` : ''}${className ? ` ${className}` : ''}`}
+      aria-hidden={hidden ? 'true' : undefined}
+      aria-labelledby='shared-data-qr-title'
+    >
+      <div className={S.card}>
+        <div className={S.tile}>
+          <canvas ref={canvasRef} />
+        </div>
 
-      <div class={S.sharedDataQrArea}>
-        <canvas ref={canvasRef} />
-        <QrCorner class={`${S.sharedDataQrAreaCorner} ${S.tL}`} />
-        <QrCorner class={`${S.sharedDataQrAreaCorner} ${S.tR}`} />
-        <QrCorner class={`${S.sharedDataQrAreaCorner} ${S.bL}`} />
-        <QrCorner class={`${S.sharedDataQrAreaCorner} ${S.bR}`} />
+        <div className={S.text}>
+          <p id='shared-data-qr-title' className={S.title}>{t('qr.title')}</p>
+          <p className={S.description}>{t('qr.description')}</p>
+        </div>
       </div>
-
-      <p class={S.sharedDataQrDescription}>
-        {t('qr.description')}
-      </p>
-    </div>
+    </Window>
   );
 }

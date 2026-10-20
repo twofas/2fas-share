@@ -1,0 +1,142 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Decor / arcs. Circles enter from the center (opacity 450 ms, scale 0.78 → 1
+// in 650 ms, 120 ms stagger). The light is a conic streak masked to the circle
+// line, rotated once along the side of the circle; no loop, no timer.
+
+@use '@/styles/variables' as *;
+
+.arcs {
+  aspect-ratio: 1388 / 696;
+  inline-size: max(86.75rem, 72vw);
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  translate: -50% 0;
+  z-index: 0;
+
+  svg {
+    block-size: 100%;
+    color: var(--theme-border-subtle);
+    inline-size: 100%;
+    max-width: none;
+    overflow: visible;
+  }
+
+  @media (forced-colors: active) {
+    display: none;
+  }
+}
+
+.arc {
+  animation:
+    arcFade var(--motion-duration-reveal) var(--motion-easing-out) both,
+    arcScale var(--motion-duration-entrance) var(--motion-easing-out) both;
+  animation-delay: calc(0.1s + var(--i) * var(--motion-duration-stagger));
+  stroke: currentColor;
+  transform-box: view-box;
+  transform-origin: 694px 0;
+}
+
+.light {
+  animation:
+    lightTravel var(--duration) var(--motion-easing-in-out) var(--delay) both,
+    lightFade var(--duration) linear var(--delay) both;
+  aspect-ratio: 1;
+  inline-size: var(--size);
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  opacity: 0;
+  position: absolute;
+  translate: -50% -50%;
+}
+
+.core,
+.halo {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg calc(360deg - var(--streak)),
+    var(--theme-decor-arc-light) 360deg
+  );
+  border-radius: 50%;
+  inset: 0;
+  position: absolute;
+}
+
+// Core: 1.5 px centered on the circle line.
+.core {
+  mask: radial-gradient(
+    closest-side,
+    transparent calc(100% - 0.75px),
+    #000 calc(100% - 0.75px),
+    #000 calc(100% + 0.75px),
+    transparent calc(100% + 0.75px)
+  );
+}
+
+// Halo: 6 px, blurred 3 px, 0.35 of the core.
+.halo {
+  filter: blur(3px);
+  mask: radial-gradient(
+    closest-side,
+    transparent calc(100% - 3px),
+    #000 calc(100% - 3px),
+    #000 calc(100% + 3px),
+    transparent calc(100% + 3px)
+  );
+  opacity: 0.35;
+}
+
+@keyframes arcFade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes arcScale {
+  from {
+    scale: 0.78;
+  }
+}
+
+@keyframes lightTravel {
+  from {
+    rotate: var(--from);
+  }
+
+  to {
+    rotate: var(--to);
+  }
+}
+
+@keyframes lightFade {
+  0% {
+    opacity: 0;
+  }
+
+  22%,
+  68% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arc {
+    animation: none;
+  }
+
+  .light {
+    display: none;
+  }
+}

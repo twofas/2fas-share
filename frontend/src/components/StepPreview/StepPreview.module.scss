@@ -1,0 +1,269 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Preview / generator step: the generator window drawn at a fixed natural
+// size (428 × 329 px; the Figma thumbnail is 312 × 240 at 1440) and zoomed to the card
+// width. Zoom, unlike transform: scale, takes the height along in the layout.
+
+@use '@/styles/variables' as *;
+@use '@/pages/Home/sections' as *;
+
+@include motion-keyframes;
+
+.preview {
+  inline-size: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.window {
+  block-size: 20.5625rem;
+  box-shadow: var(--elevation-dialog);
+  inline-size: 26.75rem;
+  zoom: var(--preview-zoom, 0.73);
+}
+
+// Card hover (HowToUse): the frame, the card outline and the section lines
+// stay still; only the components inside the sections zoom in, clipped by
+// the card.
+.card > * > * {
+  transform: translateY(var(--preview-inner-lift, 0)) scale(var(--preview-inner-zoom, 1));
+  transition: transform var(--motion-duration-reveal) var(--motion-easing-overshoot);
+}
+
+.card {
+  flex: 1;
+  min-block-size: 0;
+}
+
+// Password step: the bottom of the dialog shows, the top is cut off.
+.cardEnd {
+  justify-content: flex-end;
+}
+
+.footer {
+  padding-block-end: var(--space-2);
+}
+
+.cta {
+  inline-size: 100%;
+}
+
+.switchRow {
+  align-items: center;
+  display: flex;
+  gap: var(--space-6);
+
+  > :first-child {
+    flex: 1;
+    min-inline-size: 0;
+  }
+}
+
+// Switch picture (a <span>, never focusable): the on state as a class.
+.fakeSwitchOn {
+  background: var(--theme-control-track-on);
+
+  &::before {
+    translate: 1.3125rem 0;
+  }
+}
+
+// Selected segment picture (Segmented / option Selected=True).
+.optionSelected {
+  background: var(--theme-bg-raised);
+  box-shadow: inset 0 0 0 var(--stroke-1) var(--theme-border-subtle), var(--elevation-sm);
+  color: var(--theme-text-primary);
+}
+
+.segment {
+  display: contents;
+}
+
+.textarea {
+  min-block-size: 5rem;
+  position: relative;
+  resize: none;
+}
+
+// "(optional)" after the password row title: text/secondary, same style.
+.titleSuffix {
+  color: var(--theme-text-secondary);
+}
+
+.placeholder {
+  color: var(--theme-text-subtle);
+}
+
+// Typed text: one line each, revealed left to right by the clip.
+.typed {
+  color: var(--theme-text-primary);
+  display: block;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.typedField {
+  position: relative;
+}
+
+// Placeholder under the typed text: gone in the final state, shown while
+// the sequence waits for the typing.
+.ghost {
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  opacity: 0;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.noteGhost {
+  inset-block-start: var(--space-4);
+  inset-inline-start: var(--space-4);
+}
+
+// ── Micro-sequence (Figma E · Motion, 03 four steps) ────────
+// Times from the trigger of the step cards (Figma 3.05 s = 0). Runs once,
+// only without prefers-reduced-motion; the static markup is the final state.
+@media (prefers-reduced-motion: no-preference) {
+  .play {
+    // Preview 1: placeholder out 0.40-0.55 s, two lines typed in 10 steps of
+    // 0.06 s (0.60 s and 1.25 s), then the CTA press 1 → 0.96 → 1 at 1.95 s.
+    .noteGhost {
+      animation: ghostOut 0.15s var(--motion-easing-out) 0.4s backwards;
+    }
+
+    .typedLine1 {
+      animation: typeIn 0.6s steps(10, end) 0.6s backwards;
+    }
+
+    .typedLine2 {
+      animation: typeIn 0.6s steps(10, end) 1.25s backwards;
+    }
+
+    .ctaPress {
+      animation: ctaPress 0.28s 1.95s;
+    }
+
+    // Preview 2: the selected pill presses 1 → 0.93 → 1 at 2.10 s.
+    .pillPress {
+      animation: pillPress 0.25s 2.1s;
+    }
+
+    // Preview 3: the switch turns on (0.16 s at 2.40 s), the field drops in
+    // (Y −8, 0.2 s at 2.55 s), the eye pops at 2.75 s, the password is typed
+    // in 8 steps of 0.05 s from 2.80 s.
+    .switchOn {
+      animation: trackOn 0.16s var(--motion-easing-in-out) 2.4s backwards;
+
+      &::before {
+        animation: knobOn 0.16s var(--motion-easing-in-out) 2.4s backwards;
+      }
+    }
+
+    .passwordGhost {
+      animation: ghostOut 0.01s linear 2.8s backwards;
+    }
+
+    .typedPassword {
+      animation: typeIn 0.4s steps(8, end) 2.8s backwards;
+    }
+
+    // Preview 4: "Link ready" at 3.05 s (caption +0.08 s), the star turns and
+    // grows, the link is typed from 3.15 s, the CTA appears at 3.55 s.
+    .typedLink {
+      animation: typeIn 0.4s steps(10, end) 3.15s backwards;
+    }
+  }
+}
+
+.fieldDrop {
+  @include enter(2.55s, $y: -0.5rem, $move: (0.2s, out), $fade: 0.2s, $on: '.play', $hide: false);
+}
+
+.eyePop {
+  @include enter(2.75s, $scale: 0.6, $fade: 0.2s, $on: '.play', $hide: false);
+}
+
+.readyTitle {
+  @include enter(3.05s, $on: '.play', $hide: false);
+}
+
+.readyCaption {
+  @include enter(3.13s, $on: '.play', $hide: false);
+}
+
+.readyStar {
+  @include enter(3.05s, $scale: 0.6, $rotate: -45deg, $fade: false, $on: '.play', $hide: false);
+}
+
+.ctaAppear {
+  @include enter(3.55s, $scale: 0.9, $scale-motion: (reveal, overshoot), $fade: 0.2s, $on: '.play', $hide: false);
+}
+
+@keyframes ghostOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes typeIn {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+@keyframes ctaPress {
+  0% {
+    animation-timing-function: var(--motion-easing-out);
+    scale: 1;
+  }
+
+  28.5714% {
+    animation-timing-function: var(--motion-easing-spring);
+    scale: 0.96;
+  }
+
+  100% {
+    scale: 1;
+  }
+}
+
+@keyframes pillPress {
+  0% {
+    animation-timing-function: var(--motion-easing-out);
+    scale: 1;
+  }
+
+  40% {
+    animation-timing-function: var(--motion-easing-out);
+    scale: 0.93;
+  }
+
+  100% {
+    scale: 1;
+  }
+}
+
+@keyframes trackOn {
+  from {
+    background-color: var(--theme-control-track-off);
+  }
+}
+
+@keyframes knobOn {
+  from {
+    translate: 0 0;
+  }
+}

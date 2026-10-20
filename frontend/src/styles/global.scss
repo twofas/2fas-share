@@ -5,6 +5,9 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
+@use 'fonts';
+@use 'tokens';
+@use 'properties';
 @use 'variables' as *;
 @use 'animations';
 
@@ -31,6 +34,16 @@ textarea {
   border: none;
   color: inherit;
   font: inherit;
+}
+
+// Keyboard focus ring (Focus/accent): 2 px gap, then the focus color.
+// Components with their own ring (Focus/on-nav, Focus/field…) override it.
+:focus-visible {
+  outline: var(--stroke-2) solid var(--theme-border-focus);
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
   outline: none;
 }
 
@@ -46,7 +59,7 @@ svg {
 }
 
 * {
-  scrollbar-color: var(--2fas-scrollbar-thumb) var(--2fas-scrollbar-track);
+  scrollbar-color: var(--theme-border-default) transparent;
   scrollbar-width: thin;
 
   &::-webkit-scrollbar {
@@ -55,40 +68,100 @@ svg {
   }
 
   &::-webkit-scrollbar-track {
-    background: var(--2fas-scrollbar-track);
+    background: transparent;
   }
 
   &::-webkit-scrollbar-thumb {
     border-radius: 3px;
-    background: var(--2fas-scrollbar-thumb);
+    background: var(--theme-border-default);
 
     &:hover {
-      background: var(--2fas-scrollbar-thumb-hover);
+      background: var(--theme-field-border-hover);
     }
+  }
+}
+
+// Single-line fields scroll their text sideways without a scrollbar; the
+// custom scrollbar above would otherwise show as a bar under the text when
+// the value (or an injected password-manager icon) overflows the field.
+input {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
 html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  background: var(--2fas-bg-1);
-  color: var(--2fas-text-color);
-  font-family: Montserrat, sans-serif, Arial, system-ui, -apple-system, 'Segoe UI';
-  font-optical-sizing: auto;
-  line-height: 1.5;
+  background: var(--theme-bg-canvas);
+  color: var(--theme-text-primary);
+  font-family: var(--type-family-sans);
+  // Figma uses Inter's text cut at every size (no switch to the display cut).
+  font-optical-sizing: none;
+  font-size: var(--size-body-base);
+  line-height: var(--line-height-body-base);
   overscroll-behavior: none;
   text-rendering: optimizeLegibility;
+
+  // The pinned bar must not cover the anchor target or the focused element:
+  // bar offset + bar height + 8 px (Figma: Link / nav, Navigation bar notes).
+  scroll-padding-top: 4.5rem;
+
+  @include from(desktop) {
+    scroll-padding-top: 5rem;
+  }
+
+  @include from(wide) {
+    scroll-padding-top: 6rem;
+  }
+
+  @include from(ultrawide) {
+    scroll-padding-top: 7rem;
+  }
 
   @media (prefers-reduced-motion: no-preference) {
     scroll-behavior: smooth;
   }
 
-  @media (max-width: 500px) {
-    font-size: 14px;
-  }
-
   &.system-font {
-    font-family: sans-serif, Arial, system-ui, -apple-system, 'Segoe UI';
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  }
+}
+
+::selection {
+  background: var(--theme-field-focus-glow);
+}
+
+// Text style classes, named as in the Figma style descriptions (.typ-*).
+@each $name, $style in $type-styles {
+  .typ-#{$name} {
+    @include typ($name);
+  }
+}
+
+.visually-hidden {
+  @include visually-hidden;
+}
+
+// "Skip to content": the first focusable element, visible on focus.
+.skip-link {
+  @include typ('label-button');
+
+  background: var(--theme-bg-raised);
+  border-radius: var(--radius-full);
+  box-shadow: var(--elevation-md);
+  color: var(--theme-text-primary);
+  inset-block-start: var(--space-2);
+  inset-inline-start: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  position: fixed;
+  translate: 0 -200%;
+  z-index: 60;
+
+  &:focus-visible {
+    translate: none;
   }
 }
 
@@ -97,20 +170,6 @@ body {
   flex-direction: column;
   min-height: 100vh;
   min-height: max(100svh, 100dvh);
-
-  &::after {
-    animation: fadeInUp 0.5s ease-out 0.25s both;
-    background: linear-gradient(0deg, rgba(136, 0, 255, .25) 0%, rgba(136, 0, 255, 0) 100%);
-    bottom: 0;
-    content: '';
-    display: block;
-    height: 40%;
-    left: 0;
-    pointer-events: none;
-    position: fixed;
-    width: 100%;
-    z-index: 1;
-  }
 }
 
 #app {
@@ -120,101 +179,17 @@ body {
   overflow: clip;
 }
 
-.container {
-  margin: 0 auto;
-  max-width: 82rem;
-  width: 100%;
-}
-
+// Pages lay themselves out; the navigation bar floats above them, so each
+// page reserves --space-page-top (or -top-window) at its start.
 main {
-  animation: fadeIn 0.5s ease-out 0.5s both;
-  color: var(--2fas-text-color);
   flex: 1;
-  min-height: 75vh;
-  padding: 9.5rem 2.8125rem 0;
+  isolation: isolate;
   position: relative;
-  text-align: center;
-  z-index: 2;
-
-  @include tablet {
-    padding: 6.5rem 1.875rem 0;
-  }
-
-  @media (max-width: 1050px) and (min-width: 920px) {
-    padding-top: 11rem;
-  }
-
-  @include mobile {
-    padding: 5rem 1.875rem 0;
-  }
-
-  @include small-mobile {
-    padding: 4rem 1.25rem 0;
-  }
-
-  > .page-box {
-    background-color: var(--2fas-card-bg);
-    border-radius: 16px;
-    color: var(--2fas-text-color);
-    margin: 1.625rem auto 0;
-    padding: 2.5rem 2.375rem 2.0625rem;
-    position: relative;
-    text-align: left;
-    z-index: 3;
-
-    @include mobile {
-      padding: 2rem;
-    }
-
-    @include small-mobile {
-      padding: 2.5rem 1rem 2rem;
-    }
-
-    > button,
-    > div > button {
-      width: 100%;
-    }
-  }
-
-  > .page-header {
-    margin-bottom: 2rem;
-
-    h1 {
-      font-size: 2.25rem;
-      font-size: clamp(1.5rem, 5vw, 2.25rem);
-      font-weight: 800;
-      letter-spacing: -.36px;
-      line-height: 1.2222;
-    }
-
-    p {
-      font-size: 1.25rem;
-      font-size: clamp(1rem, 2.5vw, 1.25rem);
-      font-weight: 500;
-      line-height: 1.55;
-      margin-bottom: 2.375rem;
-    }
-  }
 }
 
-img {
-  &.theme-light {
-    display: block;
-  }
-
-  &.theme-dark {
-    display: none;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    &.theme-light {
-      display: none;
-    }
-
-    &.theme-dark {
-      display: block;
-    }
-  }
+// Section ids are focus targets for the bar's anchors.
+[id][tabindex='-1']:focus {
+  outline: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -227,4 +202,23 @@ img {
     transition-delay: 0ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+// Theme switch: one uniform cross-fade of the whole page (utils/theme.js).
+// Element transitions are paused for the swap, so nothing animates on its own.
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: none !important;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--motion-duration-toggle);
+  animation-timing-function: var(--motion-easing-standard);
+}
+
+main:focus {
+  outline: none;
 }
