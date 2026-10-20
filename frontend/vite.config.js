@@ -13,14 +13,23 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'path';
 
-// Rolldown (Vite 8) injects __vite__mapDeps into entry chunks after
-// generateBundle, so hashing chunk.code there produces stale digests.
-// writeBundle runs after the final files are on disk — hash those instead.
+/**
+ * Add Subresource Integrity (sha384) attributes to the JS and CSS tags of the
+ * built HTML. Rolldown (Vite 8) injects __vite__mapDeps into entry chunks after
+ * generateBundle, so hashing chunk.code there produces stale digests;
+ * writeBundle runs after the final files are on disk — hash those instead.
+ * @returns {import('vite').Plugin} Vite plugin.
+ */
 function sri () {
   return {
     name: 'vite-plugin-sri',
     enforce: 'post',
     apply: 'build',
+    /**
+     * Rewrite every emitted HTML file with integrity attributes.
+     * @param {import('rollup').NormalizedOutputOptions} options Output options (dir).
+     * @param {import('rollup').OutputBundle} bundle Emitted files keyed by name.
+     */
     writeBundle (options, bundle) {
       const outDir = options.dir;
       const htmlFiles = Object.keys(bundle).filter(k => k.endsWith('.html'));

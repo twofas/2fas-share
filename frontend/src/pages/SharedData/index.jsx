@@ -5,35 +5,52 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import { useState, useRef, useEffect } from 'preact/hooks';
+import { useState, useRef, useEffect, useCallback } from 'preact/hooks';
 import S from './SharedData.module.scss';
 import SharedDataBox from '../../components/SharedDataBox';
+import { AnnounceContext } from '../../components/SharedDataBox/Parts/context';
 import SharedDataQR from '../../components/SharedDataQR';
-import LinkExpiry from '../../components/LinkExpiry';
-import Decors from '../../components/Decors';
-import Sparkle from '@/assets/decor2.svg?react';
-import confetti from '@/utils/confetti';
-import { prefersReducedMotion } from '@/utils/reducedMotion';
+import ArcsDecor, { runArcsLight } from '@/components/ArcsDecor';
+import { RecipientHeading, TrustNote, StatusRegion } from './parts';
 import { isMobileOrTablet } from '@/utils/device';
-import { t } from '@/i18n';
+
+/** Delay between clearing and filling the status region, so a repeated message is announced again. */
+const ANNOUNCE_GAP_MS = 100;
 
 /**
- * Shared data page.
+ * Shared data page (Section / 10 Recipient). One <h1> above the window in
+ * every state; the states change only the heading and the window interior.
+ * A page-level role="status" region announces the copy and the last 5 minutes.
+ * @param {Object} props - Component props.
+ * @param {Object} props.params - Route parameters (id, type, nonce, key).
  * @returns {import('preact').JSX.Element} The shared data page.
  */
 export default function SharedData (props) {
   const { id, type, nonce, key } = props.params;
   const [hideQR, setHideQR] = useState(false);
   const [secretMeta, setSecretMeta] = useState(null);
-  const [showHeader, setShowHeader] = useState(true);
-  const [error, setError] = useState(false);
-  const [showError, setShowError] = useState(false);
-  const mainRef = useRef(null);
-  const headerRef = useRef(null);
+  const [state, setState] = useState(type === 'v1p' ? 'password' : 'intro');
+  const [contentType, setContentType] = useState(null);
 
-  // Warn before leaving page for singleUse links after data is fetched
+  /**
+   * Track the recipient state and, once revealed, the content type.
+   * @param {string} next - Recipient state.
+   * @param {string} [type] - Content type of the revealed data.
+   */
+  const handleStateChange = useCallback((next, type) => {
+    setState(next);
+    setContentType(type || null);
+  }, []);
+  const [status, setStatus] = useState('');
+  const headingRef = useRef(null);
+  const statusTimers = useRef([]);
+
+  useEffect(() => () => statusTimers.current.forEach(clearTimeout), []);
+
+  // Warn before leaving the page once a one-time link was fetched (it is
+  // already deleted on the server).
   useEffect(() => {
-    if (!secretMeta?.singleUse || showHeader) {
+    if (!secretMeta?.singleUse || state === 'unavailable') {
       return;
     }
 
@@ -50,124 +67,81 @@ export default function SharedData (props) {
     return () => {
       window.removeEventListener('beforeunload', onBeforeUnload);
     };
-  }, [secretMeta, showHeader]);
+  }, [secretMeta, state]);
 
   /**
-   * Handle secret metadata received from SharedDataBox after API fetch.
-   * Fades out the header, removes it, then animates main maxHeight.
+   * Put a message in the status region, then clear it.
+   * @param {string} message - Text to announce.
+   * @param {number} [duration=2000] - How long the text stays in the region.
+   */
+  const announce = useCallback((message, duration = 2000) => {
+    statusTimers.current.forEach(clearTimeout);
+    setStatus('');
+    statusTimers.current = [
+      setTimeout(() => setStatus(message), ANNOUNCE_GAP_MS),
+      setTimeout(() => setStatus(''), ANNOUNCE_GAP_MS + duration)
+    ];
+  }, []);
+
+  /**
+   * Handle secret metadata received from SharedDataBox after the API fetch.
    * @param {Object} meta - Secret metadata.
    * @param {boolean} meta.singleUse - Whether the secret is single-use.
    * @param {string} [meta.createdAt] - ISO date when the link was created.
    * @param {string} [meta.validUntil] - ISO date when the link expires.
    */
-  const handleSecretMeta = async (meta) => {
+  const handleSecretMeta = useCallback((meta) => {
     if (meta.singleUse) {
       setHideQR(true);
     }
 
-    if (prefersReducedMotion()) {
-      setSecretMeta(meta);
-      setShowHeader(false);
-      return;
-    }
-
-    const el = mainRef.current;
-    const header = headerRef.current;
-
-    // Step 1: Fade out header
-    if (header) {
-      await header.animate(
-        [
-          { opacity: 1, transform: 'scale(1)' },
-          { opacity: 0, transform: 'scale(0.95)' }
-        ],
-        { duration: 200, easing: 'ease-in' }
-      ).finished;
-    }
-
-    // Step 2: Capture height before DOM change, then update state
-    const fromHeight = el ? el.offsetHeight : 0;
-
     setSecretMeta(meta);
-    setShowHeader(false);
-
-    // Step 3: Animate main maxHeight after re-render
-    await new Promise((r) => requestAnimationFrame(r));
-
-    if (el) {
-      const toHeight = el.offsetHeight;
-
-      if (fromHeight !== toHeight) {
-        el.style.overflow = 'hidden';
-        el.animate(
-          [{ maxHeight: `${fromHeight}px` }, { maxHeight: `${toHeight}px` }],
-          { duration: 300, easing: 'ease-in-out' }
-        ).onfinish = () => {
-          el.style.overflow = '';
-        };
-      }
-    }
-  };
+  }, []);
 
   /**
-   * Handle unrecoverable error from SharedDataBox.
-   * Triggers fade-out animation, then swaps to error display.
+   * Unrecoverable error: the window turns to Unavailable; the QR goes away.
    */
-  const handleError = () => {
-    setError(true);
+  const handleError = useCallback(() => {
     setHideQR(true);
+  }, []);
 
-    if (prefersReducedMotion()) {
-      setShowError(true);
-    } else {
-      setTimeout(() => setShowError(true), 350);
-    }
-  };
+  /**
+   * The content is revealed: the button that had focus is gone, so focus
+   * goes to the page heading; the arcs light up.
+   */
+  const handleReveal = useCallback(() => {
+    // Two frames: the heading text of the revealed state is rendered first.
+    requestAnimationFrame(() => requestAnimationFrame(() => headingRef.current?.focus()));
+    runArcsLight();
+  }, []);
 
   return (
-    <>
-      <main ref={mainRef} className={`${S.sharedData} ${error ? S.errorAnimating : ''}`}>
-        <Decors />
+    <AnnounceContext.Provider value={announce}>
+      <main id='content' className={S.page}>
+        <ArcsDecor />
 
-        {!showError && (
-          <>
-            {showHeader && (
-              <div ref={headerRef} className='page-header'>
-                <h1>{t('sharedData.subtitle1')}<br />{t('sharedData.subtitle2')}</h1>
-              </div>
-            )}
+        <div className={S.column}>
+          <RecipientHeading ref={headingRef} state={state} contentType={contentType} />
 
-            {secretMeta && (secretMeta.validUntil || secretMeta.singleUse) && (
-              <LinkExpiry
-                className='page-content'
-                singleUse={secretMeta.singleUse}
-                createdAt={secretMeta.createdAt}
-                validUntil={secretMeta.validUntil}
-              />
-            )}
+          <SharedDataBox
+            type={type}
+            id={id}
+            nonce={nonce}
+            urlSecret={key}
+            secretMeta={secretMeta}
+            onSecretMeta={handleSecretMeta}
+            onError={handleError}
+            onReveal={handleReveal}
+            onStateChange={handleStateChange}
+          />
 
-            <SharedDataBox
-              type={type}
-              id={id}
-              nonce={nonce}
-              urlSecret={key}
-              onSecretMeta={handleSecretMeta}
-              onError={handleError}
-              onReveal={confetti}
-            />
-          </>
-        )}
+          <TrustNote />
 
-        {showError && (
-          <div className={S.errorDisplay}>
-            <Sparkle className={S.errorSparkle} />
-            <h2>{t('sharedData.errorTitle')}</h2>
-            <p>{t('sharedData.invalidLink')}</p>
-          </div>
-        )}
+          {!isMobileOrTablet && <SharedDataQR hidden={hideQR} className={S.qr} />}
+        </div>
+
+        <StatusRegion message={status} />
       </main>
-
-      {!isMobileOrTablet && <SharedDataQR hidden={hideQR} />}
-    </>
+    </AnnounceContext.Provider>
   );
 }

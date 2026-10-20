@@ -1,0 +1,115 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Full generator view: heading and lead centered above the window on the
+// page axis, the benefits (below 1024 px) and "More about the tool" under it.
+
+@use '@/styles/variables' as *;
+
+.page {
+  overflow-x: clip;
+  position: relative;
+}
+
+.section {
+  @include container;
+
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding-block: var(--space-page-top) var(--space-16);
+  position: relative;
+  z-index: 1;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  margin-block-end: var(--space-12);
+  max-inline-size: var(--size-column-generator);
+  padding-block-start: var(--space-6);
+  text-align: center;
+
+  // Layout=Mobile: section-copy has 24/16 px padding on both sides and the
+  // window follows 8 px lower.
+  @include below(layout) {
+    margin-block-end: var(--space-2);
+    padding-block: var(--space-6);
+  }
+}
+
+// Display/H1 in Layout=Mobile, Heading/H3 from 1024 px.
+.title {
+  @include typ('display-h1');
+
+  color: var(--theme-text-primary);
+
+  @include from(layout) {
+    @include typ('heading-h3');
+  }
+}
+
+.lead {
+  @include typ('body-base');
+
+  color: var(--theme-text-secondary);
+  margin-inline: auto;
+  max-inline-size: 36rem;
+  text-wrap: balance;
+
+  @include from(layout) {
+    @include typ('body-lg');
+  }
+}
+
+.after {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  margin-block-start: var(--space-12);
+
+  // Layout=Mobile: 8 px gap plus 40 px padding of copy-column.
+  @include below(layout) {
+    margin-block-start: calc(var(--space-32) + var(--space-2));
+  }
+}
+
+.benefits {
+  @include from(layout) {
+    display: none;
+  }
+}
+
+// "More about the tool": Button / secondary Big (48 px, no chevron) in
+// Layout=Mobile, Small (32 px) with the 16 px chevron from 1024 px.
+.more.more {
+  svg {
+    block-size: 1rem;
+    flex-shrink: 0;
+    inline-size: 1rem;
+  }
+
+  // Small: 32 px high, the 24 px label fills it.
+  @include from(layout) {
+    padding-block: 0;
+  }
+
+  @include below(layout) {
+    min-block-size: 3rem;
+    padding-inline: var(--space-6);
+
+    &::after {
+      content: none;
+    }
+
+    svg {
+      display: none;
+    }
+  }
+}

@@ -5,59 +5,70 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-@use '../../styles/variables' as *;
+// 404: no Figma frame; built like the recipient Unavailable state, centered
+// on the page axis over the arcs.
 
-.not-found {
-  width: 100%;
+@use '@/styles/variables' as *;
 
-  &-content {
-    position: relative;
-    z-index: 2;
+.page {
+  display: flex;
+  flex-direction: column;
+  overflow: clip;
+  position: relative;
+}
 
-    .decor-2 {
-      fill: var(--2fas-bg-2);
-      height: 56px;
-      margin: 1.6875rem auto 1.1875rem;
-      width: auto;
-    }
+.content {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  margin-inline: auto;
+  max-inline-size: calc(var(--size-column-narrow) + 2 * var(--space-page-margin));
+  padding: calc(var(--space-page-top-window) + var(--space-10)) var(--space-page-margin) var(--space-section-block);
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
 
-    img {
-      height: auto;
-      margin: 0 auto;
-      max-width: 100%;
-      transform: translateX(3px);
-      width: 604px;
+.medallion {
+  margin-block-end: var(--space-10);
+}
 
-      @include mobile {
-        transform: none;
-      }
-    }
+.title {
+  @include typ('display-h1');
 
-    h2 {
-      color: var(--2fas-text-color);
-      font-size: 2.25rem;
-      font-size: clamp(1.5rem, 5vw, 2.25rem);
-      font-weight: 700;
-      letter-spacing: -.36px;
-      line-height: 1.2222;
-      margin-bottom: 1.0625rem;
-      text-align: center;
-    }
+  color: var(--theme-text-primary);
+  text-wrap: balance;
+}
 
-    p {
-      color: var(--2fas-text-color);
-      font-size: 1.625rem;
-      font-size: clamp(1.125rem, 3.5vw, 1.625rem);
-      font-weight: 500;
-      letter-spacing: -.26px;
-      line-height: 1.3077;
-      margin: 0 auto;
-      max-width: 33.625rem;
-      text-align: center;
+.lead {
+  @include typ('body-lg');
 
-      @include mobile {
-        max-width: 100%;
-      }
+  color: var(--theme-text-secondary);
+  margin-block-start: var(--space-6);
+  text-wrap: pretty;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  inline-size: 100%;
+  margin-block-start: var(--space-16);
+
+  > * {
+    inline-size: 100%;
+    text-decoration: none;
+  }
+
+  @include from(tablet) {
+    flex-direction: row;
+    justify-content: center;
+
+    > * {
+      inline-size: auto;
     }
   }
 }

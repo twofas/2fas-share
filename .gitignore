@@ -3,3 +3,9 @@
 data
 .playwright-mcp/
 .claude/
+.agents
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.mcp.json
+.playwright-mcp

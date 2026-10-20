@@ -1,0 +1,192 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Messages: Medallion, Alert / card and Toast / status.
+// Tone is always carried by text and glyph shape too, never color alone.
+
+@use '../variables' as *;
+@use '../animations';
+
+// ── Medallion ───────────────────────────────────────────────
+// <span aria-hidden="true" class={`${fb.medallion} ${fb.size40} ${fb.tint} ${fb.info}`}>
+// Size × Style × Tone; the tone sets the colors, the style picks which apply.
+.medallion {
+  align-items: center;
+  background: var(--medallion-bg);
+  block-size: var(--medallion-size);
+  border-radius: var(--radius-full);
+  box-shadow: inset 0 0 0 var(--stroke-1) var(--medallion-border, transparent);
+  color: var(--medallion-fg);
+  display: inline-flex;
+  flex-shrink: 0;
+  inline-size: var(--medallion-size);
+  justify-content: center;
+  position: relative;
+
+  svg {
+    block-size: var(--medallion-icon);
+    inline-size: var(--medallion-icon);
+    position: relative;
+  }
+}
+
+// Sizes: 24 (icon 14), 32 (16), 40 (20), 96 (32).
+.size24 { --medallion-size: 1.5rem; --medallion-icon: 0.875rem; }
+.size32 { --medallion-size: 2rem; --medallion-icon: 1rem; }
+.size40 { --medallion-size: 2.5rem; --medallion-icon: 1.25rem; }
+.size96 { --medallion-size: 6rem; --medallion-icon: 2rem; }
+
+// Tones
+.neutral {
+  --tone-solid: var(--theme-bg-inverse);
+  --tone-surface: var(--theme-bg-muted);
+  --tone-border: var(--theme-border-default);
+  --tone-fg: var(--theme-text-secondary);
+}
+
+.info {
+  --tone-solid: var(--theme-accent-default);
+  --tone-surface: var(--theme-feedback-info-surface);
+  --tone-border: var(--theme-feedback-info-border);
+  --tone-fg: var(--theme-text-accent);
+}
+
+.error {
+  --tone-solid: var(--theme-feedback-error);
+  --tone-surface: var(--theme-feedback-error-surface);
+  --tone-border: var(--theme-feedback-error-border);
+  --tone-fg: var(--theme-feedback-error-text);
+}
+
+.accent {
+  --tone-solid: var(--theme-accent-default);
+  --tone-surface: var(--theme-feedback-info-surface);
+  --tone-border: var(--theme-feedback-info-border);
+  --tone-fg: var(--theme-text-accent);
+}
+
+// Styles
+.solid {
+  --medallion-bg: var(--tone-solid);
+  --medallion-fg: var(--theme-text-on-accent);
+}
+
+.tint {
+  --medallion-bg: var(--tone-surface);
+  --medallion-border: var(--tone-border);
+  --medallion-fg: var(--tone-fg);
+}
+
+.inverse {
+  --medallion-bg: var(--theme-bg-raised);
+  --medallion-border: var(--tone-border);
+  --medallion-fg: var(--tone-fg);
+}
+
+// Ring: only for the Ready success moment, a tone ring and a 64 px disc.
+.ring {
+  --medallion-bg: var(--theme-feedback-info-ring);
+  --medallion-border: var(--tone-border);
+  --medallion-fg: var(--tone-fg);
+
+  &::before {
+    background: var(--theme-bg-raised);
+    block-size: 4rem;
+    border-radius: var(--radius-full);
+    box-shadow: var(--elevation-md);
+    content: '';
+    inline-size: 4rem;
+    position: absolute;
+  }
+}
+
+// Repeated failed attempt: scale 1 → 1.08 → 1, no shaking.
+.bump {
+  animation: bump var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+// ── Alert / card ────────────────────────────────────────────
+// <div role="note" class={fb.alert}>: stroke only, no fill, no shadow.
+// Medallion 40 by tone: Neutral Inverse, Info Tint Info, Warning Solid Accent.
+.alert {
+  align-items: flex-start;
+  border: var(--stroke-1) solid var(--theme-border-default);
+  border-radius: var(--radius-md);
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+.alertWarning {
+  border-color: var(--theme-accent-border-strong);
+}
+
+.alertError {
+  border-color: var(--theme-feedback-error-border);
+}
+
+.alertText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.alertTitle {
+  @include typ('label-strong');
+
+  color: var(--theme-text-primary);
+}
+
+.alertBody {
+  @include typ('body-sm');
+
+  color: var(--theme-text-secondary);
+}
+
+// ── Toast / status ──────────────────────────────────────────
+// role="status" region present from page load; add .toastVisible with the
+// text. Glass pill of the navigation bar material, pinned to the bottom of
+// the view, 32 px above the edge (16 px plus the safe area on a phone).
+.toast {
+  @include typ('label-strong');
+
+  align-items: center;
+  backdrop-filter: blur(var(--blur-nav));
+  background: var(--theme-bg-nav);
+  border: var(--stroke-1) solid var(--theme-nav-control-border);
+  border-radius: var(--radius-full);
+  box-shadow: var(--elevation-nav);
+  color: var(--theme-text-on-accent);
+  display: flex;
+  gap: 0.75rem;
+  inset-block-end: calc(var(--space-6) + env(safe-area-inset-bottom));
+  inset-inline-start: 50%;
+  opacity: 0;
+  padding: 0.5rem 1.25rem 0.5rem 0.5rem;
+  pointer-events: none;
+  position: fixed;
+  transition:
+    opacity var(--motion-duration-hover) var(--motion-easing-in),
+    translate var(--motion-duration-hover) var(--motion-easing-in);
+  translate: -50% 0.5rem;
+  z-index: 100;
+
+  @include from(tablet) {
+    inset-block-end: 2rem;
+  }
+
+  &:empty {
+    display: none;
+  }
+}
+
+.toastVisible {
+  opacity: 1;
+  transition-timing-function: var(--motion-easing-out);
+  translate: -50% 0;
+}

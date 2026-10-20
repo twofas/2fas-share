@@ -7,6 +7,8 @@
 
 import { useRef, useEffect } from 'preact/hooks';
 import QRCode from 'qrcode';
+import QrIcon from '@/assets/icons/qr-code-line.svg?react';
+import { Medallion } from '../../Parts';
 import S from './ContentTypes.module.scss';
 import { t } from '@/i18n';
 
@@ -102,11 +104,14 @@ export default function WifiQr ({ content }) {
   }
 
   return (
-    <div className={S.wifiQr}>
+    <figure className={S.wifiQr}>
       <div className={S.wifiQrCanvas}>
         <canvas ref={canvasRef} />
       </div>
-      <p className={S.wifiQrLabel}>{t('content.wifiQr')}</p>
-    </div>
+      <figcaption className={S.wifiQrLabel}>
+        <Medallion icon={QrIcon} size={32} />
+        {t('content.wifiQr')}
+      </figcaption>
+    </figure>
   );
 }

@@ -5,7 +5,8 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import { useState } from 'preact/hooks';
+import { Fragment } from 'preact';
+import { useState, useEffect, useLayoutEffect, useRef, useId } from 'preact/hooks';
 import { FRONTEND_URL } from '@/env';
 import { createSecret } from '@/api/client';
 import { toBase64, toBase64Url } from '@/crypto/encoding';
@@ -17,29 +18,112 @@ import {
   encryptData
 } from '@/crypto/encrypt';
 import PrefetchLink from '@/components/PrefetchLink';
-import B from '@/styles/box-sections.module.scss';
-import C from '@/styles/controls.module.scss';
+import { WindowCard, WindowSection, WindowFooter, FieldHeader } from '@/components/Window';
+import FieldMessage from './FieldMessage';
+import btn from '@/styles/ds/button.module.scss';
+import lnk from '@/styles/ds/link.module.scss';
+import field from '@/styles/ds/field.module.scss';
+import ctl from '@/styles/ds/controls.module.scss';
 import S from '../AddNewBox.module.scss';
-import bS from '@/styles/buttons.module.scss';
-import ErrorMessage from '@/components/ErrorMessage/ErrorMessage';
+import EyeIcon from '@/assets/icons/eye-line.svg?react';
+import EyeOffIcon from '@/assets/icons/eye-off-line.svg?react';
 import { t } from '@/i18n';
+
+// Segmented / expiry: three presets and "Other", which reveals the
+// Generator / custom expiry track. Together the same six values as before.
+const PRESETS = [
+  { value: 3600, label: 'expiry.1hour', short: 'generator.hourShort' },
+  { value: 86400, label: 'expiry.1day', short: 'generator.dayShort' },
+  { value: 604800, label: 'generator.week', short: 'expiry.7days' }
+];
+const CUSTOM = [
+  { value: 300, label: 'v2.expiry.5min' },
+  { value: 1800, label: 'v2.expiry.30min' },
+  { value: 2592000, label: 'expiry.30days' }
+];
+const OTHER = 'other';
+const CUSTOM_DEFAULT = 1800;
 
 /**
  * Form for creating a new secure share (custom/text content type).
  * Handles client-side encryption (AES-256-GCM) and API submission.
  * @param {Object} props
  * @param {(result: {link: string, expiration: number, oneTimeAccess: boolean, password: string}) => void} props.onSuccess - Called with the share result on success.
+ * @param {boolean} [props.focusOnMount] - Focus the content field after mounting.
+ * @param {string} [props.labelledBy] - Id of the page heading that names the form.
  * @returns {import('preact').JSX.Element} The add new form.
  */
-export default function AddNewForm({ onSuccess }) {
+export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy }) {
   const [text, setText] = useState('');
-  const [expiration, setExpiration] = useState(1800);
-  const [oneTimeAccess, setOneTimeAccess] = useState(false);
+  const [expiration, setExpiration] = useState(3600);
+  const [oneTimeAccess, setOneTimeAccess] = useState(true);
   const [usePassword, setUsePassword] = useState(false);
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Presentational: "Other" selected in the expiry track, failed attempts (medallion bump).
+  const [otherSelected, setOtherSelected] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const noteRef = useRef(null);
+  const passwordRef = useRef(null);
+  const uid = useId();
+  /**
+   * Build a unique element id for this generator instance.
+   * @param {string} name - Local name.
+   * @returns {string} Element id.
+   */
+  const id = (name) => `${uid}-${name}`;
+
+  useEffect(() => {
+    if (focusOnMount) {
+      noteRef.current?.focus();
+    }
+  }, [focusOnMount]);
+
+  // The content field keeps the height it has in the Empty state: a message,
+  // the custom expiry block or the password field grow the window instead of
+  // shrinking the field (Figma: Error +32 px, Custom +84 px). The height is
+  // measured only while none of those is shown.
+  const plainRef = useRef(true);
+  plainRef.current = !errors.content && !errors.submit && !otherSelected && !usePassword;
+
+  useLayoutEffect(() => {
+    const note = noteRef.current;
+
+    if (!note) {
+      return undefined;
+    }
+
+    /** Measure the free height of the field in the Empty state and keep it. */
+    const lock = () => {
+      if (!plainRef.current) {
+        return;
+      }
+
+      note.style.minBlockSize = '';
+      note.style.minBlockSize = `${note.offsetHeight}px`;
+    };
+
+    lock();
+    document.fonts?.ready.then(lock);
+    window.addEventListener('resize', lock);
+
+    return () => window.removeEventListener('resize', lock);
+  }, []);
+
+  // Field / textarea grows with the content up to a ceiling, then scrolls
+  // inside. CSS field-sizing does it where supported; elsewhere measure it.
+  useEffect(() => {
+    const note = noteRef.current;
+
+    if (!note || CSS.supports?.('field-sizing', 'content')) {
+      return;
+    }
+
+    note.style.blockSize = 'auto';
+    note.style.blockSize = `${note.scrollHeight + 2}px`;
+  }, [text]);
 
   /**
    * Validate form fields before submission.
@@ -49,7 +133,7 @@ export default function AddNewForm({ onSuccess }) {
     const newErrors = {};
 
     if (!text.trim()) {
-      newErrors.content = t('addForm.errorContentRequired');
+      newErrors.content = t('v2.addForm.errorContentRequired');
     }
 
     if (usePassword && password.trim().length < 8) {
@@ -68,10 +152,22 @@ export default function AddNewForm({ onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validate() || isSubmitting) {
+    if (isSubmitting) {
       return;
     }
 
+    if (!validate()) {
+      setAttempt((n) => n + 1);
+      // Focus goes to the first invalid field; the entered content stays.
+      if (!text.trim()) {
+        noteRef.current?.focus();
+      } else {
+        passwordRef.current?.focus();
+      }
+      return;
+    }
+
+    setAttempt(0);
     setIsSubmitting(true);
     setErrors({});
 
@@ -108,150 +204,291 @@ export default function AddNewForm({ onSuccess }) {
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <div className={B.noteSection}>
-        <div className={B.noteHeader}>
-          <h6>{t('addForm.secureNote')}</h6>
-        </div>
-        <textarea
-          id='secure-note'
-          className={B.noteTextarea}
-          placeholder={t('addForm.notePlaceholder')}
-          value={text}
-          onInput={(e) => setText(e.target.value)}
+  /**
+   * Select an option of the first expiry track. "Other" reveals the second
+   * track with its default value; a preset hides it again.
+   * @param {number|string} value - Seconds or OTHER.
+   */
+  const selectPreset = (value) => {
+    if (value === OTHER) {
+      setOtherSelected(true);
+      setExpiration(CUSTOM_DEFAULT);
+      return;
+    }
+
+    setOtherSelected(false);
+    setExpiration(value);
+  };
+
+  /**
+   * Toggle the password option; turning it off clears the password and its error.
+   * @param {Event} e - Change event of the switch.
+   */
+  const togglePassword = (e) => {
+    setUsePassword(e.target.checked);
+
+    if (!e.target.checked) {
+      setPassword('');
+      setShowPassword(false);
+      setErrors((prev) => {
+        const { password: _, ...rest } = prev;
+        return rest;
+      });
+    }
+  };
+
+  // Error semantics: the CTA keeps its look but is aria-disabled while the
+  // reported problem is still there; pressing it validates again.
+  const blocked = Boolean(
+    (errors.content && !text.trim()) ||
+    (errors.password && usePassword && password.trim().length < 8)
+  );
+  const ctaDescribedBy = [
+    errors.content && id('note-error'),
+    errors.password && id('password-error')
+  ].filter(Boolean).join(' ') || undefined;
+
+  /**
+   * Render one option of a segmented track: a visually hidden radio and its pill.
+   * @param {string} name - Radio group name.
+   * @param {number|string} value - Option value.
+   * @param {boolean} checked - Whether it is selected.
+   * @param {string} label - Full label (also the accessible name).
+   * @param {string} [short] - Short label shown below 768 px.
+   * @param {(value: number|string) => void} onSelect - Selection handler.
+   * @returns {import('preact').JSX.Element} Radio and pill.
+   */
+  /**
+   * Home and End jump to the first and last option of a radio group
+   * (arrows are native); the selection follows focus, as with the arrows.
+   * @param {KeyboardEvent} e - Key event on a radio.
+   */
+  const selectEdge = (e) => {
+    if (e.key !== 'Home' && e.key !== 'End') {
+      return;
+    }
+
+    const radios = [...e.currentTarget.form.querySelectorAll(`input[type="radio"][name="${e.currentTarget.name}"]`)];
+    const target = e.key === 'Home' ? radios[0] : radios[radios.length - 1];
+
+    e.preventDefault();
+    target.focus();
+    target.click();
+  };
+
+  const renderOption = (name, value, checked, label, short, onSelect) => {
+    const optionId = id(`${name}-${value}`);
+
+    return (
+      <Fragment key={optionId}>
+        <input
+          type='radio'
+          className={ctl.radio}
+          id={optionId}
+          name={id(name)}
+          value={value}
+          checked={checked}
+          aria-label={short ? label : undefined}
+          onKeyDown={selectEdge}
+          onChange={() => onSelect(value)}
         />
-      </div>
-      <div className={`${S.errorWrap} ${S.errorNote} ${errors.content ? S.errorVisible : ''}`}>
-        <ErrorMessage className={S.errorInner}>{errors.content}</ErrorMessage>
-      </div>
-
-      <div className={B.optionRow}>
-        <div className={B.optionText}>
-          <h6 className={B.optionTitle}>{t('addForm.expirationTitle')}</h6>
-          <p className={B.optionDesc}>
-            {t('addForm.expirationDesc')}
-          </p>
-        </div>
-        <div className={C.selectWrapper}>
-          <select
-            className={C.expirationSelect}
-            value={expiration}
-            onChange={(e) => setExpiration(Number(e.target.value))}
-          >
-            <option value={300}>{t('expiry.5min')}</option>
-            <option value={1800}>{t('expiry.30min')}</option>
-            <option value={3600}>{t('expiry.1hour')}</option>
-            <option disabled>──────────</option>
-            <option value={86400}>{t('expiry.1day')}</option>
-            <option value={604800}>{t('expiry.7days')}</option>
-            <option value={2592000}>{t('expiry.30days')}</option>
-          </select>
-        </div>
-      </div>
-
-      <div className={B.optionRow}>
-        <div className={B.optionText}>
-          <h6 className={B.optionTitle}>{t('addForm.oneTimeAccessTitle')}</h6>
-          <p className={B.optionDesc}>
-            {t('addForm.oneTimeAccessDesc')}
-          </p>
-        </div>
-        <label className={C.toggle}>
-          <input
-            type='checkbox'
-            className={C.toggleInput}
-            checked={oneTimeAccess}
-            onChange={(e) => setOneTimeAccess(e.target.checked)}
-          />
-          <span className={C.toggleTrack} />
+        <label className={ctl.option} htmlFor={optionId}>
+          {short ? (
+            <>
+              <span className={S.labelLong}>{label}</span>
+              <span className={S.labelShort} aria-hidden='true'>{short}</span>
+            </>
+          ) : label}
         </label>
-      </div>
+      </Fragment>
+    );
+  };
 
-      <div className={B.optionBlock}>
-        <div className={B.optionRow}>
-          <div className={B.optionText}>
-            <h6 className={B.optionTitle}>{t('addForm.passwordTitle')}</h6>
-            <p className={B.optionDesc}>
-              {t('addForm.passwordDesc')}
-            </p>
+  const sentence = t('v2.legal.share');
+  const terms = t('legal.termsOfUse');
+  const privacy = t('legal.privacyPolicy');
+  const [beforeTerms, afterTermsRaw] = sentence.split(terms);
+  const [betweenLinks, afterPrivacy] = afterTermsRaw.split(privacy);
+
+  return (
+    <form className={S.view} onSubmit={handleSubmit} noValidate aria-labelledby={labelledBy}>
+      <WindowCard className={S.card}>
+        <WindowSection className={S.main}>
+          <div className={S.noteStack}>
+            <FieldHeader
+              htmlFor={id('note')}
+              title={t('v2.addForm.secureNote')}
+              caption={t('stepPreview.noteCaption')}
+              captionId={id('note-caption')}
+              star
+            />
+            <textarea
+              ref={noteRef}
+              id={id('note')}
+              className={`${field.textarea} ${S.note}`}
+              placeholder={t('v2.addForm.notePlaceholder')}
+              value={text}
+              readOnly={isSubmitting}
+              aria-invalid={errors.content ? 'true' : undefined}
+              aria-describedby={errors.content ? `${id('note-caption')} ${id('note-error')}` : id('note-caption')}
+              onInput={(e) => setText(e.target.value)}
+            />
+            {errors.content && (
+              <FieldMessage id={id('note-error')} attempt={attempt} className={S.stackMessage}>{errors.content}</FieldMessage>
+            )}
           </div>
-          <label className={C.toggle}>
+
+          <fieldset
+            className={S.group}
+            disabled={isSubmitting}
+            aria-describedby={id('expiry-desc')}
+          >
+            <legend className={S.groupLabel}>{t('v2.addForm.expirationTitle')}</legend>
+            <p id={id('expiry-desc')} className='visually-hidden'>{t('addForm.expirationDesc')}</p>
+            <div className={`${ctl.segmented} ${ctl.segmentedSliding} ${S.track}`}>
+              <span
+                className={ctl.indicator}
+                aria-hidden='true'
+                style={{
+                  '--index': otherSelected ? PRESETS.length : PRESETS.findIndex(p => p.value === expiration),
+                  '--count': PRESETS.length + 1
+                }}
+              />
+              {PRESETS.map((p) => renderOption(
+                'expiry', p.value, !otherSelected && expiration === p.value,
+                t(p.label), t(p.short), selectPreset
+              ))}
+              {renderOption('expiry', OTHER, otherSelected, t('generator.other'), null, selectPreset)}
+            </div>
+          </fieldset>
+
+          <div className={`${S.collapse} ${S.customCollapse} ${otherSelected ? S.expanded : ''}`} inert={!otherSelected}>
+            <div className={S.collapseInner}>
+              <fieldset className={`${S.group} ${S.custom}`} disabled={isSubmitting}>
+                <legend className={S.groupLabel}>{t('generator.otherDuration')}</legend>
+                <div className={`${ctl.segmented} ${ctl.segmentedSliding} ${S.track} ${S.trackCustom}`}>
+                  <span
+                    className={ctl.indicator}
+                    aria-hidden='true'
+                    style={{ '--index': Math.max(0, CUSTOM.findIndex(c => c.value === expiration)), '--count': CUSTOM.length }}
+                  />
+                  {CUSTOM.map((c) => renderOption(
+                    'expiry-other', c.value, otherSelected && expiration === c.value,
+                    t(c.label), null, setExpiration
+                  ))}
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </WindowSection>
+
+        <WindowSection compact className={S.option}>
+          <label className={`${ctl.switchRow} ${S.optionRow}`}>
+            <span className={S.optionText}>
+              <span id={id('once-title')} className={S.optionTitle}>{t('v2.addForm.oneTimeAccessTitle')}</span>
+              <span id={id('once-desc')} className={S.optionDesc}>{t('v2.addForm.oneTimeAccessDesc')}</span>
+            </span>
             <input
               type='checkbox'
-              className={C.toggleInput}
-              checked={usePassword}
-              onChange={(e) => {
-                setUsePassword(e.target.checked);
-
-                if (!e.target.checked) {
-                  setPassword('');
-                  setShowPassword(false);
-                  setErrors((prev) => {
-                    const { password: _, ...rest } = prev;
-                    return rest;
-                  });
-                }
-              }}
+              role='switch'
+              className={ctl.switch}
+              checked={oneTimeAccess}
+              disabled={isSubmitting}
+              aria-labelledby={id('once-title')}
+              aria-describedby={id('once-desc')}
+              onChange={(e) => setOneTimeAccess(e.target.checked)}
             />
-            <span className={C.toggleTrack} />
           </label>
-        </div>
-        <div className={`${B.passwordCollapse} ${usePassword ? B.expanded : ''}`}>
-          <div className={B.passwordCollapseInner}>
-            <div className={C.passwordField}>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                className={C.passwordInput}
-                placeholder={t('addForm.passwordPlaceholder')}
-                value={password}
-                onInput={(e) => setPassword(e.target.value)}
-              />
-              <button
-                type='button'
-                className={C.eyeButton}
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={t('common.togglePasswordVisibility')}
-              >
-                <span className={C.eyeIcon} />
-              </button>
-            </div>
-            <div className={`${S.errorWrap} ${errors.password ? S.errorVisible : ''}`}>
-              <ErrorMessage className={`${S.errorInner} ${S.errorField}`}>{errors.password}</ErrorMessage>
+        </WindowSection>
+
+        <WindowSection compact className={S.option}>
+          <label className={`${ctl.switchRow} ${S.optionRow}`}>
+            <span className={S.optionText}>
+              <span id={id('pass-title')} className={S.optionTitle}>
+                {t('v2.addForm.passwordTitle')}{' '}
+                <span className={S.optional}>{t('stepPreview.optionalSuffix')}</span>
+              </span>
+              <span id={id('pass-desc')} className={S.optionDesc}>{t('v2.addForm.passwordDesc')}</span>
+            </span>
+            <input
+              type='checkbox'
+              role='switch'
+              className={ctl.switch}
+              checked={usePassword}
+              disabled={isSubmitting}
+              aria-labelledby={id('pass-title')}
+              aria-describedby={id('pass-desc')}
+              aria-expanded={usePassword ? 'true' : 'false'}
+              aria-controls={id('pass-field')}
+              onChange={togglePassword}
+            />
+          </label>
+
+          <div
+            id={id('pass-field')}
+            className={`${S.collapse} ${usePassword ? S.expanded : ''}`}
+            inert={!usePassword}
+          >
+            <div className={S.collapseInner}>
+              <div className={S.collapseBody}>
+                <div className={field.control}>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    className={field.input}
+                    ref={passwordRef}
+                    placeholder={t('addForm.passwordPlaceholder')}
+                    aria-label={t('content.password')}
+                    autoComplete='new-password'
+                    value={password}
+                    readOnly={isSubmitting}
+                    aria-invalid={errors.password ? 'true' : undefined}
+                    aria-describedby={errors.password ? id('password-error') : undefined}
+                    onInput={(e) => setPassword(e.target.value)}
+                  />
+                  <button
+                    type='button'
+                    className={field.adornment}
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={t('common.togglePasswordVisibility')}
+                    aria-pressed={showPassword ? 'true' : 'false'}
+                  >
+                    {showPassword ? <EyeOffIcon aria-hidden='true' /> : <EyeIcon aria-hidden='true' />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <FieldMessage id={id('password-error')} attempt={attempt}>{errors.password}</FieldMessage>
+                )}
+              </div>
             </div>
           </div>
+        </WindowSection>
+      </WindowCard>
+
+      <WindowFooter className={S.footer}>
+        <button
+          type='submit'
+          className={`${btn.cta} ${btn.ctaBig} ${S.cta}`}
+          aria-busy={isSubmitting ? 'true' : undefined}
+          aria-disabled={isSubmitting || blocked ? 'true' : undefined}
+          aria-describedby={ctaDescribedBy}
+        >
+          {isSubmitting ? t('addForm.submitting') : t('v2.addForm.submit')}
+        </button>
+
+        <div aria-live='polite' className={S.submitError}>
+          {errors.submit && (
+            <FieldMessage id={id('submit-error')}>{errors.submit}</FieldMessage>
+          )}
         </div>
-      </div>
 
-      <button
-        type='submit'
-        className={`${bS.btn} ${bS.fW}`}
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? t('addForm.submitting') : t('addForm.submit')}
-      </button>
-
-      {(() => {
-        const sentence = t('legal.share');
-        const terms = t('legal.termsOfUse');
-        const privacy = t('legal.privacyPolicy');
-        const [beforeTerms, afterTermsRaw] = sentence.split(terms);
-        const [betweenLinks, afterPrivacy] = afterTermsRaw.split(privacy);
-
-        return (
-          <p className={S.addBoxLegalConsent}>
-            {beforeTerms}
-            <PrefetchLink href='/terms-of-use'>{terms}</PrefetchLink>
-            {betweenLinks}
-            <PrefetchLink href='/privacy-policy'>{privacy}</PrefetchLink>
-            {afterPrivacy}
-          </p>
-        );
-      })()}
-
-      <div className={`${S.errorWrap} ${errors.submit ? S.errorVisible : ''}`}>
-        <ErrorMessage className={`${S.errorInner} ${S.errorSubmit}`}>{errors.submit}</ErrorMessage>
-      </div>
+        <p className={S.legal}>
+          {beforeTerms}
+          <PrefetchLink href='/terms-of-use' className={`${lnk.link} ${lnk.linkAccent}`}>{terms}</PrefetchLink>
+          {betweenLinks}
+          <PrefetchLink href='/privacy-policy' className={`${lnk.link} ${lnk.linkAccent}`}>{privacy}</PrefetchLink>
+          {afterPrivacy}
+        </p>
+      </WindowFooter>
     </form>
   );
 }

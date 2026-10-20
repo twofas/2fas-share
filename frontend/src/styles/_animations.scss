@@ -5,18 +5,6 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 @keyframes fadeOut {
   from {
     opacity: 1;
@@ -29,108 +17,38 @@
   }
 }
 
-@keyframes fadeInDown {
+// ── Design system ───────────────────────────────────────────
+
+// Loading indicator: 1 s rotation, linear.
+@keyframes spin {
+  to {
+    rotate: 1turn;
+  }
+}
+
+// Light arc around the CTA border: one lap in 1.6 s, linear, on hover only.
+@keyframes ctaArc {
+  to {
+    --cta-arc-angle: 360deg;
+  }
+}
+
+// Repeated error under a field: the medallion scales 1 → 1.08 → 1 in 320 ms.
+@keyframes bump {
+  50% {
+    scale: 1.08;
+  }
+}
+
+// Message expanding under a field (400 ms).
+@keyframes expandIn {
   from {
+    grid-template-rows: 0fr;
     opacity: 0;
-    transform: translateY(-40px);
   }
 
   to {
+    grid-template-rows: 1fr;
     opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInUpShort {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInUpScale {
-  from {
-    opacity: 0;
-    transform: translateY(16px) scale(0.92);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes fadeOutRight {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  to {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-}
-
-@keyframes popIn {
-  from {
-    opacity: 0;
-    scale: 0.7;
-  }
-
-  to {
-    opacity: 1;
-    scale: 1;
-  }
-}
-
-@keyframes popInSubtle {
-  from {
-    opacity: 0;
-    scale: 0.7;
-  }
-
-  to {
-    opacity: 0.3;
-    scale: 1;
-  }
-}
-
-@keyframes fadeToOpacity {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: var(--target-opacity, 1);
   }
 }

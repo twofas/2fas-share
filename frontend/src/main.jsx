@@ -9,7 +9,7 @@ import './utils/iframeGuard';
 import './env';
 import { render } from 'preact';
 import App from './app';
-import { isMontserratWorking } from './utils/isMontserratWorking';
+import { isFontWorking } from './utils/isFontWorking';
 import { currentLang } from './i18n';
 import './styles/global.scss';
 
@@ -21,29 +21,25 @@ import './styles/global.scss';
 document.documentElement.lang = currentLang;
 
 /**
- * Detect when Montserrat fails to render correctly (e.g. iOS Lockdown Mode
+ * Detect when Inter fails to render correctly (e.g. iOS Lockdown Mode
  * loads the font but breaks the variable weight axis, rendering everything
  * at the thinnest weight). Uses rendering measurement instead of the Font
- * Loading API, which can't detect a loaded-but-broken font.
- * Starts with system-font class to use fallback stack, removes it only
- * when Montserrat is confirmed working with proper weight rendering.
+ * Loading API alone, which can't detect a loaded-but-broken font.
+ * The page renders with Inter (and a metric-matched fallback while it loads);
+ * the system font stack is switched on only when Inter turns out broken, so
+ * a working font never causes a second layout change.
  */
-document.documentElement.classList.add('system-font');
-
-let fontResolved = false;
-
-[0, 200, 1000, 3000].forEach(delay => {
-  setTimeout(() => {
-    if (fontResolved) {
-      return;
-    }
-
-    if (isMontserratWorking()) {
-      fontResolved = true;
-      document.documentElement.classList.remove('system-font');
-    }
-  }, delay);
-});
+if (document.fonts?.load) {
+  Promise.all([document.fonts.load('400 16px Inter'), document.fonts.load('800 16px Inter')])
+    .then(() => {
+      if (!isFontWorking('Inter')) {
+        document.documentElement.classList.add('system-font');
+      }
+    })
+    .catch(() => {
+      document.documentElement.classList.add('system-font');
+    });
+}
 
 /**
  * Non-root paths without hash are invalid — redirect to 404.

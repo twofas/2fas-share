@@ -1,0 +1,291 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Section / 11 Document: heading on the 4|8 grid over the arcs, then a
+// surface sheet with the document switcher (rail) and the prose column.
+// Layout=Mobile below 1024 px (stacked), Layout=Desktop from 1024 px.
+
+@use '@/styles/variables' as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  overflow: clip;
+  position: relative;
+}
+
+// ── Heading ─────────────────────────────────────────────────
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-page-top) var(--space-page-margin) var(--space-section-block);
+  position: relative;
+  z-index: 1;
+
+  @include from(layout) {
+    @include grid;
+
+    gap: 0 var(--space-page-gutter);
+    // Figma: space/32 above the heading at every desktop width (72 px at
+    // 1024, 128 at 1440, 180 at 1920, 256 at 2560), clear of the nav bar.
+    padding: var(--space-32) var(--space-page-margin) 0;
+  }
+}
+
+.eyebrow {
+  @include typ('body-base');
+
+  align-items: center;
+  align-self: flex-start;
+  color: var(--theme-text-primary);
+  display: inline-flex;
+  gap: var(--space-2);
+  margin: 0;
+
+  @include from(layout) {
+    align-self: start;
+    grid-column: 1 / span 4;
+    padding: var(--space-section-block) var(--space-16) var(--space-section-block) 0;
+  }
+}
+
+.eyebrowStar {
+  block-size: 0.9375rem;
+  flex-shrink: 0;
+  inline-size: 0.9375rem;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+
+  @include from(layout) {
+    grid-column: 5 / span 8;
+    padding: var(--space-section-block) 0 var(--space-section-block) var(--space-16);
+  }
+}
+
+.title {
+  @include typ('display-h1');
+
+  color: var(--theme-text-primary);
+  margin: 0;
+  text-wrap: balance;
+}
+
+// "Last Updated" line under the title of a legal document.
+.date {
+  @include typ('body-sm');
+
+  color: var(--theme-text-secondary);
+  margin: 0;
+  max-inline-size: var(--size-column-prose);
+
+  strong {
+    font-weight: inherit;
+  }
+}
+
+// Lead under the title (Open Source Licenses).
+.lead {
+  @include typ('body-lg');
+
+  color: var(--theme-text-secondary);
+  margin: 0;
+  max-inline-size: var(--size-column-prose);
+}
+
+// ── Sheet ───────────────────────────────────────────────────
+.sheet {
+  background: var(--theme-bg-surface);
+  border-start-end-radius: var(--radius-lg);
+  border-start-start-radius: var(--radius-lg);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-10);
+  padding: var(--space-section-block-sm) var(--space-page-margin) var(--space-section-block);
+  position: relative;
+  z-index: 1;
+
+  @include from(layout) {
+    @include grid;
+
+    align-items: start;
+    gap: 0 var(--space-page-gutter);
+    padding: 0 var(--space-page-margin);
+  }
+}
+
+.rail {
+  @include from(layout) {
+    align-self: stretch;
+    grid-column: 1 / span 4;
+    padding: var(--space-section-block-sm) var(--space-16) var(--space-section-block) 0;
+  }
+}
+
+// Document switcher: glass frame around a raised card.
+.switcher {
+  background: var(--theme-glass-fill);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-md);
+  // Figma strokes sit inside the frame: the card starts space/2 from the
+  // outer edge, so the 1 px border is taken out of the padding.
+  padding: calc(var(--space-2) - var(--stroke-1));
+
+  @include from(layout) {
+    inset-block-start: calc(var(--space-page-top) + var(--space-6));
+    position: sticky;
+  }
+}
+
+.switcherCard {
+  background: var(--theme-bg-raised);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  list-style: none;
+  margin: 0;
+  padding: var(--space-2);
+}
+
+.item {
+  @include typ('body-base');
+  @include interactive(color, background-color);
+  @include focus-ring;
+
+  align-items: center;
+  border-radius: var(--radius-base);
+  color: var(--theme-text-secondary);
+  display: flex;
+  gap: var(--space-2);
+  min-block-size: 2.75rem;
+  padding: 0 var(--space-4) 0 var(--space-3);
+  text-decoration: none;
+
+  @include hover {
+    color: var(--theme-text-primary);
+  }
+
+  &[aria-current='page'] {
+    background: var(--theme-bg-muted);
+    color: var(--theme-text-primary);
+  }
+}
+
+// 16 px slot so the labels of all items stand on one line.
+.marker {
+  align-items: center;
+  block-size: 1rem;
+  display: inline-flex;
+  flex-shrink: 0;
+  inline-size: 1rem;
+  justify-content: center;
+
+  svg {
+    block-size: 0.9375rem;
+    inline-size: 0.9375rem;
+  }
+}
+
+// ── Content (prose) ─────────────────────────────────────────
+.content {
+  @include typ('body-base');
+
+  color: var(--theme-text-primary);
+  max-inline-size: var(--size-column-prose);
+  min-inline-size: 0;
+  overflow-wrap: break-word;
+
+  @include from(layout) {
+    grid-column: 5 / span 8;
+    padding: var(--space-section-block-sm) 0 var(--space-section-block) var(--space-16);
+    // The prose column starts after the indent, so the cap includes it.
+    max-inline-size: calc(var(--size-column-prose) + var(--space-16));
+  }
+
+  > * {
+    margin-block: 0;
+  }
+
+  > * + * {
+    margin-block-start: var(--space-4);
+  }
+
+  // Gap between sections (Figma: column gap).
+  > h2:not(:first-child),
+  > section + section {
+    margin-block-start: var(--space-32);
+
+    @include from(layout) {
+      margin-block-start: var(--space-10);
+    }
+  }
+
+  h2 {
+    @include typ('heading-h3');
+
+    color: var(--theme-text-primary);
+  }
+
+  h3 {
+    @include typ('title-lg');
+
+    color: var(--theme-text-primary);
+  }
+
+  // h3-wrap: 16 px above the subheading on top of the section gap.
+  > h3 {
+    margin-block-start: calc(var(--space-4) + 1rem);
+  }
+
+  ul {
+    list-style: disc;
+    padding-inline-start: 1.5rem;
+
+    ul {
+      list-style: circle;
+      margin-block-start: var(--space-1);
+    }
+  }
+
+  li::marker {
+    color: var(--theme-text-primary);
+  }
+
+  strong {
+    font-weight: 500;
+  }
+
+  // Link / inline, Tone=Accent: underlined at rest, hover text/primary.
+  a {
+    @include interactive;
+    @include focus-ring;
+
+    border-radius: var(--radius-full);
+    color: var(--theme-text-accent);
+    text-decoration-color: currentColor;
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--stroke-1);
+    text-underline-offset: 0.2em;
+
+    @include hover {
+      color: var(--theme-text-primary);
+    }
+  }
+}
+
+// Uppercase legal blocks (disclaimers, limitation of liability, arbitration).
+.uppercase {
+  text-transform: uppercase;
+}

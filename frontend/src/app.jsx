@@ -9,6 +9,7 @@ import { Suspense } from 'preact/compat';
 import { Router, Switch, Route } from 'wouter-preact';
 import { useHashLocation } from 'wouter-preact/use-hash-location';
 import Header from './components/Header';
+import SkipLink from './components/SkipLink';
 import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import Footer from './components/Footer';
@@ -31,6 +32,7 @@ export default function App() {
   return (
     <Router hook={useHashLocation}>
       <ScrollToTop />
+      <SkipLink />
       <Header />
       <Suspense fallback={<main aria-busy='true' />}>
         <Switch>

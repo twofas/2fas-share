@@ -5,53 +5,47 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import PrefetchLink from '@/components/PrefetchLink';
+import { useState, useEffect } from 'preact/hooks';
+import ArcsDecor from '@/components/ArcsDecor';
+import AddNewBox from '@/components/AddNewBox';
+import Benefits from './Benefits';
 import { t } from '@/i18n';
 import S from './WelcomeSection.module.scss';
-import bS from '@/styles/buttons.module.scss';
-import Ws1 from '@/assets/ws-1.svg?react';
-import Ws2 from '@/assets/ws-2.svg?react';
-import Ws3 from '@/assets/ws-3.svg?react';
 
 /**
- * Welcome hero section with animated concentric arcs, centered content,
- * and floating pills with dots aligned to the arc lines.
+ * Section / 01 Hero, generator: the headline column and the generator window
+ * over the background circles. The window sits above the text below 1280 px
+ * (Mobile and Tablet layouts) and beside it from 1280 px.
  * @returns {import('preact').JSX.Element} The welcome section component.
  */
 export default function WelcomeSection () {
+  const [resetKey, setResetKey] = useState(0);
+
+  useEffect(() => {
+    /** Remount the generator in the Empty state ("Create new link"). */
+    const handler = () => setResetKey(k => k + 1);
+    window.addEventListener('resetAddForm', handler);
+
+    return () => window.removeEventListener('resetAddForm', handler);
+  }, []);
+
   return (
-    <section className={S.welcome}>
-      <div className={S.welcomeCircles} aria-hidden='true'>
-        <Ws3 className={`${S.welcomeCircle} ${S.outer}`} />
-        <Ws2 className={`${S.welcomeCircle} ${S.middle}`} />
-        <Ws1 className={`${S.welcomeCircle} ${S.inner}`} />
-      </div>
+    <section id='hero' className={S.hero} aria-labelledby='hero-title'>
+      <ArcsDecor />
 
-      <div className={S.welcomeContent}>
-        <h1 className={S.welcomeTitle}>{t('welcome.title')}</h1>
-        <p className={S.welcomeSubtitle}>
-          {t('welcome.subtitle')}
-        </p>
-        <PrefetchLink
-          href='/add'
-          className={`${bS.btnHero} ${S.welcomeCta}`}
-        >
-          {t('header.shareSecurely')}
-        </PrefetchLink>
-      </div>
+      <div className={S.inner}>
+        <div className={S.copy}>
+          <Benefits className={S.benefits} />
+          <h1 id='hero-title' className={S.title}>
+            {t('welcome.titleStart')}{' '}
+            <span className={S.titleEnd}>{t('welcome.titleEnd')}</span>{' '}
+            {t('welcome.titleTail')}
+          </h1>
+          <p className={S.lead}>{t('v2.welcome.subtitle')}</p>
+        </div>
 
-      <div className={S.welcomePills} aria-hidden='true'>
-        <div className={`${S.welcomePill} ${S.topRight}`}>
-          <span className={S.welcomePillDot} />
-          <span className={S.welcomePillText}>{t('welcome.noAccounts')}</span>
-        </div>
-        <div className={`${S.welcomePill} ${S.bottomRight}`}>
-          <span className={S.welcomePillDot} />
-          <span className={S.welcomePillText}>{t('welcome.private')}</span>
-        </div>
-        <div className={`${S.welcomePill} ${S.left}`}>
-          <span className={S.welcomePillText}>{t('welcome.freeToUse')}</span>
-          <span className={S.welcomePillDot} />
+        <div className={S.place}>
+          <AddNewBox key={resetKey} variant='hero' focusOnMount={resetKey > 0} />
         </div>
       </div>
     </section>

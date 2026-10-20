@@ -1,0 +1,93 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Pieces of Recipient / window: info row, alert, copy button, read-only field.
+
+@use '@/styles/variables' as *;
+
+// ── Window row: Medallion 40 Tint, Label/strong title, Body/xs caption ──
+.infoRow {
+  align-items: flex-start;
+  display: flex;
+  gap: var(--space-4);
+}
+
+.infoText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-inline-size: 0;
+  padding-block-start: 0.0625rem;
+}
+
+.infoTitle {
+  @include typ('label-strong');
+
+  color: var(--theme-text-primary);
+}
+
+.infoBody {
+  @include typ('body-xs');
+
+  color: var(--theme-text-secondary);
+}
+
+// ── Alert / card ────────────────────────────────────────────
+.alert {
+  align-items: flex-start;
+
+  // Text column: 1 px top inset and 2 px between title and sentence.
+  > div {
+    gap: 0.125rem;
+    padding-block-start: 0.0625rem;
+  }
+}
+
+// ── Copy button ─────────────────────────────────────────────
+// Button / icon in the read-only field: 44 px, 24 px glyph.
+.copyIcon {
+  block-size: 2.75rem;
+  border-radius: var(--radius-full);
+  inline-size: 2.75rem;
+}
+
+.copied {
+  color: var(--theme-text-accent);
+
+  svg {
+    animation: copiedIn var(--motion-duration-hover) var(--motion-easing-out);
+  }
+}
+
+@keyframes copiedIn {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+}
+
+// ── Field / textarea, Readonly + Copy button ─────────────────
+.secret {
+  position: relative;
+}
+
+.secretText {
+  field-sizing: content;
+  max-block-size: 24rem;
+  // Room for the 44 px copy button with the same 12 px inset above and below.
+  min-block-size: calc(2.75rem + 2 * 0.75rem);
+  overflow-wrap: anywhere;
+  padding-inline-end: calc(2.75rem + 1.5rem);
+  white-space: pre-wrap;
+}
+
+.secretCopy {
+  inset-block-start: 0.75rem;
+  inset-inline-end: 0.75rem;
+  position: absolute;
+}

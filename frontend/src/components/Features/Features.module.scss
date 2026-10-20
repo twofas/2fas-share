@@ -1,0 +1,189 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Section / 05 Four features (Figma 700:2038, features part). Heading row
+// on the accent/surface → surface-end gradient, then the rows on
+// accent/default, rounded at the bottom. From 1024 px the eyebrow sits in
+// the aside (4 columns) and the rows in the main column behind a 1 px line;
+// below 1024 px the eyebrow is above the heading and the rows run full width.
+
+@use '@/styles/variables' as *;
+@use '@/pages/Home/sections' as *;
+
+// Entrance (Figma E · Motion, 05 features; 11.45 s = 0): heading at 0, rows
+// from X −140 on the spring, 0.24 s apart; inside a row the title (X −32)
+// follows at +0.10 s, the description (X −24) at +0.22 s and the ray mark
+// (scale 0.2 → 1, rotate −45° → 0) at +0.28 s.
+@include motion-keyframes;
+
+$row-start: calc(0.05s + var(--i, 0) * 0.24s);
+
+.features {
+  color: var(--theme-text-on-accent);
+  overflow-x: clip;
+}
+
+// ── Heading row ─────────────────────────────────────────────
+.head {
+  background: linear-gradient(180deg, var(--theme-accent-surface), var(--theme-accent-surface-end));
+  border-block-end: var(--stroke-1) solid var(--theme-accent-border-strong);
+}
+
+.headInner {
+  @include band-inner;
+}
+
+.headCopy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding-block: var(--space-20);
+  padding-inline-end: var(--space-16);
+
+  @include from(layout) {
+    grid-column: 1 / span 8;
+  }
+}
+
+.title {
+  @include heading;
+  @include enter-heading(0s);
+}
+
+.eyebrow {
+  @include eyebrow;
+  @include enter-small(0s);
+
+  align-items: flex-start;
+
+  svg {
+    margin-block-start: 0.28125rem;
+  }
+}
+
+.eyebrowTop {
+  @include from(layout) {
+    display: none;
+  }
+}
+
+// ── Rows ────────────────────────────────────────────────────
+.body {
+  background: var(--theme-accent-default);
+  border-block-end: var(--stroke-1) solid var(--theme-accent-border);
+  border-end-end-radius: var(--radius-lg);
+  border-end-start-radius: var(--radius-lg);
+}
+
+.bodyInner {
+  @include band-inner;
+}
+
+.aside {
+  display: none;
+
+  @include from(layout) {
+    align-self: start;
+    display: flex;
+    grid-column: 1 / span 4;
+    padding-block: var(--space-16) var(--space-12);
+    padding-inline-end: var(--space-16);
+  }
+}
+
+.list {
+  list-style: none;
+
+  // Figma: the list's accent/border line with each row's accent/border-strong
+  // left stroke drawn over it, so the visible rule is border-strong.
+  @include from(layout) {
+    border-inline-start: var(--stroke-1) solid var(--theme-accent-border-strong);
+    grid-column: 5 / -1;
+  }
+}
+
+.row {
+  @include enter($row-start, $x: -8.75rem, $move: (entrance, spring));
+
+  align-items: center;
+  border-block-end: var(--stroke-1) solid var(--theme-accent-border-strong);
+  display: flex;
+  gap: var(--space-6);
+  padding-block: var(--space-8);
+
+  &:last-child {
+    border-block-end: 0;
+  }
+
+  @include from(layout) {
+    padding-inline: var(--space-16);
+
+    &:last-child {
+      padding-block-end: var(--space-16);
+    }
+  }
+}
+
+.rowText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-inline-size: 0;
+}
+
+.rowTitle {
+  @include typ('heading-h2');
+  @include enter(calc(#{$row-start} + 0.1s), $x: -2rem);
+}
+
+.rowDesc {
+  @include typ('body-base');
+  @include enter(calc(#{$row-start} + 0.22s), $x: -1.5rem);
+}
+
+// Underlined at rest like Link / inline on the band; the arrow stays
+// without the underline (inline-block).
+.link {
+  @include interactive(text-decoration-color);
+
+  border-radius: var(--radius-xs);
+  color: inherit;
+  text-decoration-color: currentColor;
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--stroke-1);
+  text-underline-offset: 0.2em;
+
+  @include hover {
+    text-decoration-color: transparent;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
+.arrow {
+  display: inline-block;
+  white-space: pre;
+}
+
+// Ray marks: 91 px (the second one 88.7 px, as in Figma).
+.ray {
+  @include enter(calc(#{$row-start} + 0.28s), $scale: 0.2, $rotate: -45deg);
+
+  block-size: 5.6875rem;
+  flex-shrink: 0;
+  inline-size: 5.6875rem;
+}
+
+.raySmall {
+  block-size: 5.5422rem;
+  inline-size: 5.5422rem;
+  margin-inline-start: 0.1453rem;
+}

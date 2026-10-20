@@ -1,0 +1,44 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Text styles from Figma (Display/*, Heading/*, Title/*, Body/*, Label/*,
+// Caption). Size and line height come from the type-scale tokens, so they
+// follow the breakpoint on their own. No CSS output; use `@include typ(...)`.
+
+@use 'sass:map';
+
+$type-styles: (
+  'display-hero': (size: --size-display-hero, line: --line-height-display-hero, weight: 400, tracking: -0.03em),
+  'display-h1': (size: --size-display-h1, line: --line-height-display-h1, weight: 400, tracking: -0.03em),
+  'heading-h2': (size: --size-h2, line: --line-height-h2, weight: 400, tracking: -0.03em),
+  'heading-h3': (size: --size-h3, line: --line-height-h3, weight: 500, tracking: -0.01em),
+  'title-lg': (size: --size-title-lg, line: --line-height-title-lg, weight: 400, tracking: -0.03em),
+  'title-alert': (size: --size-body-base, line: --line-height-body-base, weight: 500, tracking: 0),
+  'body-lg': (size: --size-body-lg, line: --line-height-body-lg, weight: 400, tracking: 0),
+  'body-base': (size: --size-body-base, line: --line-height-body-base, weight: 400, tracking: 0),
+  'body-sm': (size: --size-body-sm, line: --line-height-body-sm, weight: 400, tracking: -0.01em),
+  'body-xs': (size: --size-body-xs, line: --line-height-body-xs, weight: 400, tracking: -0.01em),
+  'body-hint': (size: --size-body-sm, line: --line-height-control, weight: 500, tracking: -0.01em),
+  'label-button': (size: --size-body-sm, line: --line-height-control, weight: 500, tracking: -0.01em),
+  'label-nav': (size: --size-body-sm, line: --line-height-control, weight: 500, tracking: -0.01em),
+  'label-sm': (size: --size-body-xs, line: --line-height-control, weight: 500, tracking: -0.01em),
+  'label-strong': (size: --size-body-sm, line: --line-height-body-sm, weight: 500, tracking: -0.01em),
+  'caption': (size: --size-caption, line: --line-height-body-xs, weight: 400, tracking: 0)
+);
+
+@mixin typ($name) {
+  @if not map.has-key($type-styles, $name) {
+    @error 'Unknown text style `#{$name}`. Known: #{map.keys($type-styles)}';
+  }
+
+  $style: map.get($type-styles, $name);
+
+  font-size: var(#{map.get($style, size)});
+  font-weight: map.get($style, weight);
+  letter-spacing: map.get($style, tracking);
+  line-height: var(#{map.get($style, line)});
+}

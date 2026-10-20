@@ -1,0 +1,316 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Buttons from the Figma design system (09 Components):
+// Button / CTA (Small in the bar, Big on the page), Button / secondary,
+// Button / icon, Button / nav icon and Toggle / theme.
+//
+// States: :hover (fine pointer only), :active, :focus-visible,
+// aria-disabled="true" (prefer it over the native disabled, it keeps the
+// button in the Tab order) and aria-busy="true" for loading.
+
+@use '../variables' as *;
+@use '../animations';
+
+// ── Button / CTA ────────────────────────────────────────────
+// <button class={`${btn.cta} ${btn.ctaBig}`}>. The fill and the 1 px inside
+// stroke are 180° gradients; their end colors are registered properties
+// (_properties.scss), so hover and press transition smoothly.
+.cta {
+  @include typ('label-button');
+
+  align-items: center;
+  background:
+    linear-gradient(180deg, var(--cta-bg-start), var(--cta-bg-end)) padding-box,
+    linear-gradient(180deg, var(--cta-border-start), var(--cta-border-end)) border-box;
+  border: var(--stroke-1) solid transparent;
+  color: var(--theme-text-on-accent);
+  cursor: pointer;
+  display: inline-flex;
+  gap: var(--space-2);
+  isolation: isolate;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  transition:
+    --cta-bg-start var(--motion-duration-hover) var(--motion-easing-standard),
+    --cta-bg-end var(--motion-duration-hover) var(--motion-easing-standard),
+    --cta-border-start var(--motion-duration-hover) var(--motion-easing-standard),
+    --cta-border-end var(--motion-duration-hover) var(--motion-easing-standard),
+    color var(--motion-duration-hover) var(--motion-easing-standard);
+  user-select: none;
+
+  &:active {
+    transition-duration: var(--motion-duration-press);
+  }
+
+  // Light arc travelling around the border, masked to the 1 px ring.
+  &::before {
+    background: conic-gradient(
+      from var(--cta-arc-angle),
+      transparent 0deg 250deg,
+      var(--cta-highlight) 320deg,
+      transparent 360deg
+    );
+    border-radius: inherit;
+    content: '';
+    inset: calc(-1 * var(--stroke-1));
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    opacity: 0;
+    padding: var(--stroke-1);
+    pointer-events: none;
+    position: absolute;
+    transition: opacity var(--motion-duration-hover) var(--motion-easing-standard);
+    z-index: -1;
+  }
+
+  @include hover {
+    &::before {
+      animation: ctaArc 1.6s linear infinite;
+      opacity: 1;
+    }
+  }
+
+  @include disabled;
+
+  // Loading: label keeps its width but is invisible, spinner on top.
+  &[aria-busy='true'] {
+    color: transparent;
+    cursor: progress;
+
+    &::after {
+      animation: spin 1s linear infinite;
+      block-size: var(--cta-spinner);
+      border: var(--stroke-2) solid var(--theme-text-on-accent);
+      border-block-start-color: transparent;
+      border-radius: var(--radius-full);
+      content: '';
+      inline-size: var(--cta-spinner);
+      inset: 0;
+      margin: auto;
+      position: absolute;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      display: none;
+    }
+  }
+
+  svg {
+    block-size: 1.25rem;
+    flex-shrink: 0;
+    inline-size: 1.25rem;
+  }
+}
+
+// Size=Small: in the navigation bar, tokens theme/nav/cta/*.
+.ctaSmall {
+  --cta-bg-start: var(--theme-nav-cta-bg-start);
+  --cta-bg-end: var(--theme-nav-cta-bg-end);
+  --cta-border-start: var(--theme-nav-cta-bg-start);
+  --cta-border-end: var(--theme-nav-cta-bg-end);
+  --cta-highlight: var(--theme-nav-cta-highlight);
+  --cta-spinner: 1.25rem;
+
+  border-radius: var(--radius-md);
+  // Heights follow Figma, where the 1 px stroke sits inside the frame: the
+  // border takes its width from the padding (24 px label + padding = 40 px).
+  min-block-size: var(--size-control-nav);
+  padding: calc(var(--space-2) - var(--stroke-1)) calc(var(--space-6) - var(--stroke-1));
+
+  @include hover {
+    --cta-bg-start: var(--theme-nav-cta-bg-start-hover);
+    --cta-bg-end: var(--theme-nav-cta-bg-end-hover);
+    --cta-border-start: var(--theme-nav-cta-bg-start-hover);
+    --cta-border-end: var(--theme-nav-cta-bg-end-hover);
+  }
+
+  @include pressed {
+    --cta-bg-start: var(--theme-nav-cta-bg-start-pressed);
+    --cta-bg-end: var(--theme-nav-cta-bg-end-pressed);
+    --cta-border-start: var(--theme-nav-cta-bg-start);
+    --cta-border-end: var(--theme-nav-cta-bg-end);
+  }
+
+  @include focus-ring(var(--focus-ring-on-nav));
+}
+
+// Size=Big: on the page, 56 px, tokens theme/page/cta/*.
+.ctaBig {
+  --cta-bg-start: var(--theme-page-cta-bg-start);
+  --cta-bg-end: var(--theme-page-cta-bg-end);
+  --cta-border-start: var(--theme-page-cta-border-start);
+  --cta-border-end: var(--theme-page-cta-border-end);
+  --cta-highlight: var(--theme-page-cta-highlight);
+  --cta-spinner: 1.5rem;
+
+  border-radius: var(--radius-lg);
+  // 24 px label + 2 × space/4: 48 px on a phone, 56 at 1024 and 1440, 64 at
+  // 1920 and 72 at 2560 (Figma CTA / create link, Recipient / window).
+  padding: calc(var(--space-4) - var(--stroke-1)) calc(var(--space-8) - var(--stroke-1));
+
+  @include hover {
+    --cta-bg-start: var(--theme-page-cta-bg-start-hover);
+    --cta-bg-end: var(--theme-page-cta-bg-end-hover);
+  }
+
+  @include pressed {
+    --cta-bg-start: var(--theme-page-cta-bg-start-pressed);
+    --cta-bg-end: var(--theme-page-cta-bg-end-pressed);
+  }
+
+  @include focus-ring(var(--focus-ring-page-cta));
+}
+
+// ── Button / secondary ──────────────────────────────────────
+// Small 32 px (bar, next to a title), Big 48 px (standalone action).
+.secondary {
+  @include typ('label-button');
+  @include interactive;
+
+  align-items: center;
+  background: var(--theme-button-secondary-bg);
+  border: var(--stroke-1) solid var(--theme-button-secondary-border);
+  border-radius: var(--radius-full);
+  color: var(--theme-button-secondary-text);
+  cursor: pointer;
+  display: inline-flex;
+  gap: var(--space-2);
+  justify-content: center;
+  min-block-size: 2rem;
+  padding: calc(var(--space-1) - var(--stroke-1)) calc(var(--space-4) - var(--stroke-1));
+  position: relative;
+
+  @include hover {
+    background: var(--theme-button-secondary-bg-hover);
+  }
+
+  @include pressed {
+    background: var(--theme-button-secondary-bg-pressed);
+  }
+
+  @include focus-ring;
+  @include disabled;
+
+  // Touch target of at least 44 px without changing the 32 px frame.
+  @media (pointer: coarse) {
+    &::after {
+      content: '';
+      inset: -0.375rem 0;
+      position: absolute;
+    }
+  }
+
+  svg {
+    block-size: 1rem;
+    flex-shrink: 0;
+    inline-size: 1rem;
+  }
+}
+
+.secondaryBig {
+  // 48 px on a phone, 56 px from 768 (24 px label + 2 × space/4).
+  padding-block: calc(var(--space-4) - var(--stroke-1));
+  padding-inline: calc(var(--space-6) - var(--stroke-1));
+
+  &::after {
+    content: none;
+  }
+}
+
+// ── Button / icon ───────────────────────────────────────────
+// Icon-only on the page background; an aria-label is mandatory.
+.icon {
+  @include interactive;
+
+  align-items: center;
+  background: var(--theme-bg-canvas);
+  block-size: 2.5rem;
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-control);
+  color: var(--theme-button-ghost-text);
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  inline-size: 2.5rem;
+  justify-content: center;
+  position: relative;
+
+  @include hover {
+    background: var(--theme-button-ghost-bg-hover);
+    border-color: var(--theme-border-default);
+  }
+
+  @include pressed {
+    background: var(--theme-button-ghost-bg-pressed);
+    border-color: var(--theme-border-default);
+  }
+
+  @include focus-ring;
+  @include disabled;
+
+  @media (pointer: coarse) {
+    &::after {
+      content: '';
+      inset: -0.125rem;
+      position: absolute;
+    }
+  }
+
+  svg {
+    block-size: 1.5rem;
+    inline-size: 1.5rem;
+  }
+}
+
+// ── Navigation bar controls ─────────────────────────────────
+// Button / nav icon (menu, 40 px, 16 px glyph) and Toggle / theme
+// (size/control/nav, aria-pressed carries the state, sun or moon glyph).
+.navControl {
+  @include interactive;
+
+  align-items: center;
+  background: transparent;
+  block-size: 2.5rem;
+  border: var(--stroke-1) solid var(--theme-nav-control-border);
+  border-radius: var(--radius-control);
+  color: var(--theme-text-on-accent);
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  inline-size: 2.5rem;
+  justify-content: center;
+
+  @include hover {
+    background: var(--theme-nav-control-bg-hover);
+  }
+
+  @include pressed {
+    background: var(--theme-nav-control-bg-pressed);
+  }
+
+  @include focus-ring(var(--focus-ring-on-nav));
+
+  svg {
+    block-size: 1rem;
+    inline-size: 1rem;
+  }
+}
+
+.themeToggle {
+  block-size: var(--size-control-nav);
+  inline-size: var(--size-control-nav);
+
+  svg {
+    block-size: 1rem;
+    inline-size: 1rem;
+  }
+}

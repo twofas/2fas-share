@@ -35,6 +35,7 @@ function lazyWithPreload (loader) {
   }
 
   /**
+   * Render the loaded module, or suspend until its chunk arrives.
    * @param {object} props Component props forwarded to the loaded module.
    * @returns {import('preact').VNode} Rendered component once loaded.
    */

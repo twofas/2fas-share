@@ -1,0 +1,92 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Section / 05, FAQ part: eyebrow in the aside, the heading and the
+// Accordion / FAQ rows in the main column framed by border/subtle lines.
+
+@use '@/styles/variables' as *;
+@use '@/pages/Home/sections' as *;
+
+// Entrance (Figma E · Motion, 05 faq; 15.75 s = 0): the heading block Y +24,
+// the rows Y +16 from 0.15 s with a 0.12 s stagger.
+@include motion-keyframes;
+
+.faq {
+  @include anchor;
+
+  padding-block-end: var(--space-section-block);
+}
+
+.inner {
+  @include band-inner;
+}
+
+.eyebrow {
+  @include eyebrow;
+  @include aside;
+  @include enter-small(0s);
+
+  align-self: start;
+  color: var(--theme-text-primary);
+  padding-block: var(--space-16) var(--space-12);
+
+  @include from(layout) {
+    padding-block: var(--space-section-block);
+  }
+}
+
+.main {
+  // Rows run edge to edge on a phone.
+  margin-inline: calc(-1 * var(--space-page-margin));
+
+  @include from(layout) {
+    grid-column: 5 / -1;
+    margin-inline: 0;
+  }
+}
+
+.head {
+  @include enter-lead(0s);
+
+  border-block: var(--stroke-1) solid var(--theme-border-subtle);
+  padding: var(--space-section-block) var(--space-16) var(--space-section-block-sm);
+
+  @include from(layout) {
+    border-inline-start: var(--stroke-1) solid var(--theme-border-subtle);
+    border-start-end-radius: var(--radius-lg);
+  }
+}
+
+.title {
+  @include typ('heading-h2');
+
+  color: var(--theme-text-primary);
+  white-space: pre-line;
+}
+
+.row {
+  @include enter-small(calc(0.15s + var(--i, 0) * var(--motion-duration-stagger)));
+
+  @include from(layout) {
+    border-inline: var(--stroke-1) solid var(--theme-border-subtle);
+  }
+}
+
+// The h4 carries the question and the mark; the summary stays a plain row.
+.question {
+  align-items: center;
+  display: flex;
+  gap: var(--space-6);
+  justify-content: space-between;
+}
+
+.answer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+

@@ -1,0 +1,120 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Interaction and motion helpers (Figma: 07 Motion, 08 States and opacity).
+// No CSS output.
+//
+// Rules from the design system:
+// - hover goes in and out with the same duration and curve (320 ms, standard);
+// - press (:active) takes 120 ms, release returns on the hover duration;
+// - the focus ring appears without animation, so box-shadow is never transitioned
+//   together with colors;
+// - hover exists only for a fine pointer, so it does not stick after a tap.
+
+@use 'sass:list';
+
+$disabled: ':disabled, [aria-disabled="true"], [aria-busy="true"]';
+
+// Color, background and border transitions of a control.
+@mixin interactive($properties...) {
+  @if list.length($properties) == 0 {
+    $properties: (color, background-color, border-color, text-decoration-color);
+  }
+
+  transition-duration: var(--motion-duration-hover);
+  transition-property: $properties;
+  transition-timing-function: var(--motion-easing-standard);
+
+  &:active {
+    transition-duration: var(--motion-duration-press);
+  }
+}
+
+// Hover state for a fine pointer, skipped while disabled or busy.
+@mixin hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(#{$disabled}) {
+      @content;
+    }
+  }
+}
+
+// Pressed state, skipped while disabled or busy.
+@mixin pressed {
+  &:active:not(#{$disabled}) {
+    @content;
+  }
+}
+
+// Disabled state: opacity/disabled, no reactions, label stays readable.
+@mixin disabled {
+  &:disabled,
+  &[aria-disabled='true'] {
+    cursor: not-allowed;
+    opacity: var(--opacity-disabled);
+    @content;
+  }
+}
+
+// Focus ring from a Focus/* effect style (a --focus-ring-* token).
+@mixin focus-ring($ring: var(--focus-ring-accent)) {
+  &:focus-visible {
+    box-shadow: $ring;
+    outline: none;
+
+    // Forced colors drop box-shadow: draw the ring with an outline instead.
+    @media (forced-colors: active) {
+      outline: var(--stroke-2) solid CanvasText;
+      outline-offset: 2px;
+    }
+  }
+}
+
+// Scroll reveal, paired with useInView: hidden until the parent gets its
+// "visible" class. Text (headings, leads, badges) uses `reveal`, larger blocks
+// (windows, cards, feature rows) use `entrance`. Order within a group comes from
+// the --reveal-index custom property times the stagger.
+@mixin reveal($kind: text) {
+  opacity: 0;
+
+  @if $kind == entrance {
+    scale: 0.98;
+    transition:
+      opacity var(--motion-duration-entrance) var(--motion-easing-out),
+      translate var(--motion-duration-entrance) var(--motion-easing-spring),
+      scale var(--motion-duration-entrance) var(--motion-easing-spring);
+    translate: 0 1.5rem;
+  } @else {
+    transition:
+      opacity var(--motion-duration-reveal) var(--motion-easing-out),
+      translate var(--motion-duration-reveal) var(--motion-easing-out);
+    translate: 0 1rem;
+  }
+
+  transition-delay: calc(var(--reveal-index, 0) * var(--motion-duration-stagger));
+
+  // Never move a target that already holds focus.
+  &:focus-within {
+    transition: none;
+  }
+}
+
+@mixin revealed {
+  opacity: 1;
+  scale: none;
+  translate: none;
+}
+
+// Visually hidden but available to assistive technology.
+@mixin visually-hidden {
+  block-size: 1px;
+  clip-path: inset(50%);
+  inline-size: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}

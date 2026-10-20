@@ -5,102 +5,65 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-// ── Theme-invariant tokens ──────────────────────────────────
-:root {
-  --2fas-bg-2: #8800ff;
-  --2fas-brand-blue: #214ce8;
-  --2fas-link: #0088ff;
-  --2fas-qr-bg: #8a3383;
-  --2fas-btn-alt-hover-color: #fff;
-  --2fas-scrollbar-track: transparent;
-  --white: #fff;
-}
+// SCSS-only helpers shared by every module: breakpoints, layout, text styles
+// and motion mixins. Emits no CSS, so @use-ing it in a module costs nothing.
+// The tokens themselves (custom properties) live in _tokens.scss and are
+// loaded once by global.scss.
 
-// ── Light theme (default) ──────────────────────────────────
-:root {
-  // Global
-  --2fas-bg-1: #fff;
-  --2fas-text-color: #010101;
+@use 'sass:map';
 
-  // Surfaces
-  --2fas-box-bg: #fff;
-  --2fas-box-bg-0: rgba(255, 255, 255, 0);
-  --2fas-card-bg: #fff;
-  --2fas-box-border: #e0e0e3;
-  --2fas-box-muted: #8e8e93;
+@forward 'typography';
+@forward 'motion';
 
-  // Controls
-  --2fas-toggle-track: #d9d9d9;
-  --2fas-success: #34c759;
-  --2fas-in-app-color: #8800ff;
+// ── Breakpoints (mobile first, Figma Grid board) ────────────
+// mobile 0-767 · tablet 768-1279 · desktop 1280-1919 · wide 1920-2559 · ultrawide 2560+
+// The token scales follow those ranges. The layout switch (Figma Layout=Mobile
+// → Desktop: navigation bar, section grids) happens at 1024 px.
+$breakpoints: (
+  tablet: 768px,
+  layout: 1024px,
+  desktop: 1280px,
+  wide: 1920px,
+  ultrawide: 2560px
+);
 
-  // Pills & cards
-  --2fas-hero-pill: rgba(230, 230, 235, 0.55);
-  --2fas-feature-pill: #fff;
-  --2fas-card-shadow: 0 0 23px rgba(0, 0, 0, 0.1);
-  --2fas-htu-card-shadow: 0 4px 32px rgba(0, 0, 0, 0.08);
-  --2fas-form-shadow: 0 0 17.6px rgba(0, 0, 0, 0.15);
-
-  // Buttons
-  --2fas-btn-hover-bg: #7000d4;
-  --2fas-btn-alt-hover-bg: #000;
-  --2fas-btn-hero-bg: #8800ff;
-  --2fas-btn-hero-color: #fff;
-  --2fas-btn-hero-hover-bg: #7000d4;
-
-  // Footer
-  --2fas-footer-link: rgba(0, 0, 0, 0.45);
-  --2fas-footer-link-hover: rgba(0, 0, 0, 0.55);
-
-  // Scrollbar
-  --2fas-scrollbar-thumb: #c7c7cc;
-  --2fas-scrollbar-thumb-hover: #a1a1a6;
-}
-
-// ── Dark theme ─────────────────────────────────────────────
-@media (prefers-color-scheme: dark) {
-  :root {
-    // Global
-    --2fas-bg-1: #111111;
-    --2fas-text-color: #fff;
-
-    // Surfaces
-    --2fas-box-bg: #111111;
-    --2fas-box-bg-0: rgba(17, 17, 17, 0);
-    --2fas-card-bg: #191919;
-    --2fas-box-border: #282828;
-    --2fas-box-muted: #797a81;
-
-    // Controls
-    --2fas-toggle-track: #3a3b42;
-    --2fas-success: #30d158;
-    --2fas-in-app-color: #fff;
-
-    // Pills & cards
-    --2fas-hero-pill: rgba(47, 47, 47, 0.55);
-    --2fas-feature-pill: #282828;
-    --2fas-card-shadow: none;
-    --2fas-htu-card-shadow: none;
-    --2fas-form-shadow: none;
-
-    // Buttons
-    --2fas-btn-hover-bg: #010101;
-    --2fas-btn-alt-hover-bg: #8800ff;
-    --2fas-btn-hero-bg: #fff;
-    --2fas-btn-hero-color: #111111;
-    --2fas-btn-hero-hover-bg: rgba(255, 255, 255, 0.85);
-
-    // Footer
-    --2fas-footer-link: rgba(255, 255, 255, 0.45);
-    --2fas-footer-link-hover: rgba(255, 255, 255, 0.55);
-
-    // Scrollbar
-    --2fas-scrollbar-thumb: #4a4b52;
-    --2fas-scrollbar-thumb-hover: #5e5f66;
+@mixin from($name) {
+  @media (min-width: map.get($breakpoints, $name)) {
+    @content;
   }
 }
 
-// Breakpoints (desktop-first)
+@mixin below($name) {
+  @media (max-width: map.get($breakpoints, $name) - 1px) {
+    @content;
+  }
+}
+
+// ── Layout ──────────────────────────────────────────────────
+// Page container: fluid with the page margin, capped from 1280 px.
+@mixin container {
+  margin-inline: auto;
+  padding-inline: var(--space-page-margin);
+  width: 100%;
+
+  @include from(desktop) {
+    max-width: calc(var(--space-page-content-max) + 2 * var(--space-page-margin));
+  }
+}
+
+// 12-column grid; children span the full width until placed.
+@mixin grid {
+  column-gap: var(--space-page-gutter);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+
+  > * {
+    grid-column: 1 / -1;
+  }
+}
+
+// ── Legacy breakpoints (desktop first) ──────────────────────
+// Used by modules that have not been moved to the new design yet.
 $bp-tablet: 1023px;
 $bp-mobile: 767px;
 $bp-small-mobile: 479px;

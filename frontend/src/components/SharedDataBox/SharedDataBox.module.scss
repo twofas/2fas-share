@@ -5,98 +5,217 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
+// Recipient / window: the glass ring (Window), its card and footer per state.
+
 @use '@/styles/variables' as *;
 
-.shared-data-box {
-  box-shadow: var(--2fas-form-shadow);
-  display: inline-block;
-  max-width: 592px;
-  overflow: visible;
-  width: 100%;
+.box {
+  position: relative;
+}
 
-  @media (max-width: 1050px) {
-    max-width: 100%;
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+// Form wrapper of the password state; the card and footer stay direct
+// flex children of the window.
+.form {
+  display: contents;
+}
+
+// Field header of the window: Title/alert label instead of Label/strong,
+// the caption 4 px under it (label-group gap).
+.header {
+  h1,
+  h2,
+  label {
+    @include typ('title-alert');
+
+    + p {
+      margin-block-start: 0.25rem;
+    }
   }
+}
 
-  &-sparkle {
-    fill: var(--2fas-bg-2);
-    height: 52px;
-    left: 50%;
-    pointer-events: none;
+.dialogRow {
+  gap: 0.75rem;
+}
+
+// Intro: the closed note as a slot with a padlock medallion.
+.slot {
+  align-items: center;
+  background: var(--theme-bg-surface);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: var(--space-6) var(--space-8);
+  text-align: center;
+}
+
+.slotLabel {
+  @include typ('title-alert');
+
+  color: var(--theme-text-primary);
+}
+
+// Unavailable / Broken: the empty slot is dashed, without a fill.
+.slotEmpty {
+  background: transparent;
+  border-color: var(--theme-border-default);
+  border-radius: var(--radius-md);
+  border-style: dashed;
+}
+
+.slotText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.slotBody {
+  @include typ('body-sm');
+
+  color: var(--theme-text-secondary);
+  text-wrap: pretty;
+}
+
+// Window rows (padding space/4 × space/6); a row and an alert share one
+// section, which then keeps the space/6 bottom padding.
+.rows {
+  gap: var(--space-4);
+  padding-block: var(--space-4);
+
+  &:has(> [role='note']) {
+    padding-block-end: var(--space-6);
+  }
+}
+
+// Revealed once (Figma alert-top): the Warning alert space/6 from the card
+// edge on three sides, radius/md; the title section follows without a
+// hairline, with its own space/6 top padding.
+.alertRow.alertRow {
+  padding: var(--space-6) var(--space-6) 0;
+}
+
+.afterAlert.afterAlert {
+  border-block-start: 0;
+}
+
+// Waiting: aria-busy with aria-disabled keeps the CTA at full strength (the
+// spinner shows the wait), not the dimmed disabled look.
+.footer [aria-busy='true'][aria-disabled='true'] {
+  cursor: progress;
+  opacity: 1;
+}
+
+// Inline links (consent, "Create your own link"): a hit area of at least
+// 24 px, 44 px on touch, without changing the line height.
+.inlineTarget {
+  position: relative;
+
+  &::after {
+    content: '';
+    inset: -0.25rem 0;
     position: absolute;
-    top: -26px;
-    transform: translateX(-50%);
-    width: auto;
+  }
 
-    @include tablet {
-      height: 48px;
-      top: -24px;
-    }
-
-    @include mobile {
-      height: 42px;
-      top: -21px;
+  @media (pointer: coarse) {
+    &::after {
+      inset: -0.875rem 0;
     }
   }
+}
 
-  &-text {
-    margin-bottom: 1.0625rem;
+// Button / secondary Big in Unavailable and Broken (height from the DS).
+.createButton {
+  text-decoration: none;
+}
 
-    h6 {
-      font-size: 1rem;
-      font-weight: 700;
-      line-height: 1.4;
-    }
+// Footer: CTA, consent sentence, secondary link. In Recipient / window the
+// footer has no bottom padding of its own: the ring padding closes it.
+.footer.footer {
+  padding-block-end: 0;
+}
 
-    p {
-      font-size: 1rem;
-      font-weight: 400;
-      line-height: 1.25;
+.consent {
+  @include typ('body-xs');
 
-      @include mobile {
-        font-size: 0.875rem;
-      }
-    }
+  color: var(--theme-text-primary);
+  text-wrap: pretty;
+
+  a {
+    @include typ('body-xs');
+  }
+}
+
+// The paragraph takes the line height of the link (Body/sm, 20 px); at 390
+// the link is a 44 px row right under the CTA (12 px above and below).
+.createLinkRow,
+.createLink {
+  @include typ('body-sm');
+}
+
+.createLinkRow {
+  @include below(tablet) {
+    padding-block-end: var(--space-4);
+  }
+}
+
+// Password: the medallion of the error message sits on the first line;
+// 2 px between the title and the sentence.
+.errorText {
+  gap: 0.125rem;
+  padding-block-start: 0.125rem;
+}
+
+// After the window: "Open in 2FAS Pass app" (mobile and tablet) and the
+// browser extension slot.
+.openInApp {
+  align-self: center;
+  justify-self: center;
+  text-decoration: none;
+}
+
+.extensionContainer {
+  display: contents;
+}
+
+// The 2FAS Pass browser extension injects its button here: style it as
+// Button / secondary, Size=Big.
+
+:global(#twofas-pass-extension-container) > button {
+  @include typ('label-button');
+  @include interactive;
+
+  align-items: center;
+  background: var(--theme-button-secondary-bg);
+  border: var(--stroke-1) solid var(--theme-button-secondary-border);
+  border-radius: var(--radius-full);
+  color: var(--theme-button-secondary-text);
+  cursor: pointer;
+  display: inline-flex;
+  gap: var(--space-2);
+  justify-content: center;
+  min-block-size: 3rem;
+  padding: var(--space-1) var(--space-6);
+
+  @include hover {
+    background: var(--theme-button-secondary-bg-hover);
   }
 
-  &-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+  @include pressed {
+    background: var(--theme-button-secondary-bg-pressed);
   }
 
-  &-legal-consent {
-    color: var(--2fas-text-color);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    line-height: 1.25rem;
-    margin-top: 0.75rem;
-    opacity: 0.7;
-    text-align: center;
+  @include focus-ring;
+}
 
-    a {
-      text-decoration: underline;
-    }
-  }
-
-  &-error-wrap {
-    display: grid;
-    grid-template-rows: 0fr;
-    margin-top: -0.5rem;
-    transition: grid-template-rows 0.25s ease-out;
-
-    &.shared-data-box-error-visible {
-      grid-template-rows: 1fr;
-    }
-  }
-
-  &-error {
-    margin-bottom: 1rem;
-    overflow: hidden;
-  }
-
-  &-open-in-app {
-    align-self: center;
-    margin-top: 0.25rem;
-  }
+// Injection point of the 2FAS Pass browser extension in the revealed state:
+// no box of its own, so an empty slot adds no gap to the footer.
+:global(#twofas-pass-be-btn) {
+  display: contents;
 }

@@ -1,0 +1,234 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Layout shared by the home page sections 02–06 (Figma: 10 Sections).
+// A band paints its background edge to edge; its content sits in the page
+// container on the 12-column grid. From 1024 px (Layout=Desktop) a band row
+// splits into an aside of 4 columns and a main part of 8 columns, divided
+// by a 1 px vertical line. No CSS output.
+
+@use 'sass:list';
+@use 'sass:meta';
+@use '@/styles/variables' as *;
+
+// Band row: full-bleed background, content in the container grid.
+@mixin band-inner {
+  @include container;
+  @include grid;
+}
+
+// Aside column (eyebrow) from 1024 px.
+@mixin aside {
+  @include from(layout) {
+    grid-column: 1 / span 4;
+    padding-inline-end: var(--space-16);
+  }
+}
+
+// Main column with the dividing line from 1024 px.
+@mixin main($line: var(--theme-border-default)) {
+  @include from(layout) {
+    border-inline-start: var(--stroke-1) solid $line;
+    grid-column: 5 / -1;
+    padding-inline-start: var(--space-16);
+  }
+}
+
+// Eyebrow: star mark and a Body/base label.
+@mixin eyebrow {
+  @include typ('body-base');
+
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+
+  svg {
+    block-size: 0.9375rem;
+    flex-shrink: 0;
+    inline-size: 0.9375rem;
+  }
+}
+
+// Section heading, Figma uses the Display/H1 size for every band title.
+@mixin heading {
+  @include typ('display-h1');
+
+  white-space: pre-line;
+}
+
+// Anchor target of the navigation links. The fixed bar is cleared globally
+// by scroll-padding-top on <html> (global.scss), for anchors and focus alike.
+@mixin anchor {
+  scroll-margin-block-start: 0;
+}
+
+// ── Entrance motion (Figma: E · Motion, presentation_scroll) ─
+// Every reveal is a keyframe pair from a start state to the element's own
+// resting value: opacity, translate, scale and rotate run as separate
+// animations, so each keeps the duration and curve from the Figma track.
+// Include `motion-keyframes` once at the root of a module that uses `enter`.
+//
+// `enter` holds the element hidden until an ancestor (`$on`, by default the
+// module's `.visible` class from useInView) appears, then plays. With
+// `$on: null` it plays on page load (hero). Only the backwards fill is used,
+// so after the run no animation stays in effect (no lasting transform, no
+// containing block for fixed descendants). Under prefers-reduced-motion
+// nothing is hidden and nothing moves. An element holding focus never moves.
+
+
+// Duration token (reveal, entrance, …) or a literal time.
+@function motion-duration($d) {
+  @if meta.type-of($d) == 'string' {
+    @return var(--motion-duration-#{$d});
+  }
+
+  @return $d;
+}
+
+// Easing token (out, overshoot, spring, in-out, standard).
+@function motion-easing($e) {
+  @return var(--motion-easing-#{$e});
+}
+
+@mixin motion-keyframes {
+  @keyframes enterFade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes enterMove {
+    from {
+      translate: var(--enter-x, 0) var(--enter-y, 0);
+    }
+  }
+
+  @keyframes enterScale {
+    from {
+      scale: var(--enter-scale, 1);
+    }
+  }
+
+  @keyframes enterRotate {
+    from {
+      rotate: var(--enter-rotate, 0deg);
+    }
+  }
+}
+
+// $delay: offset from the trigger (s). $x / $y: start offset. $move: duration
+// and easing of the translate. $scale / $rotate: start values with their own
+// duration and easing. $fade: false skips the opacity track, a time sets its
+// duration (0.45 s by default). $hide: false keeps the element visible before
+// the trigger (the backwards fill alone shows the start state from then on).
+@mixin enter(
+  $delay: 0s,
+  $x: 0,
+  $y: 0,
+  $move: (reveal, out),
+  $scale: null,
+  $scale-motion: (entrance, spring),
+  $rotate: null,
+  $rotate-motion: (reveal, out),
+  $fade: true,
+  $on: '.visible',
+  $hide: true
+) {
+  $animations: ();
+
+  @if $fade {
+    $fade-duration: var(--motion-duration-reveal);
+
+    @if $fade != true {
+      $fade-duration: $fade;
+    }
+
+    $animations: list.append($animations, enterFade $fade-duration var(--motion-easing-out) $delay backwards, comma);
+  }
+
+  @if $x != 0 or $y != 0 {
+    $animations: list.append(
+      $animations,
+      enterMove motion-duration(list.nth($move, 1)) motion-easing(list.nth($move, 2)) $delay backwards,
+      comma
+    );
+  }
+
+  @if $scale {
+    $animations: list.append(
+      $animations,
+      enterScale motion-duration(list.nth($scale-motion, 1)) motion-easing(list.nth($scale-motion, 2)) $delay backwards,
+      comma
+    );
+  }
+
+  @if $rotate {
+    $animations: list.append(
+      $animations,
+      enterRotate motion-duration(list.nth($rotate-motion, 1)) motion-easing(list.nth($rotate-motion, 2)) $delay backwards,
+      comma
+    );
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    --enter-x: #{$x};
+    --enter-y: #{$y};
+
+    @if $scale {
+      --enter-scale: #{$scale};
+    }
+
+    @if $rotate {
+      --enter-rotate: #{$rotate};
+    }
+
+    @if $on and $hide {
+      opacity: 0;
+
+      #{$on} & {
+        animation: $animations;
+        opacity: 1;
+      }
+    } @else if $on {
+      #{$on} & {
+        animation: $animations;
+      }
+    } @else {
+      animation: $animations;
+    }
+
+    // Never move a target that holds focus: finish the entrance at once.
+    // Only duration and delay change (not the animation name), so the
+    // entrance is not restarted when focus enters or leaves (no flicker).
+    &:focus-within {
+      animation-delay: 0s;
+      animation-duration: 0s;
+      opacity: 1;
+    }
+  }
+}
+
+// Text presets (Figma summary 3 and 4).
+// Heading: opacity 0.45 s ease-out, Y +48 → 0 in 0.65 s overshoot.
+@mixin enter-heading($delay: 0s, $on: '.visible') {
+  @include enter($delay, $y: 3rem, $move: (entrance, overshoot), $on: $on);
+}
+
+// Eyebrow, badge, small text: Y +16 → 0, 0.45 s ease-out.
+@mixin enter-small($delay: 0s, $on: '.visible') {
+  @include enter($delay, $y: 1rem, $on: $on);
+}
+
+// Lead: Y +24 → 0, 0.45 s ease-out.
+@mixin enter-lead($delay: 0s, $on: '.visible') {
+  @include enter($delay, $y: 1.5rem, $on: $on);
+}
+
+// Body copy: fade only.
+@mixin enter-fade($delay: 0s, $on: '.visible') {
+  @include enter($delay, $on: $on);
+}

@@ -7,60 +7,52 @@
 
 import PrefetchLink from '@/components/PrefetchLink';
 import S from './Footer.module.scss';
+import lnk from '@/styles/ds/link.module.scss';
 import { t } from '@/i18n';
-import GithubIcon from '@/assets/github.svg?react';
+import Logo from '@/assets/logo-share.svg?react';
+import GithubIcon from '@/assets/icons/github-fill.svg?react';
+
+const LEGAL_LINKS = [
+  { href: '/privacy-policy', label: 'footer.privacyPolicy' },
+  { href: '/terms-of-use', label: 'footer.termsOfUse' },
+  { href: '/open-source-licenses', label: 'footer.openSourceLicenses' }
+];
 
 /**
- * Application footer with legal links and copyright notice.
+ * Application footer (Section / 07): brand column with the legal note and a
+ * column of legal links plus the source code link, on the 4|8 grid.
  * @returns {import('preact').JSX.Element} The footer component.
  */
 export default function Footer () {
   return (
     <footer className={S.footer}>
-      <div className='container'>
-        <div className={S.footerContent}>
-          <div className={S.footerSection}>
-            <p className={S.footerHeading}>{t('footer.termsTitle')}</p>
+      <div className={S.inner}>
+        <div className={S.brand}>
+          <Logo className={S.logo} role='img' aria-label={t('header.logoAlt')} />
+          <p className={S.copyright}>
+            {t('footer.copyright', { year: new Date().getFullYear() }).replace('Inc. ', 'Inc.\n')}
+          </p>
+        </div>
 
-            <nav className={S.footerLinks}>
-              <PrefetchLink
-                className={S.footerLink}
-                href='/privacy-policy'
-              >
-                {t('footer.privacyPolicy')}
+        <div className={S.links}>
+          <nav className={S.legal} aria-label={t('footer.legalNav')}>
+            {LEGAL_LINKS.map(({ href, label }) => (
+              <PrefetchLink key={href} className={`${lnk.link} ${S.link}`} href={href}>
+                {t(label)}
               </PrefetchLink>
+            ))}
+          </nav>
 
-              <PrefetchLink
-                className={S.footerLink}
-                href='/terms-of-use'
-              >
-                {t('footer.termsOfUse')}
-              </PrefetchLink>
-
-              <PrefetchLink
-                className={S.footerLink}
-                href='/open-source-licenses'
-              >
-                {t('footer.openSourceLicenses')}
-              </PrefetchLink>
-            </nav>
-          </div>
-
-          <div className={S.footerRight}>
-            <a
-              className={S.footerGithub}
-              href='https://github.com/twofas/2fas-share'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              <GithubIcon className={S.footerGithubIcon} aria-hidden='true' />
-              <span>{t('footer.githubRepository')}</span>
-            </a>
-
-            <p className={S.footerCopyright}>
-              {t('footer.copyright', { year: new Date().getFullYear() })}
-            </p>
-          </div>
+          <a
+            className={`${lnk.link} ${S.link} ${S.github}`}
+            href='https://github.com/twofas/2fas-share'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <GithubIcon />
+            <span>{t('v2.footer.githubRepository')}</span>
+            <span className='visually-hidden'>{t('nav.newTab')}</span>
+          </a>
         </div>
       </div>
     </footer>

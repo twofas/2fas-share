@@ -6,74 +6,92 @@
 // See the LICENSE file for details.
 
 import { useState, useRef, useCallback } from 'preact/hooks';
+import { Window } from '@/components/Window';
+import { runArcsLight } from '@/components/ArcsDecor';
+import { prefersReducedMotion } from '@/utils/reducedMotion';
 import AddNewForm from './Views/AddNewForm';
 import ShareLinkResult from './Views/ShareLinkResult';
 import S from './AddNewBox.module.scss';
+import { t } from '@/i18n';
 
 /** @enum {string} */
 const VIEWS = { FORM: 'form', RESULT: 'result' };
 
+// Rebuilding the window into Ready takes motion/duration/layout (480 ms):
+// a third to fade the form out, the rest to bring the result in.
+const LAYOUT_MS = 480;
+const EASING = 'cubic-bezier(0.4, 0, 0.6, 1)';
+
 /**
- * Add New box component — orchestrates the form and result views
- * with animated transitions (fade out → height → fade in).
+ * Ask the page that hosts the generator to remount it in the Empty state.
+ */
+const requestReset = () => window.dispatchEvent(new Event('resetAddForm'));
+
+/**
+ * Generator window (Generator / dialog): the form (Empty, Creating, Error,
+ * Custom) and the result (Ready, Copied) inside one glass window.
+ * @param {Object} props
+ * @param {'hero'|'full'} [props.variant='hero'] - Home hero or the full generator view (/add).
+ * @param {boolean} [props.focusOnMount] - Focus the content field on mount (after "Create new link").
+ * @param {string} [props.className] - Extra class on the window.
  * @returns {import('preact').JSX.Element} The add new box component.
  */
-export default function AddNewBox() {
+export default function AddNewBox({ variant = 'hero', focusOnMount = false, className }) {
   const [view, setView] = useState(VIEWS.FORM);
   const [shareResult, setShareResult] = useState(null);
-  const boxRef = useRef(null);
+  // role="status" region present from the start: "Link created", "Copied".
+  const [status, setStatus] = useState('');
+
+  /**
+   * Announce a message; clearing first makes a repeated text be read again.
+   * @param {string} text - Message for the status region.
+   */
+  const announce = useCallback((text) => {
+    setStatus('');
+    requestAnimationFrame(() => setStatus(text));
+  }, []);
   const contentRef = useRef(null);
   const animatingRef = useRef(false);
 
   /**
-   * Changes the view with a 3-step animation:
-   * 1. Fade out current view
-   * 2. Animate height to fit new view
-   * 3. Fade in new view
+   * Switch the view: fade the current content out, swap it and fade the new
+   * one in (480 ms in total). The window keeps its height.
    * @param {string} nextView - The view to switch to.
    */
   const changeView = useCallback(async (nextView) => {
-    const el = boxRef.current;
     const content = contentRef.current;
+    const win = content?.parentElement;
 
-    if (!el || !content || animatingRef.current) {
+    // Ready keeps the height of the form window, so the hero does not jump;
+    // the lock is released when the viewport changes.
+    if (win) {
+      win.style.minHeight = `${win.offsetHeight}px`;
+      window.addEventListener('resize', () => { win.style.minHeight = ''; }, { once: true });
+    }
+
+    if (!content || animatingRef.current || prefersReducedMotion()) {
+      setView(nextView);
       return;
     }
 
     animatingRef.current = true;
 
     try {
-      // Step 1: Fade out current view
       await content.animate(
         [{ opacity: 1 }, { opacity: 0 }],
-        { duration: 150, easing: 'ease-in' }
+        { duration: LAYOUT_MS / 3, easing: EASING, fill: 'forwards' }
       ).finished;
-
-      content.style.opacity = '0';
-      const fromHeight = el.offsetHeight;
 
       setView(nextView);
 
-      // Wait for render
       await new Promise((r) => requestAnimationFrame(r));
 
-      // Step 2: Animate height
-      const toHeight = el.offsetHeight;
-
-      if (fromHeight !== toHeight) {
-        await el.animate(
-          [{ height: `${fromHeight}px` }, { height: `${toHeight}px` }],
-          { duration: 300, easing: 'ease-in-out' }
-        ).finished;
-      }
-
-      // Step 3: Fade in new view
-      content.style.opacity = '';
       await content.animate(
-        [{ opacity: 0 }, { opacity: 1 }],
-        { duration: 150, easing: 'ease-out' }
+        [{ opacity: 0, transform: 'translateY(0.5rem)' }, { opacity: 1, transform: 'none' }],
+        { duration: (LAYOUT_MS * 2) / 3, easing: EASING }
       ).finished;
     } finally {
+      content.getAnimations().forEach((a) => a.cancel());
       animatingRef.current = false;
     }
   }, []);
@@ -88,26 +106,35 @@ export default function AddNewBox() {
    */
   const handleSuccess = useCallback(async (result) => {
     setShareResult(result);
+    announce(t('v2.result.title'));
+    runArcsLight();
     await changeView(VIEWS.RESULT);
-  }, [changeView]);
+  }, [changeView, announce]);
 
   return (
-    <section
-      ref={boxRef}
-      className={view === VIEWS.FORM ? `page-box ${S.addBoxForm}` : `page-box ${S.addBoxResult}`}
+    <Window
+      as='div'
+      className={`${S.window} ${variant === 'full' ? S.full : S.hero} ${className || ''}`}
     >
-      <div ref={contentRef}>
+      <div ref={contentRef} className={S.content}>
         {view === VIEWS.FORM ? (
-          <AddNewForm onSuccess={handleSuccess} />
+          <AddNewForm
+            onSuccess={handleSuccess}
+            focusOnMount={focusOnMount}
+            labelledBy={variant === 'full' ? 'generator-title' : 'hero-title'}
+          />
         ) : (
           <ShareLinkResult
             link={shareResult.link}
             expiration={shareResult.expiration}
             oneTimeAccess={shareResult.oneTimeAccess}
             password={shareResult.password}
+            onReset={requestReset}
+            announce={announce}
           />
         )}
       </div>
-    </section>
+      <span role='status' className='visually-hidden'>{status}</span>
+    </Window>
   );
 }

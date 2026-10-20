@@ -1,0 +1,203 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Section / 04 Encryption, accent band. Text on the band in text/on-accent,
+// lines in accent/border.
+
+@use '@/styles/variables' as *;
+@use '@/pages/Home/sections' as *;
+
+// Entrance (Figma E · Motion, 04): times from each block's trigger
+// (Figma 8.25 s = 0).
+@include motion-keyframes;
+
+.band {
+  @include anchor;
+
+  background: var(--theme-accent-surface);
+  color: var(--theme-text-on-accent);
+  // The panel enters from X +152 and the text from X −72.
+  overflow-x: clip;
+}
+
+// ── Heading row: title (8 columns) and the eyebrow (4) ──────
+.head {
+  border-block-end: var(--stroke-1) solid var(--theme-accent-border);
+}
+
+.headInner {
+  @include band-inner;
+
+  padding-block: var(--space-20);
+  row-gap: var(--space-6);
+
+  @include from(layout) {
+    padding-block: 0;
+  }
+}
+
+.title {
+  @include heading;
+  @include enter-heading(0s);
+
+  @include from(layout) {
+    grid-column: 1 / span 8;
+    padding-block: var(--space-20);
+    padding-inline-end: var(--space-16);
+  }
+}
+
+.eyebrow {
+  @include eyebrow;
+  @include enter-small(0.12s);
+
+  align-self: start;
+  grid-row: 1;
+
+  @include from(layout) {
+    align-self: stretch;
+    align-items: flex-start;
+    border-inline-start: var(--stroke-1) solid var(--theme-accent-border);
+    grid-column: 9 / -1;
+    padding-block: var(--space-20);
+    padding-inline-start: var(--space-16);
+
+    svg {
+      margin-block-start: 0.28125rem;
+    }
+  }
+}
+
+// ── Body: lead text (5 columns) and the four stages (7) ─────
+.body {
+  border-block-end: var(--stroke-1) solid var(--theme-accent-border);
+  padding-block: var(--space-section-block-sm) var(--space-section-block);
+}
+
+.bodyInner {
+  @include band-inner;
+
+  row-gap: var(--space-page-gutter);
+}
+
+// Text block: X −72 → 0, 0.65 s ease-out, at 0.25 s.
+.text {
+  @include enter(0.25s, $x: -4.5rem, $move: (entrance, out));
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  justify-content: center;
+
+  @include from(layout) {
+    align-self: start;
+    grid-column: 1 / span 5;
+    padding-inline-end: var(--space-16);
+  }
+}
+
+.lead {
+  @include typ('heading-h3');
+}
+
+.leadNote {
+  @include typ('body-lg');
+}
+
+// Glass panel around the 2 × 2 cards and the closing note: X +152 → 0 on
+// the spring at 0.20 s.
+.panel {
+  @include enter(0.2s, $x: 9.5rem, $move: (entrance, spring));
+
+  background: var(--theme-glass-fill);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+
+  @include from(layout) {
+    align-self: start;
+    grid-column: 6 / -1;
+  }
+}
+
+.stages {
+  display: grid;
+  gap: var(--space-2);
+  list-style: none;
+
+  @include from(tablet) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+// Cards 01-04 from 0.90 s, 0.18 s apart: opacity and Y +16 in 0.45 s,
+// scale 0.85 → 1 on the spring.
+.stage {
+  @include enter(calc(0.9s + var(--i, 0) * 0.18s), $y: 1rem, $scale: 0.85);
+
+  background: var(--theme-bg-canvas);
+  border-block-end: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--theme-text-primary);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4);
+}
+
+.stageTop {
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  margin-block-end: var(--space-2);
+}
+
+// Icon tile: CTA gradient, 56 px, a 24 px mark in text/on-accent.
+.tile {
+  align-items: center;
+  background:
+    linear-gradient(180deg, var(--theme-page-cta-bg-start), var(--theme-page-cta-bg-end)) padding-box,
+    linear-gradient(180deg, var(--theme-page-cta-border-start), var(--theme-page-cta-border-end)) border-box;
+  block-size: 3.5rem;
+  border: var(--stroke-1) solid transparent;
+  border-radius: var(--radius-base);
+  color: var(--theme-text-on-accent);
+  display: inline-flex;
+  flex-shrink: 0;
+  inline-size: 3.5rem;
+  justify-content: center;
+
+  svg {
+    block-size: 1.5rem;
+    inline-size: 1.5rem;
+  }
+}
+
+.number {
+  @include typ('heading-h2');
+
+  font-variant-numeric: tabular-nums;
+}
+
+.stageTitle {
+  @include typ('title-lg');
+}
+
+.stageDesc {
+  @include typ('body-sm');
+
+  color: var(--theme-text-secondary);
+}
+
+.note {
+  @include typ('body-lg');
+  @include enter-fade(1.85s);
+
+  padding: var(--space-2) var(--space-4);
+}
+

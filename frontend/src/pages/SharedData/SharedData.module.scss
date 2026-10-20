@@ -5,50 +5,124 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-@use '@/styles/animations';
+// Section / 10 Recipient: a focus page. The heading, the window and the
+// trust note stand on the page axis (the axis of the arcs) in a
+// size/column/narrow column; on a desktop the QR card sits in the right
+// margin next to the window, so it never moves the axis.
 
-.shared-data {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
+@use '@/styles/variables' as *;
+
+.page {
+  overflow: clip;
+  position: relative;
 }
 
-.error {
-  &-animating {
-    :global(> .page-header),
-    :global(> .page-box),
-    :global(> .page-content) {
-      animation: fadeOut 0.25s ease-in forwards;
-      pointer-events: none;
-    }
+.column {
+  align-items: start;
+  display: grid;
+  grid-template-columns: minmax(0, var(--size-column-narrow));
+  justify-content: center;
+  // Top: below 1024 the room under the bar (space/page-top, 80 at 390),
+  // from 1024 space/32 (72 at 1024, 128 at 1440), plus the column's own
+  // space/10 above the heading.
+  padding:
+    calc(var(--space-page-top) + var(--space-10))
+    var(--space-page-margin)
+    var(--space-section-block);
+  position: relative;
+  row-gap: var(--space-10);
+  z-index: 1;
+
+  > * {
+    grid-column: 1;
+    min-inline-size: 0;
   }
 
-  &-display {
-    animation: fadeIn 0.3s ease-out both;
-    text-align: center;
-
-    h2 {
-      font-size: 2.25rem;
-      font-size: clamp(1.5rem, 5vw, 2.25rem);
-      font-weight: 700;
-      letter-spacing: -.36px;
-      line-height: 1.2222;
-    }
-
-    p {
-      font-size: 1.625rem;
-      font-size: clamp(1.125rem, 3.5vw, 1.625rem);
-      font-weight: 500;
-      letter-spacing: -.26px;
-      line-height: 1.3077;
-    }
+  @include from(layout) {
+    padding-block-start: calc(var(--space-32) + var(--space-10));
   }
 
-  &-sparkle {
-    fill: var(--2fas-bg-2);
-    height: 56px;
-    margin: 0 auto 1.1875rem;
-    width: auto;
+  @include from(desktop) {
+    column-gap: var(--space-10);
+    grid-template-columns: 1fr minmax(0, var(--size-column-narrow)) 1fr;
+
+    > * {
+      grid-column: 2;
+    }
+  }
+}
+
+.heading {
+  @include typ('heading-h2');
+
+  text-align: center;
+  text-wrap: balance;
+
+  // Focus lands here by script after the reveal; the heading is not a control.
+  &:focus {
+    outline: none;
+  }
+}
+
+.heading-primary {
+  color: var(--theme-text-primary);
+  display: block;
+}
+
+.heading-secondary {
+  color: var(--theme-text-secondary);
+  display: block;
+}
+
+// Recipient / trust note: Body/sm text/secondary, the link on the axis; at
+// 390 the link moves to its own line.
+.trust {
+  @include typ('body-sm');
+
+  color: var(--theme-text-secondary);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem var(--space-2);
+  justify-content: center;
+  text-align: center;
+
+  @include below(tablet) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.trust-link {
+  position: relative;
+
+  // 44 px touch target without changing the line height.
+  &::after {
+    content: '';
+    inset: -0.75rem -0.25rem;
+    position: absolute;
+  }
+}
+
+// The browser extension injects its button into a box-less container, so
+// the button itself is a grid item of the column.
+.column :global(#twofas-pass-extension-container) > * {
+  grid-column: 1;
+  justify-self: center;
+
+  @include from(desktop) {
+    grid-column: 2;
+  }
+}
+
+// QR card: under the trust note below 1280 px, in the right margin next to
+// the window from 1280 px (grid row 2 = the window).
+.column > .qr {
+  justify-self: center;
+
+  @include from(desktop) {
+    align-self: start;
+    grid-column: 3;
+    grid-row: 2;
+    justify-self: start;
   }
 }

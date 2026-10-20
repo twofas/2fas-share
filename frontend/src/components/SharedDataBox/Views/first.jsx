@@ -5,52 +5,74 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import PrefetchLink from '@/components/PrefetchLink';
-import bS from '@/styles/buttons.module.scss';
-import Sparkle from '@/assets/decor2.svg?react';
+import { WindowCard, WindowSection, WindowFooter, FieldHeader } from '@/components/Window';
+import { Medallion, InfoRow } from '../Parts';
+import ConsentNote from './consent';
+import LockIcon from '@/assets/icons/lock-line.svg?react';
+import ShieldIcon from '@/assets/icons/shield-keyhole-line.svg?react';
+import btn from '@/styles/ds/button.module.scss';
 import S from '../SharedDataBox.module.scss';
+import { runArcsLight } from '@/components/ArcsDecor';
 import { t } from '@/i18n';
 
 /**
- * SharedDataBox - first view with sparkle icon and continue button.
+ * SharedDataBox - first view (Recipient / window, State=Intro, links without
+ * a password): the closed note, the privacy row, the CTA "Open note" that
+ * fetches the data and the consent sentence under it.
  * @param {Object} props - Component props.
  * @param {function} props.onContinue - Called when the continue button is clicked.
  * @param {boolean} props.loading - Whether the API request is in progress.
  * @returns {import('preact').JSX.Element} The first view.
  */
 export default function SharedDataBoxFirst (props) {
-  const legalSentence = t('legal.continue');
-  const termsText = t('legal.termsOfUse');
-  const privacyText = t('legal.privacyPolicy');
-  const [beforeTerms, afterTermsRaw] = legalSentence.split(termsText);
-  const [betweenLinks, afterPrivacy] = afterTermsRaw.split(privacyText);
+  /**
+   * Continue unless the request is already running.
+   */
+  const handleContinue = () => {
+    if (!props.loading) {
+      props.onContinue();
+    }
+  };
 
   return (
     <>
-      <Sparkle className={S.sharedDataBoxSparkle} />
+      <WindowCard>
+        <WindowSection className={`${S.dialogRow} ${S.header}`}>
+          <FieldHeader
+            title={t('content.note')}
+            caption={t('recipient.introCaption')}
+            star
+          />
 
-      <div className={S.sharedDataBoxText}>
-        <h6>{t('first.description')}</h6>
-        <p>{t('first.instruction')}</p>
-      </div>
+          <div className={S.slot}>
+            <Medallion icon={LockIcon} />
+            <p className={S.slotLabel}>{t('recipient.encryptedNote')}</p>
+          </div>
+        </WindowSection>
 
-      <div className={S.sharedDataBoxButtons}>
+        <WindowSection className={S.rows}>
+          <InfoRow
+            icon={ShieldIcon}
+            title={t('recipient.privacyTitle')}
+            body={t('recipient.privacyBody')}
+          />
+        </WindowSection>
+      </WindowCard>
+
+      <WindowFooter className={S.footer}>
         <button
-          className={bS.btn}
-          onClick={props.onContinue}
-          disabled={props.loading}
+          type='button'
+          className={`${btn.cta} ${btn.ctaBig}`}
+          onClick={handleContinue}
+          onMouseEnter={() => runArcsLight({ throttle: true })}
+          aria-busy={props.loading ? 'true' : undefined}
+          aria-disabled={props.loading ? 'true' : undefined}
         >
-          {props.loading ? t('first.loading') : t('first.continue')}
+          {t('recipient.openNote')}
         </button>
-      </div>
 
-      <p className={S.sharedDataBoxLegalConsent}>
-        {beforeTerms}
-        <PrefetchLink href='/terms-of-use'>{termsText}</PrefetchLink>
-        {betweenLinks}
-        <PrefetchLink href='/privacy-policy'>{privacyText}</PrefetchLink>
-        {afterPrivacy}
-      </p>
+        <ConsentNote />
+      </WindowFooter>
     </>
   );
 }
