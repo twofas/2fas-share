@@ -17,7 +17,8 @@ CLAUDE.md
 AGENTS.md
 .mcp.json
 .playwright-mcp
-scripts/
+scripts/*
+!scripts/generate-licenses.mjs
 .superpowers/
 docs/
 testFiles/

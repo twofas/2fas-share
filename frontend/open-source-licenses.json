@@ -1,1 +1,114 @@
-[{"department":"kessler","relatedTo":"stuff","name":"canvas-confetti","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git+https://github.com/catdad/canvas-confetti.git","remoteVersion":"1.9.4","installedVersion":"n/a","definedVersion":"^1.9.4","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"express","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git+https://github.com/expressjs/express.git","remoteVersion":"5.2.1","installedVersion":"n/a","definedVersion":"^5.2.1","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"helmet","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git://github.com/helmetjs/helmet.git","remoteVersion":"8.1.0","installedVersion":"n/a","definedVersion":"^8.1.0","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"preact","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git+https://github.com/preactjs/preact.git","remoteVersion":"10.29.1","installedVersion":"n/a","definedVersion":"^10.28.4","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"qrcode","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git://github.com/soldair/node-qrcode.git","remoteVersion":"1.5.4","installedVersion":"n/a","definedVersion":"^1.5.4","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"ua-parser-js","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git+https://github.com/faisalman/ua-parser-js.git","remoteVersion":"2.0.9","installedVersion":"n/a","definedVersion":"^2.0.9","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"wouter-preact","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git+https://github.com/molefrog/wouter.git","remoteVersion":"3.9.0","installedVersion":"n/a","definedVersion":"^3.9.0","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"@babel/core","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"https://github.com/babel/babel.git","remoteVersion":"7.29.0","installedVersion":"n/a","definedVersion":"^7.29.0","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"@eslint/js","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git+https://github.com/eslint/eslint.git","remoteVersion":"10.0.1","installedVersion":"n/a","definedVersion":"^10.0.1","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"@preact/preset-vite","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git+https://github.com/preactjs/preset-vite.git","remoteVersion":"2.10.5","installedVersion":"n/a","definedVersion":"^2.10.3","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"eslint","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git+https://github.com/eslint/eslint.git","remoteVersion":"10.2.0","installedVersion":"n/a","definedVersion":"^10.0.2","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"eslint-plugin-jsdoc","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git+https://github.com/gajus/eslint-plugin-jsdoc.git","remoteVersion":"62.9.0","installedVersion":"n/a","definedVersion":"^62.7.1","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"globals","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git+https://github.com/sindresorhus/globals.git","remoteVersion":"17.5.0","installedVersion":"n/a","definedVersion":"^17.4.0","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"sass-embedded","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git+https://github.com/sass/embedded-host-node.git","remoteVersion":"1.99.0","installedVersion":"n/a","definedVersion":"^1.97.3","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"vite","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git+https://github.com/vitejs/vite.git","remoteVersion":"7.3.2","installedVersion":"n/a","definedVersion":"^7.3.1","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"vite-plugin-compression2","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git+https://github.com/nonzzz/vite-plugin-compression.git","remoteVersion":"2.5.3","installedVersion":"n/a","definedVersion":"^2.5.2","author":"n/a"},{"department":"kessler","relatedTo":"stuff","name":"vite-plugin-svgr","licensePeriod":"perpetual","material":"material","licenseType":"n/a","link":"git+https://github.com/pd4d10/vite-plugin-svgr.git","remoteVersion":"4.5.0","installedVersion":"n/a","definedVersion":"^4.5.0","author":"n/a"}]
+[
+  {
+    "name": "@babel/core",
+    "licenseType": "MIT",
+    "link": "https://github.com/babel/babel",
+    "installedVersion": "8.0.7",
+    "definedVersion": "^8.0.7",
+    "author": "The Babel Team"
+  },
+  {
+    "name": "@eslint/js",
+    "licenseType": "MIT",
+    "link": "https://github.com/eslint/eslint",
+    "installedVersion": "10.0.1",
+    "definedVersion": "^10.0.1",
+    "author": "n/a"
+  },
+  {
+    "name": "@preact/preset-vite",
+    "licenseType": "MIT",
+    "link": "https://github.com/preactjs/preset-vite",
+    "installedVersion": "2.10.6",
+    "definedVersion": "^2.10.6",
+    "author": "The Preact Team"
+  },
+  {
+    "name": "eslint",
+    "licenseType": "MIT",
+    "link": "https://github.com/eslint/eslint",
+    "installedVersion": "10.13.0",
+    "definedVersion": "^10.13.0",
+    "author": "Nicholas C. Zakas"
+  },
+  {
+    "name": "eslint-plugin-jsdoc",
+    "licenseType": "BSD-3-Clause",
+    "link": "https://github.com/gajus/eslint-plugin-jsdoc",
+    "installedVersion": "65.4.0",
+    "definedVersion": "^65.4.0",
+    "author": "Gajus Kuizinas"
+  },
+  {
+    "name": "globals",
+    "licenseType": "MIT",
+    "link": "https://github.com/sindresorhus/globals",
+    "installedVersion": "17.13.0",
+    "definedVersion": "^17.13.0",
+    "author": "Sindre Sorhus"
+  },
+  {
+    "name": "preact",
+    "licenseType": "MIT",
+    "link": "https://github.com/preactjs/preact",
+    "installedVersion": "11.0.1",
+    "definedVersion": "^11.0.1",
+    "author": "n/a"
+  },
+  {
+    "name": "qrcode",
+    "licenseType": "MIT",
+    "link": "https://github.com/soldair/node-qrcode",
+    "installedVersion": "1.5.4",
+    "definedVersion": "^1.5.4",
+    "author": "Ryan Day"
+  },
+  {
+    "name": "sass-embedded",
+    "licenseType": "MIT",
+    "link": "https://github.com/sass/embedded-host-node",
+    "installedVersion": "1.105.2",
+    "definedVersion": "^1.105.2",
+    "author": "Google Inc."
+  },
+  {
+    "name": "ua-parser-js",
+    "licenseType": "AGPL-3.0-or-later",
+    "link": "https://github.com/faisalman/ua-parser-js",
+    "installedVersion": "2.0.10",
+    "definedVersion": "^2.0.10",
+    "author": "Faisal Salman"
+  },
+  {
+    "name": "vite",
+    "licenseType": "MIT",
+    "link": "https://github.com/vitejs/vite",
+    "installedVersion": "8.3.4",
+    "definedVersion": "^8.3.4",
+    "author": "Evan You"
+  },
+  {
+    "name": "vite-plugin-compression2",
+    "licenseType": "MIT",
+    "link": "https://github.com/nonzzz/vite-plugin-compression",
+    "installedVersion": "2.5.3",
+    "definedVersion": "^2.5.3",
+    "author": "Kanno"
+  },
+  {
+    "name": "vite-plugin-svgr",
+    "licenseType": "MIT",
+    "link": "https://github.com/pd4d10/vite-plugin-svgr",
+    "installedVersion": "5.2.0",
+    "definedVersion": "^5.2.0",
+    "author": "Rongjian Zhang"
+  },
+  {
+    "name": "wouter-preact",
+    "licenseType": "Unlicense",
+    "link": "https://github.com/molefrog/wouter",
+    "installedVersion": "3.13.0",
+    "definedVersion": "^3.13.0",
+    "author": "Alexey Taktarov"
+  }
+]
