@@ -5,6 +5,15 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
+// Windows Phone UAs also contain "Android" and "iPhone" tokens, so they are ruled out first.
+const WINDOWS_PHONE_RE = /Windows Phone|IEMobile|Windows Mobile/i;
+const IOS_RE = /\b(iPhone|iPod|iPad)\b/;
+const ANDROID_RE = /\bAndroid\b/i;
+// Huawei HarmonyOS UAs carry an "Android" token but are not treated as Android.
+const HARMONYOS_RE = /\bHarmonyOS\b/i;
+// Android-based TVs, set-top boxes and Chromecasts are neither phones nor tablets.
+const ANDROID_TV_RE = /\b(Android TV|Google ?TV|SMART-?TV|SmartTV|CrKey|BRAVIA|AFT[A-Z]\w*)\b/i;
+
 /**
  * Detect an iPad running iPadOS 13+ that masquerades as a desktop Mac.
  *
@@ -23,20 +32,24 @@ export function isIPadOSLike (nav) {
 }
 
 /**
- * Compute device capability flags from parsed user-agent data plus the
- * iPad-as-Mac override. Pure (no globals) so it can be unit-tested.
- * @param {{ name?: string }} os - Parsed OS result (e.g. from UAParser#getOS).
- * @param {{ type?: string }} device - Parsed device result (e.g. from UAParser#getDevice).
- * @param {boolean} iPadOSLike - Whether the device is an iPad masquerading as a Mac.
+ * Compute device capability flags from a navigator-like object. Pure (no globals)
+ * so it can be unit-tested.
+ *
+ * iOS covers iPhone, iPod and iPad (including iPadOS Safari reporting a Mac UA).
+ * Android covers phones and tablets; Android TV devices are reported as Android
+ * but not as mobile or tablet. HarmonyOS is neither Android nor mobile.
+ * @param {{ maxTouchPoints?: number, userAgent?: string }} [nav] - A navigator-like object.
  * @returns {{ isMobileOrTablet: boolean, isIOS: boolean, isAndroid: boolean }} Device flags.
  */
-export function computeDeviceFlags (os, device, iPadOSLike) {
-  const isMobileOS = os.name === 'iOS' || os.name === 'Android' || iPadOSLike;
-  const isMobileDevice = device.type === 'mobile' || device.type === 'tablet' || iPadOSLike;
+export function computeDeviceFlags (nav) {
+  const ua = nav?.userAgent || '';
+  const isWindowsPhone = WINDOWS_PHONE_RE.test(ua);
+  const isIOS = !isWindowsPhone && (IOS_RE.test(ua) || isIPadOSLike(nav));
+  const isAndroid = !isWindowsPhone && !isIOS && ANDROID_RE.test(ua) && !HARMONYOS_RE.test(ua);
 
   return {
-    isMobileOrTablet: isMobileOS && isMobileDevice,
-    isIOS: os.name === 'iOS' || iPadOSLike,
-    isAndroid: os.name === 'Android'
+    isMobileOrTablet: isIOS || (isAndroid && !ANDROID_TV_RE.test(ua)),
+    isIOS,
+    isAndroid
   };
 }
