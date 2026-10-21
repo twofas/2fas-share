@@ -72,14 +72,6 @@
     "author": "Google Inc."
   },
   {
-    "name": "ua-parser-js",
-    "licenseType": "AGPL-3.0-or-later",
-    "link": "https://github.com/faisalman/ua-parser-js",
-    "installedVersion": "2.0.10",
-    "definedVersion": "^2.0.10",
-    "author": "Faisal Salman"
-  },
-  {
     "name": "vite",
     "licenseType": "MIT",
     "link": "https://github.com/vitejs/vite",
