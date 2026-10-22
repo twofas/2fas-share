@@ -27,7 +27,11 @@ import ctl from '@/styles/ds/controls.module.scss';
 import S from '../AddNewBox.module.scss';
 import EyeIcon from '@/assets/icons/eye-line.svg?react';
 import EyeOffIcon from '@/assets/icons/eye-off-line.svg?react';
-import { t } from '@/i18n';
+import { t, tCount } from '@/i18n';
+import { contentLimit, noteData } from '@/utils/contentLimit';
+import { runArcsLight } from '@/components/ArcsDecor';
+import { prefersReducedMotion } from '@/utils/reducedMotion';
+import { typedPrefix } from '@/utils/typedText';
 
 // Segmented / expiry: three presets and "Other", which reveals the
 // Generator / custom expiry track. Together the same six values as before.
@@ -37,12 +41,16 @@ const PRESETS = [
   { value: 604800, label: 'generator.week', short: 'expiry.7days' }
 ];
 const CUSTOM = [
-  { value: 300, label: 'v2.expiry.5min' },
-  { value: 1800, label: 'v2.expiry.30min' },
+  { value: 300, label: 'v2.expiry.5min', short: 'expiry.5min' },
+  { value: 1800, label: 'v2.expiry.30min', short: 'expiry.30min' },
   { value: 2592000, label: 'expiry.30days' }
 ];
 const OTHER = 'other';
 const CUSTOM_DEFAULT = 1800;
+const MIN_CREATING_MS = 400;
+// The hint types itself once the window has come in (entrance 0.40 + 0.65 s).
+const HINT_DELAY_MS = 1100;
+const HINT_CHAR_MS = 45;
 
 /**
  * Form for creating a new secure share (custom/text content type).
@@ -67,6 +75,8 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
   const [attempt, setAttempt] = useState(0);
   const noteRef = useRef(null);
   const passwordRef = useRef(null);
+  const ctaRef = useRef(null);
+  const limit = contentLimit(text);
   const uid = useId();
   /**
    * Build a unique element id for this generator instance.
@@ -81,12 +91,48 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
     }
   }, [focusOnMount]);
 
+  // Field hint typing itself once, letter by letter, while the field is empty
+  // and not in use; focus, typing or reduced motion show it whole at once.
+  // A screen reader reads the hint on focus, when it is already complete.
+  const fullHint = t('v2.addForm.notePlaceholder');
+  const [hint, setHint] = useState(() => (focusOnMount || prefersReducedMotion() ? fullHint : ''));
+
+  useEffect(() => {
+    if (hint === fullHint) {
+      return undefined;
+    }
+
+    const note = noteRef.current;
+    const start = performance.now();
+    let timer;
+
+    const tick = () => {
+      if (!note || note.value || document.activeElement === note) {
+        setHint(fullHint);
+        return;
+      }
+
+      const next = typedPrefix(fullHint, performance.now() - start, HINT_DELAY_MS, HINT_CHAR_MS);
+
+      setHint(next);
+
+      if (next !== fullHint) {
+        timer = setTimeout(tick, HINT_CHAR_MS);
+      }
+    };
+
+    timer = setTimeout(tick, HINT_DELAY_MS);
+
+    return () => clearTimeout(timer);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // The content field keeps the height it has in the Empty state: a message,
   // the custom expiry block or the password field grow the window instead of
   // shrinking the field (Figma: Error +32 px, Custom +84 px). The height is
   // measured only while none of those is shown.
   const plainRef = useRef(true);
-  plainRef.current = !errors.content && !errors.submit && !otherSelected && !usePassword;
+  plainRef.current = !errors.content && !errors.submit && !otherSelected && !usePassword &&
+    !limit.over && !limit.showCounter;
 
   useLayoutEffect(() => {
     const note = noteRef.current;
@@ -141,7 +187,7 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(newErrors).length === 0 && !limit.over;
   };
 
   /**
@@ -159,7 +205,7 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
     if (!validate()) {
       setAttempt((n) => n + 1);
       // Focus goes to the first invalid field; the entered content stays.
-      if (!text.trim()) {
+      if (!text.trim() || limit.over) {
         noteRef.current?.focus();
       } else {
         passwordRef.current?.focus();
@@ -167,12 +213,23 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
       return;
     }
 
+    // Enter on a pill or a switch submits too: those get disabled for the
+    // request, so focus moves to the button first instead of the page start.
+    if (e.currentTarget.contains(document.activeElement) && document.activeElement.matches('input[type="radio"], input[type="checkbox"]')) {
+      ctaRef.current?.focus({ preventScroll: true });
+    }
+
     setAttempt(0);
     setIsSubmitting(true);
     setErrors({});
 
+    // The Creating state lasts at least 400 ms (BEHAVIOR-SPEC), also when the
+    // request fails, so a fast server does not make it flash.
+    const started = performance.now();
+    const settle = () => new Promise(resolve => setTimeout(resolve, Math.max(0, MIN_CREATING_MS - (performance.now() - started))));
+
     try {
-      const data = { contentType: 'custom', contentVersion: 1, content: { text } };
+      const data = noteData(text);
       let shareKey, type, urlSecret;
       const nonce = generateNonce();
 
@@ -196,8 +253,10 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
       });
 
       const link = `${FRONTEND_URL}/#/${result.id}/${type}/${toBase64Url(nonce)}/${urlSecret}`;
+      await settle();
       onSuccess({ link, expiration, oneTimeAccess, password: password.trim() });
     } catch (err) {
+      await settle();
       setErrors({ submit: t('addForm.errorSubmit') });
     } finally {
       setIsSubmitting(false);
@@ -241,10 +300,14 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
   // reported problem is still there; pressing it validates again.
   const blocked = Boolean(
     (errors.content && !text.trim()) ||
+    limit.over > 0 ||
     (errors.password && usePassword && password.trim().length < 8)
   );
+  const contentError = errors.content && !text.trim()
+    ? errors.content
+    : limit.over > 0 && tCount('v2.addForm.errorContentTooLong', limit.over);
   const ctaDescribedBy = [
-    errors.content && id('note-error'),
+    contentError && id('note-error'),
     errors.password && id('password-error')
   ].filter(Boolean).join(' ') || undefined;
 
@@ -326,15 +389,22 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
               ref={noteRef}
               id={id('note')}
               className={`${field.textarea} ${S.note}`}
-              placeholder={t('v2.addForm.notePlaceholder')}
+              placeholder={hint}
               value={text}
               readOnly={isSubmitting}
-              aria-invalid={errors.content ? 'true' : undefined}
-              aria-describedby={errors.content ? `${id('note-caption')} ${id('note-error')}` : id('note-caption')}
+              aria-invalid={contentError ? 'true' : undefined}
+              aria-describedby={[
+                id('note-caption'),
+                contentError && id('note-error'),
+                limit.showCounter && id('note-counter')
+              ].filter(Boolean).join(' ')}
               onInput={(e) => setText(e.target.value)}
             />
-            {errors.content && (
-              <FieldMessage id={id('note-error')} attempt={attempt} className={S.stackMessage}>{errors.content}</FieldMessage>
+            {contentError && (
+              <FieldMessage id={id('note-error')} attempt={attempt} className={S.stackMessage}>{contentError}</FieldMessage>
+            )}
+            {limit.showCounter && (
+              <p id={id('note-counter')} className={S.counter}>{tCount('v2.addForm.contentLeft', limit.remaining)}</p>
             )}
           </div>
 
@@ -374,7 +444,7 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
                   />
                   {CUSTOM.map((c) => renderOption(
                     'expiry-other', c.value, otherSelected && expiration === c.value,
-                    t(c.label), null, setExpiration
+                    t(c.label), c.short && t(c.short), setExpiration
                   ))}
                 </div>
               </fieldset>
@@ -466,8 +536,10 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
 
       <WindowFooter className={S.footer}>
         <button
+          ref={ctaRef}
           type='submit'
           className={`${btn.cta} ${btn.ctaBig} ${S.cta}`}
+          onMouseEnter={() => runArcsLight({ throttle: true })}
           aria-busy={isSubmitting ? 'true' : undefined}
           aria-disabled={isSubmitting || blocked ? 'true' : undefined}
           aria-describedby={ctaDescribedBy}

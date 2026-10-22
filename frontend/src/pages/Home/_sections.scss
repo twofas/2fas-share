@@ -7,7 +7,7 @@
 
 // Layout shared by the home page sections 02–06 (Figma: 10 Sections).
 // A band paints its background edge to edge; its content sits in the page
-// container on the 12-column grid. From 1024 px (Layout=Desktop) a band row
+// container on the 12-column grid. From 768 px (Layout=Desktop) a band row
 // splits into an aside of 4 columns and a main part of 8 columns, divided
 // by a 1 px vertical line. No CSS output.
 
@@ -21,17 +21,17 @@
   @include grid;
 }
 
-// Aside column (eyebrow) from 1024 px.
+// Aside column (eyebrow) from 768 px.
 @mixin aside {
-  @include from(layout) {
+  @include from(columns) {
     grid-column: 1 / span 4;
     padding-inline-end: var(--space-16);
   }
 }
 
-// Main column with the dividing line from 1024 px.
+// Main column with the dividing line from 768 px.
 @mixin main($line: var(--theme-border-default)) {
-  @include from(layout) {
+  @include from(columns) {
     border-inline-start: var(--stroke-1) solid $line;
     grid-column: 5 / -1;
     padding-inline-start: var(--space-16);

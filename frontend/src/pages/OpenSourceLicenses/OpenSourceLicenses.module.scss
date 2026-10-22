@@ -47,7 +47,7 @@
   // Figma strokes sit inside the row (44 px with the bottom line).
   padding-block: var(--space-3) calc(var(--space-3) - var(--stroke-1));
 
-  @include from(layout) {
+  @include from(columns) {
     flex-wrap: nowrap;
   }
 
@@ -58,14 +58,16 @@
     text-align: start;
   }
 
-  th {
+  // Column headers; the package name is the row header and reads as a cell.
+  th[scope='col'] {
     @include typ('label-sm');
 
     color: var(--theme-text-secondary);
     text-transform: uppercase;
   }
 
-  td {
+  td,
+  th[scope='row'] {
     @include typ('body-sm');
   }
 }
@@ -76,7 +78,7 @@
   min-inline-size: 0;
   overflow-wrap: anywhere;
 
-  @include from(layout) {
+  @include from(columns) {
     flex: 1 1 0;
   }
 }
@@ -94,7 +96,7 @@
   min-inline-size: 0;
   white-space: nowrap;
 
-  @include from(layout) {
+  @include from(columns) {
     flex: 0 0 7.5rem;
   }
 }
@@ -107,7 +109,7 @@
     margin-inline-start: auto;
   }
 
-  @include from(layout) {
+  @include from(columns) {
     flex: 0 0 7.5rem;
 
     .colPackage + & {

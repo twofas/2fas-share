@@ -21,6 +21,11 @@
 }
 
 .window {
+  // The inside is always drawn in the 1440 px proportions: the space and
+  // title tokens grow from 1920 px, which would not fit the fixed window.
+  // The whole picture scales with the zoom instead.
+  @include tokens-1440;
+
   block-size: 20.5625rem;
   box-shadow: var(--elevation-dialog);
   inline-size: 26.75rem;

@@ -10,10 +10,10 @@
   "header": {
     "logoAlt": "Logo 2FAS Share",
     "shareSecurely": "Użyj 2FAS Share",
-    "aboutShare": "Więcej o SHARE"
+    "aboutShare": "O 2FAS Share"
   },
   "footer": {
-    "copyright": "© {year} Two Factor Authentication Service, Inc. Wszelkie prawa zastrzeżone.",
+    "copyright": "© {year} Two Factor Authentication Service, Inc.\nWszelkie prawa zastrzeżone.",
     "privacyPolicy": "Polityka prywatności",
     "termsOfUse": "Warunki korzystania",
     "githubRepository": "Repozytorium GitHub",
@@ -22,8 +22,8 @@
     "termsTitle": "Regulamin i polityka prywatności"
   },
   "qr": {
-    "title": "Sprawdź na urządzeniu mobilnym",
-    "description": "Zeskanuj kod QR, aby zobaczyć szczegóły elementu na swoim urządzeniu mobilnym."
+    "title": "Otwórz na telefonie",
+    "description": "Zeskanuj kod QR, aby otworzyć ten link na telefonie."
   },
   "first": {
     "openInApp": "Otwórz w aplikacji 2FAS Pass",
@@ -57,8 +57,8 @@
   "common": {
     "copied": "Skopiowano!",
     "copyToClipboard": "Kopiuj do schowka",
-    "toggleVisibility": "Widoczność hasła",
-    "togglePasswordVisibility": "Włącz/wyłącz widoczność hasła",
+    "toggleVisibility": "Pokaż wartość",
+    "togglePasswordVisibility": "Pokaż wartość",
     "yes": "Tak",
     "errorPrefix": "Błąd:"
   },
@@ -91,7 +91,7 @@
     "passwordDesc": "Odbiorca będzie potrzebował tego hasła, aby otworzyć link.",
     "passwordPlaceholder": "Wprowadź hasło",
     "errorSubmit": "Nie udało się wygenerować linku. Spróbuj ponownie.",
-    "submitting": "Udostępnianie...",
+    "submitting": "Tworzenie linku...",
     "submit": "Udostępnij"
   },
   "expiry": {
@@ -104,7 +104,7 @@
   },
   "result": {
     "title": "Link jest gotowy do użycia",
-    "copyShareLink": "Kopiuj link",
+    "copyShareLink": "Skopiuj link",
     "expirationTitle": "Wygaśnięcie linku",
     "oneTimeAccessTitle": "Jednorazowy dostęp",
     "copyPassword": "Kopiuj hasło",
@@ -153,7 +153,7 @@
     "continue": "Klikając Kontynuuj, akceptujesz nasze Warunki korzystania oraz Politykę prywatności."
   },
   "openSourceLicenses": {
-    "title": "Licencje Open Source",
+    "title": "Licencje\nOpen Source",
     "intro": "2FAS Share opiera się na pracy społeczności open-source. \nDziękujemy autorom i opiekunom poniższych bibliotek.",
     "frontendSection": "Zależności frontendu",
     "frontendDesc": "Pakiety JavaScript używane w kliencie webowym (npm).",
@@ -182,8 +182,8 @@
   },
   "generator": {
     "week": "1 tydzień",
-    "hourShort": "1 godz.",
-    "dayShort": "24 godz.",
+    "hourShort": "1 h",
+    "dayShort": "24 h",
     "other": "Inny",
     "otherDuration": "Inny czas",
     "readyCaption": "Skopiuj go i wyślij odbiorcy.",
@@ -226,7 +226,7 @@
     "headingPassword2": "do notatki.",
     "headingRevealed1": "Notatka",
     "headingRevealed2": "od nadawcy.",
-    "headingOnce1": "Skopiuj treść",
+    "headingOnce1": "Skopiuj treść,",
     "headingOnce2": "zanim wyjdziesz.",
     "headingUnavailable1": "Ten link",
     "headingUnavailable2": "już nie działa.",
@@ -234,10 +234,10 @@
     "headingBroken2": "jest niepełny.",
     "introCaption": "Odszyfrowuje się tylko w Twojej przeglądarce.",
     "openNote": "Otwórz notatkę",
-    "consentOpenNote": "Klikając Otwórz notatkę, akceptujesz nasze Warunki korzystania oraz Politykę prywatności.",
+    "consentOpenNote": "Klikając „Otwórz notatkę”, akceptujesz nasze Warunki korzystania oraz Politykę prywatności.",
     "passwordLabel": "Hasło od nadawcy",
     "passwordCaption": "Nadawca przekazuje je osobno, na przykład SMS-em albo telefonicznie.",
-    "showPassword": "Pokaż hasło",
+    "showPassword": "Pokaż wartość",
     "wrongPasswordTitle": "Nieprawidłowe hasło.",
     "wrongPasswordBody": "Sprawdź wielkość liter albo poproś nadawcę, aby przekazał je jeszcze raz.",
     "keepTabTitle": "Nie zamykaj ani nie odświeżaj tej karty.",
@@ -379,7 +379,19 @@
       "passwordTitle": "Dodaj hasło",
       "passwordDesc": "Przekaż hasło osobno, innym kanałem.",
       "submit": "Utwórz link",
-      "oneTimeAccessTitle": "Jednorazowy dostęp"
+      "oneTimeAccessTitle": "Jednorazowy dostęp",
+      "contentLeft": {
+        "one": "Został około {count} znak.",
+        "few": "Zostały około {count} znaki.",
+        "many": "Zostało około {count} znaków.",
+        "other": "Zostało około {count} znaku."
+      },
+      "errorContentTooLong": {
+        "one": "Treść jest za długa. Skróć ją o {count} znak.",
+        "few": "Treść jest za długa. Skróć ją o {count} znaki.",
+        "many": "Treść jest za długa. Skróć ją o {count} znaków.",
+        "other": "Treść jest za długa. Skróć ją o {count} znaku."
+      }
     },
     "expiry": {
       "5min": "5 minut",
@@ -409,11 +421,16 @@
       "subtitle": "Jedno pole, jedno kliknięcie. Nic do instalowania."
     },
     "legal": {
-      "share": "Klikając Utwórz link, akceptujesz nasze Warunki korzystania oraz Politykę prywatności."
+      "share": "Klikając „Utwórz link”, akceptujesz nasze Warunki korzystania oraz Politykę prywatności."
     },
     "openSourceLicenses": {
       "intro": "2FAS Share opiera się na pracy społeczności open source. Dziękujemy autorom i opiekunom poniższych bibliotek.",
       "frontendDesc": "Pakiety JavaScript używane w kliencie webowym (npm)."
     }
+  },
+  "meta": {
+    "homeTitle": "2FAS Share – Wyślij hasło lub notatkę. Tylko raz.",
+    "pageTitle": "{page} – 2FAS Share",
+    "note": "Prywatna notatka"
   }
 }

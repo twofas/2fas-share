@@ -37,11 +37,8 @@
 
   align-self: start;
   color: var(--theme-text-primary);
-  padding-block: var(--space-section-block) 0;
-
-  @include from(layout) {
-    padding-block-end: var(--space-section-block);
-  }
+  // Figma: on a phone the eyebrow row has the section padding below it too.
+  padding-block: var(--space-section-block);
 }
 
 .headMain {
@@ -77,12 +74,16 @@
 .list {
   display: grid;
   gap: var(--space-12);
+  // minmax(0, …): the zoomed thumbnail must not set the card's minimum width
+  // (at 320 px its first zoom would otherwise hold the card wider than the screen).
+  grid-template-columns: minmax(0, 1fr);
   list-style: none;
 
+  // Figma 2 × 2: the second row starts 64 px under the first card (1024).
   @include from(tablet) {
     column-gap: var(--space-page-gutter);
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: var(--space-16);
+    row-gap: calc(var(--space-16) + var(--space-8));
   }
 
   @include from(desktop) {
@@ -121,8 +122,12 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  padding-inline-end: var(--space-6);
   position: relative;
+
+  // Full card width on a phone, a space-6 gutter on the right from 768 px.
+  @include from(tablet) {
+    padding-inline-end: var(--space-6);
+  }
 }
 
 // "Optional" above the step 3 title (Caption, text/accent): in the flow on

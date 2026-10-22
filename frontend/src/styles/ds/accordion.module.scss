@@ -30,6 +30,14 @@
   &[open]::details-content {
     block-size: auto;
   }
+
+  // The global reduced-motion reset does not reach ::details-content (an
+  // unknown pseudo-element would void the whole selector list there).
+  @media (prefers-reduced-motion: reduce) {
+    &::details-content {
+      transition: none;
+    }
+  }
 }
 
 .summary {
@@ -39,7 +47,14 @@
   gap: var(--space-6);
   justify-content: space-between;
   list-style: none;
-  padding: var(--space-8) var(--space-16);
+  // Figma draws the bottom stroke inside the row: it takes its width from
+  // the padding (92 px row at 1440).
+  padding: var(--space-8) var(--space-16) calc(var(--space-8) - var(--stroke-1));
+
+  // Expanded: the answer follows the question after space-6 (24 px at 1440).
+  .row[open] > & {
+    padding-block-end: var(--space-6);
+  }
 
   &::-webkit-details-marker {
     display: none;
@@ -93,5 +108,5 @@
   @include typ('body-base');
 
   color: var(--theme-text-secondary);
-  padding: 0 var(--space-16) var(--space-8);
+  padding: 0 var(--space-16) calc(var(--space-8) - var(--stroke-1));
 }

@@ -40,7 +40,6 @@ const EXPIRATIONS = [300, 1800, 3600, 86400, 604800, 2592000];
 export default function ShareLinkResult({ link, expiration, oneTimeAccess, password, onReset, announce }) {
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedPassword, setCopiedPassword] = useState(false);
-  const [linkHovered, setLinkHovered] = useState(false);
   const ctaRef = useRef(null);
 
   // The "Create link" button turned into "Copy link": focus stays on the
@@ -83,15 +82,9 @@ export default function ShareLinkResult({ link, expiration, oneTimeAccess, passw
             <p className={S.readyCaption}>{t('generator.readyCaption')}</p>
           </div>
 
-          <div
-            className={S.linkField}
-            onPointerEnter={() => setLinkHovered(true)}
-            onPointerLeave={() => setLinkHovered(false)}
-            onFocusIn={() => setLinkHovered(true)}
-            onFocusOut={() => setLinkHovered(false)}
-          >
+          <div className={S.linkField}>
             <div className={S.linkValue}>
-              <GlitchText text={link} revealed={linkHovered || copiedLink} />
+              <GlitchText text={link} />
             </div>
             <button
               type='button'

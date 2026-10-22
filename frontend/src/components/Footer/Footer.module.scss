@@ -6,7 +6,7 @@
 // See the LICENSE file for details.
 
 // Section / 07 Footer: brand on 4 columns, links on 8 behind the 4|8 line
-// (Desktop from 1024 px); stacked on mobile without the vertical line.
+// (Desktop from 768 px); stacked on mobile without the vertical line.
 
 @use '@/styles/variables' as *;
 
@@ -25,7 +25,7 @@
 
   // Desktop: the 4|8 line runs the full height of the footer, so the
   // vertical padding moves into the two columns.
-  @include from(layout) {
+  @include from(columns) {
     @include grid;
 
     padding-block: 0;
@@ -37,7 +37,7 @@
   flex-direction: column;
   gap: var(--space-6);
 
-  @include from(layout) {
+  @include from(columns) {
     padding-block: var(--space-12);
 
     .inner > & {
@@ -52,7 +52,8 @@
   inline-size: 7.0625rem;
 }
 
-// "Inc." ends the first line, "All rights reserved." starts the second.
+// "Inc." ends the first line, "All rights reserved." starts the second (a
+// line break in the translation).
 .copyright {
   @include typ('body-sm');
 
@@ -65,7 +66,7 @@
   flex-direction: column;
   gap: var(--space-12);
 
-  @include from(layout) {
+  @include from(columns) {
     align-items: flex-end;
     border-inline-start: var(--stroke-1) solid var(--theme-border-subtle);
     gap: var(--space-10);
@@ -82,7 +83,7 @@
   display: flex;
   flex-direction: column;
 
-  @include from(layout) {
+  @include from(columns) {
     column-gap: var(--space-8);
     flex-direction: row;
     flex-wrap: wrap;
@@ -98,7 +99,7 @@
   gap: var(--space-2);
   min-block-size: 2.75rem;
 
-  @include from(layout) {
+  @include from(columns) {
     min-block-size: auto;
   }
 
@@ -112,7 +113,7 @@
 .github {
   align-self: flex-start;
 
-  @include from(layout) {
+  @include from(columns) {
     align-self: flex-end;
   }
 }

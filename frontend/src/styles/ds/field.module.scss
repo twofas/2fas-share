@@ -23,8 +23,11 @@
   border-radius: var(--radius-sm);
   color: var(--theme-text-primary);
 
-  @include hover {
-    border-color: var(--theme-field-border-hover);
+  // Hover skips a focused field: the focus border wins under the cursor.
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:focus-within, #{$disabled}) {
+      border-color: var(--theme-field-border-hover);
+    }
   }
 }
 

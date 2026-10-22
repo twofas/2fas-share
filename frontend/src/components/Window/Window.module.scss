@@ -45,8 +45,10 @@
   gap: var(--space-4);
   padding: var(--space-6);
 
+  // Figma draws the divider inside the row: the line takes no height.
   & + & {
     border-block-start: var(--stroke-1) solid var(--theme-border-subtle);
+    margin-block-start: calc(-1 * var(--stroke-1));
   }
 }
 

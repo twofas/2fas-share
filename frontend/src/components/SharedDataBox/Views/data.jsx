@@ -17,7 +17,6 @@ import ContentLogin from './ContentTypes/Login';
 import ContentPaymentCard from './ContentTypes/PaymentCard';
 import ContentSecureNote from './ContentTypes/SecureNote';
 import ContentWifi from './ContentTypes/Wifi';
-import CheckIcon from '@/assets/icons/check-line.svg?react';
 import btn from '@/styles/ds/button.module.scss';
 import link from '@/styles/ds/link.module.scss';
 import S from '../SharedDataBox.module.scss';
@@ -62,8 +61,8 @@ function noteText (contentType, content) {
 }
 
 /**
- * Footer CTA copying the whole note: "Copy content" → "Content copied" with a
- * checkmark for 2 s. The name comes from the visible text (no aria-label);
+ * Footer CTA copying the whole note: "Copy content" → "Content copied" for
+ * 2 s, text only (Figma: no checkmark). The name comes from the visible text (no aria-label);
  * the page status region announces the same text.
  * @param {Object} props - Component props.
  * @param {boolean} props.copied - Whether the note was just copied.
@@ -73,7 +72,6 @@ function noteText (contentType, content) {
 function CopyContentButton ({ copied, onCopy }) {
   return (
     <button type='button' className={`${btn.cta} ${btn.ctaBig}`} onClick={onCopy}>
-      {copied && <CheckIcon aria-hidden='true' />}
       {copied ? t('recipient.contentCopied') : t('recipient.copyContent')}
     </button>
   );

@@ -13,7 +13,7 @@
     "aboutShare": "Über 2FAS Share"
   },
   "footer": {
-    "copyright": "© {year} Two Factor Authentication Service, Inc. Alle Rechte vorbehalten.",
+    "copyright": "© {year} Two Factor Authentication Service, Inc.\nAlle Rechte vorbehalten.",
     "privacyPolicy": "Datenschutzerklärung",
     "termsOfUse": "Nutzungsbedingungen",
     "githubRepository": "GitHub-Repository",
@@ -22,8 +22,8 @@
     "termsTitle": "Nutzungsbedingungen & Datenschutz"
   },
   "qr": {
-    "title": "Auf Mobilgerät öffnen",
-    "description": "Scanne diesen QR-Code, um die Details des Eintrags auf deinem Mobilgerät zu öffnen."
+    "title": "Auf dem Handy öffnen",
+    "description": "Scanne den QR-Code, um diesen Link auf deinem Handy zu öffnen."
   },
   "first": {
     "openInApp": "In der 2FAS Pass App öffnen",
@@ -57,8 +57,8 @@
   "common": {
     "copied": "Kopiert!",
     "copyToClipboard": "In Zwischenablage kopieren",
-    "toggleVisibility": "Sichtbarkeit umschalten",
-    "togglePasswordVisibility": "Passwortsichtbarkeit umschalten",
+    "toggleVisibility": "Wert anzeigen",
+    "togglePasswordVisibility": "Wert anzeigen",
     "yes": "Ja",
     "errorPrefix": "Fehler:"
   },
@@ -237,7 +237,7 @@
     "consentOpenNote": "Durch das Klicken auf Notiz öffnen stimmst du unseren Nutzungsbedingungen und unserer Datenschutzerklärung zu.",
     "passwordLabel": "Passwort vom Absender",
     "passwordCaption": "Der Absender teilt es separat, zum Beispiel per SMS oder Telefon.",
-    "showPassword": "Passwort anzeigen",
+    "showPassword": "Wert anzeigen",
     "wrongPasswordTitle": "Falsches Passwort.",
     "wrongPasswordBody": "Prüfe die Groß- und Kleinschreibung oder bitte den Absender, es noch einmal zu teilen.",
     "keepTabTitle": "Schließe oder aktualisiere diesen Tab nicht.",
@@ -379,7 +379,15 @@
       "oneTimeAccessDesc": "Der Link verschwindet nach dem ersten Öffnen.",
       "passwordTitle": "Passwort hinzufügen",
       "passwordDesc": "Teile das Passwort separat über einen anderen Kanal.",
-      "submit": "Link erstellen"
+      "submit": "Link erstellen",
+      "contentLeft": {
+        "one": "Noch etwa {count} Zeichen.",
+        "other": "Noch etwa {count} Zeichen."
+      },
+      "errorContentTooLong": {
+        "one": "Die Notiz ist zu lang. Kürze sie um {count} Zeichen.",
+        "other": "Die Notiz ist zu lang. Kürze sie um {count} Zeichen."
+      }
     },
     "expiry": {
       "5min": "5 Minuten",
@@ -415,5 +423,10 @@
       "intro": "2FAS Share basiert auf der Arbeit der Open-Source-Community. Wir danken den Autoren und Maintainern der folgenden Bibliotheken.",
       "frontendDesc": "JavaScript-Pakete, die im Webclient verwendet werden (npm)."
     }
+  },
+  "meta": {
+    "homeTitle": "2FAS Share – Sende ein Passwort oder eine Notiz. Nur einmal.",
+    "pageTitle": "{page} – 2FAS Share",
+    "note": "Private Notiz"
   }
 }

@@ -109,7 +109,7 @@ export default function OpenSourceLicenses () {
           <tbody role='rowgroup'>
             {sortedBackend.map((dep) => (
               <tr key={dep.package} className={S.row} role='row'>
-                <td role='cell' className={S.colPackage}>{packagePath(dep.package)}</td>
+                <th scope='row' role='rowheader' className={S.colPackage}>{packagePath(dep.package)}</th>
                 <td role='cell' className={S.colSource}>
                   <a
                     className={`${lnk.link} ${lnk.linkAccent} ${S.sourceLink}`}
@@ -118,6 +118,7 @@ export default function OpenSourceLicenses () {
                     rel='noopener noreferrer'
                   >
                     {t('openSourceLicenses.viewSource')}
+                    <span className='visually-hidden'> {t('nav.newTab')}</span>
                   </a>
                 </td>
               </tr>
@@ -151,7 +152,7 @@ export default function OpenSourceLicenses () {
 
               return (
                 <tr key={dep.name} className={S.row} role='row'>
-                  <td role='cell' className={S.colPackage}>{packagePath(dep.name)}</td>
+                  <th scope='row' role='rowheader' className={S.colPackage}>{packagePath(dep.name)}</th>
                   <td role='cell' className={S.colVersion}>{version || '—'}</td>
                   <td role='cell' className={S.colSource}>
                     {url
@@ -163,6 +164,7 @@ export default function OpenSourceLicenses () {
                           rel='noopener noreferrer'
                         >
                           {t('openSourceLicenses.viewSource')}
+                          <span className='visually-hidden'> {t('nav.newTab')}</span>
                         </a>
                       )
                       : '—'}

@@ -27,6 +27,8 @@
 // ── Heading row: title (8 columns) and the eyebrow (4) ──────
 .head {
   border-block-end: var(--stroke-1) solid var(--theme-accent-border);
+  // Figma draws the line inside the row: the body below starts on it.
+  margin-block-end: calc(-1 * var(--stroke-1));
 }
 
 .headInner {
@@ -35,7 +37,7 @@
   padding-block: var(--space-20);
   row-gap: var(--space-6);
 
-  @include from(layout) {
+  @include from(columns) {
     padding-block: 0;
   }
 }
@@ -44,7 +46,7 @@
   @include heading;
   @include enter-heading(0s);
 
-  @include from(layout) {
+  @include from(columns) {
     grid-column: 1 / span 8;
     padding-block: var(--space-20);
     padding-inline-end: var(--space-16);
@@ -58,7 +60,7 @@
   align-self: start;
   grid-row: 1;
 
-  @include from(layout) {
+  @include from(columns) {
     align-self: stretch;
     align-items: flex-start;
     border-inline-start: var(--stroke-1) solid var(--theme-accent-border);
@@ -75,7 +77,8 @@
 // ── Body: lead text (5 columns) and the four stages (7) ─────
 .body {
   border-block-end: var(--stroke-1) solid var(--theme-accent-border);
-  padding-block: var(--space-section-block-sm) var(--space-section-block);
+  // The bottom line sits inside the row (Figma): it takes its width from the padding.
+  padding-block: var(--space-section-block-sm) calc(var(--space-section-block) - var(--stroke-1));
 }
 
 .bodyInner {
@@ -93,7 +96,7 @@
   gap: var(--space-4);
   justify-content: center;
 
-  @include from(layout) {
+  @include from(columns) {
     align-self: start;
     grid-column: 1 / span 5;
     padding-inline-end: var(--space-16);
@@ -120,7 +123,7 @@
   gap: var(--space-2);
   padding: var(--space-2);
 
-  @include from(layout) {
+  @include from(columns) {
     align-self: start;
     grid-column: 6 / -1;
   }
@@ -147,7 +150,8 @@
   color: var(--theme-text-primary);
   display: flex;
   flex-direction: column;
-  padding: var(--space-4);
+  // The bottom stroke is drawn inside the card in Figma.
+  padding: var(--space-4) var(--space-4) calc(var(--space-4) - var(--stroke-1));
 }
 
 .stageTop {
@@ -198,6 +202,8 @@
   @include typ('body-lg');
   @include enter-fade(1.85s);
 
+  // Figma: the note keeps a 739 px measure on the wide panels (1920, 2560).
+  max-inline-size: 46.1875rem;
   padding: var(--space-2) var(--space-4);
 }
 

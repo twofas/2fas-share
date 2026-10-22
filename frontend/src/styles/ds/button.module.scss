@@ -48,6 +48,15 @@
     transition-duration: var(--motion-duration-press);
   }
 
+  // Press: the button shrinks to 98 % (BEHAVIOR-SPEC 1744).
+  @include pressed {
+    scale: 0.98;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition-property: --cta-bg-start, --cta-bg-end, --cta-border-start, --cta-border-end, color, scale;
+  }
+
   // Light arc travelling around the border, masked to the 1 px ring.
   &::before {
     background: conic-gradient(
@@ -79,22 +88,28 @@
 
   @include disabled;
 
-  // Loading: label keeps its width but is invisible, spinner on top.
+  // Loading: label keeps its width but is invisible, spinner on top. Full
+  // color (Figma: State=Loading), not the faded disabled look.
   &[aria-busy='true'] {
     color: transparent;
     cursor: progress;
+    opacity: 1;
 
+    // Figma: spinner = icon loader-2-line, painted in the label color.
     &::after {
       animation: spin 1s linear infinite;
+      background: var(--theme-text-on-accent);
       block-size: var(--cta-spinner);
-      border: var(--stroke-2) solid var(--theme-text-on-accent);
-      border-block-start-color: transparent;
-      border-radius: var(--radius-full);
       content: '';
       inline-size: var(--cta-spinner);
       inset: 0;
       margin: auto;
+      mask: url('@/assets/icons/loader-2-line.svg') center / contain no-repeat;
       position: absolute;
+
+      @media (forced-colors: active) {
+        background: ButtonText;
+      }
     }
   }
 

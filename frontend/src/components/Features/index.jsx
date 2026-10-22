@@ -50,6 +50,7 @@ function OpenSourceDesc () {
   return (
     <>
       {t('features.openSourceDesc')}{' '}
+      <br className={S.phoneBreak} />
       <a className={S.link} href={GITHUB_URL} target='_blank' rel='noopener noreferrer'>
         {t('features.openSourceLink')}
         <span className={S.arrow} aria-hidden='true'>{' →'}</span>
@@ -62,8 +63,8 @@ function OpenSourceDesc () {
 /**
  * Section / 05, features part: "Four things you get right away" on the
  * violet band, four rows with a heading, a description and a ray mark.
- * The eyebrow sits above the heading below 1024 px and in the aside of the
- * rows from 1024 px (one of the two is display: none).
+ * The eyebrow sits above the heading below 768 px and in the aside of the
+ * rows from 768 px (one of the two is display: none).
  * @returns {import('preact').JSX.Element} The features section.
  */
 export default function Features () {

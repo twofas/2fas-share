@@ -8,18 +8,22 @@
 // Section / 08 Navigation, sticky: a glass capsule pinned to the top of the
 // view. Collapsed after scrolling: more transparent glass (0.55 against 0.85),
 // stronger blur, logo without the wordmark and, from 1024 px, scale 0.94.
+// Collapses after 340 px of scroll (BEHAVIOR-SPEC 48.2) in 480 ms.
 
 @use '@/styles/variables' as *;
 
-$collapse: 0.6s;
+$collapse: var(--motion-duration-layout);
 
 .header {
   --nav-top: 0.5rem;
 
   // Entrance on page load (Figma E · Motion, nav): opacity 0.4 s, Y −72 → 0 in 0.55 s.
+  // Fill backwards, not both: a finished animation that keeps holding opacity
+  // makes the header a group with animated opacity, which cuts the backdrop
+  // blur of the bar and the menu panel off from the page.
   animation:
-    navFade 0.4s var(--motion-easing-out) both,
-    navDrop 0.55s var(--motion-easing-out) both;
+    navFade 0.4s var(--motion-easing-out) backwards,
+    navDrop 0.55s var(--motion-easing-out) backwards;
 
   align-items: center;
   display: flex;
@@ -40,6 +44,13 @@ $collapse: 0.6s;
     --nav-top: 2rem;
   }
 
+  // Narrow phones: on a bar narrower than 20.25 rem (BEHAVIOR-SPEC,
+  // navigation) the logo drops the wordmark, so "Create link" keeps one line
+  // in every language. The header content box is the bar width.
+  @include below(layout) {
+    container-type: inline-size;
+  }
+
   > * {
     pointer-events: auto;
   }
@@ -57,9 +68,9 @@ $collapse: 0.6s;
   padding: 0.375rem 0.375rem 0.375rem 1rem;
   transform-origin: top center;
   transition:
-    background-color $collapse var(--motion-easing-standard),
-    backdrop-filter $collapse var(--motion-easing-standard),
-    scale $collapse var(--motion-easing-standard);
+    background-color $collapse var(--motion-easing-out),
+    backdrop-filter $collapse var(--motion-easing-out),
+    scale $collapse var(--motion-easing-out);
   width: 100%;
 
   @include from(layout) {
@@ -78,8 +89,10 @@ $collapse: 0.6s;
   }
 }
 
-// Logo: the mark stays, the wordmark fades first (0.3 s), then the frame
-// narrows to the mark (0.5 s). Lettering is white on the dark glass.
+// Logo: collapsing, the wordmark fades first (0.3 s), then the frame narrows
+// to the mark (0.5 s after 0.1 s). Expanding plays it backwards: the frame
+// grows first, the wordmark shows once it is full width, so no cut letters.
+// Lettering is white on the dark glass.
 .logo {
   border-radius: var(--radius-xs);
   color: var(--theme-text-on-accent);
@@ -87,7 +100,7 @@ $collapse: 0.6s;
   flex-shrink: 0;
   inline-size: 7.0625rem;
   overflow: hidden;
-  transition: inline-size 0.5s var(--motion-easing-standard) 0.1s;
+  transition: inline-size 0.5s var(--motion-easing-standard) 0s;
 
   svg {
     block-size: 2rem;
@@ -95,7 +108,7 @@ $collapse: 0.6s;
     max-width: none;
 
     path:last-of-type {
-      transition: opacity 0.3s var(--motion-easing-standard);
+      transition: opacity 0.3s var(--motion-easing-standard) 0.5s;
     }
   }
 
@@ -103,6 +116,28 @@ $collapse: 0.6s;
 
   @include from(layout) {
     .scrolled & {
+      inline-size: 1.6875rem;
+      transition-delay: 0.1s;
+
+      svg path:last-of-type {
+        opacity: 0;
+        transition-delay: 0s;
+      }
+    }
+  }
+
+  @container (max-width: 20.25rem) {
+    inline-size: 1.6875rem;
+
+    svg path:last-of-type {
+      opacity: 0;
+    }
+  }
+
+  // Recipient bar: "What is this page?" is longer than "Create link" (DE:
+  // "Was ist diese Seite?"), so the wordmark goes below 21 rem of bar.
+  @container (max-width: 21rem) {
+    .recipient & {
       inline-size: 1.6875rem;
 
       svg path:last-of-type {
@@ -132,8 +167,9 @@ $collapse: 0.6s;
   }
 }
 
-// Menu=Open: theme/overlay/scrim at 60 % dims the page behind the bar and
-// the panel; it fades with the panel and a tap on it closes the menu.
+// Menu=Open: theme/overlay/scrim (60 % black, the alpha is in the token) dims
+// the page behind the bar and the panel; it fades with the panel and a tap
+// on it closes the menu.
 .scrim {
   background: var(--theme-overlay-scrim);
   display: none;
@@ -152,7 +188,7 @@ $collapse: 0.6s;
 
 .scrimVisible {
   display: block;
-  opacity: 0.6;
+  opacity: 1;
   transition-duration: var(--motion-duration-expand);
   transition-timing-function: var(--motion-easing-standard);
 
@@ -201,6 +237,11 @@ $collapse: 0.6s;
   color: var(--theme-text-on-accent);
   display: flex;
   flex-direction: column;
+  // Low screens (landscape phone): the panel scrolls inside instead of
+  // running off the bottom. 2.75 rem bar + 0.375 rem padding twice.
+  max-block-size: calc(100dvh - var(--nav-top) - 3.5rem - var(--space-2) - var(--space-2));
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: var(--space-2);
   width: 100%;
 
