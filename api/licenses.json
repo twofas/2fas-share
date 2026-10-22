@@ -76,6 +76,10 @@
     "license": "BSD-3-Clause"
   },
   {
+    "package": "github.com/aws/smithy-go/transport/http/protocol/internal/json/internal/stdlib",
+    "license": "BSD-3-Clause"
+  },
+  {
     "package": "github.com/gorilla/mux",
     "license": "BSD-3-Clause"
   },
