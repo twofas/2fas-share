@@ -31,18 +31,20 @@
     "generate-license-info": "yarn node scripts/generate-license-info.mjs format=json"
   },
   "dependencies": {
+    "canvas-confetti": "^1.9.4",
     "preact": "^11.0.1",
     "qrcode": "^1.5.4",
+    "ua-parser-js": "^2.0.10",
     "wouter-preact": "^3.13.0"
   },
   "devDependencies": {
     "@babel/core": "^8.0.7",
     "@eslint/js": "^10.0.1",
     "@preact/preset-vite": "^2.10.6",
-    "eslint": "^10.13.0",
-    "eslint-plugin-jsdoc": "^65.4.0",
+    "eslint": "^10.12.0",
+    "eslint-plugin-jsdoc": "^65.2.4",
     "globals": "^17.13.0",
-    "sass-embedded": "^1.105.2",
+    "sass-embedded": "^1.105.1",
     "vite": "^8.3.4",
     "vite-plugin-compression2": "^2.5.3",
     "vite-plugin-svgr": "^5.2.0"
