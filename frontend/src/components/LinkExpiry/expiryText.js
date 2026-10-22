@@ -88,13 +88,13 @@ export function formatDay (date, now, lang) {
 }
 
 /**
- * Clock time of the expiry in the language's format, e.g. "12:15".
+ * Clock time of the expiry, 24-hour in every language (Figma), e.g. "12:15".
  * @param {Date} date - Expiry date.
  * @param {string} lang - BCP 47 language.
  * @returns {string} Time.
  */
 export function formatClock (date, lang) {
-  return new Intl.DateTimeFormat(lang, { hour: 'numeric', minute: '2-digit' }).format(date);
+  return new Intl.DateTimeFormat(lang, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date);
 }
 
 /**

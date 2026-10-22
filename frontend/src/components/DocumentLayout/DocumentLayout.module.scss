@@ -7,7 +7,7 @@
 
 // Section / 11 Document: heading on the 4|8 grid over the arcs, then a
 // surface sheet with the document switcher (rail) and the prose column.
-// Layout=Mobile below 1024 px (stacked), Layout=Desktop from 1024 px.
+// Layout=Mobile below 768 px (stacked), Layout=Desktop from 768 px.
 
 @use '@/styles/variables' as *;
 
@@ -27,7 +27,7 @@
   position: relative;
   z-index: 1;
 
-  @include from(layout) {
+  @include from(columns) {
     @include grid;
 
     gap: 0 var(--space-page-gutter);
@@ -47,7 +47,7 @@
   gap: var(--space-2);
   margin: 0;
 
-  @include from(layout) {
+  @include from(columns) {
     align-self: start;
     grid-column: 1 / span 4;
     padding: var(--space-section-block) var(--space-16) var(--space-section-block) 0;
@@ -65,7 +65,7 @@
   flex-direction: column;
   gap: var(--space-6);
 
-  @include from(layout) {
+  @include from(columns) {
     grid-column: 5 / span 8;
     padding: var(--space-section-block) 0 var(--space-section-block) var(--space-16);
   }
@@ -77,6 +77,8 @@
   color: var(--theme-text-primary);
   margin: 0;
   text-wrap: balance;
+  // Line breaks come from the text (Figma: "Open Source / Licenses").
+  white-space: pre-line;
 }
 
 // "Last Updated" line under the title of a legal document.
@@ -104,8 +106,7 @@
 // ── Sheet ───────────────────────────────────────────────────
 .sheet {
   background: var(--theme-bg-surface);
-  border-start-end-radius: var(--radius-lg);
-  border-start-start-radius: var(--radius-lg);
+  border-radius: var(--radius-lg);
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -114,7 +115,7 @@
   position: relative;
   z-index: 1;
 
-  @include from(layout) {
+  @include from(columns) {
     @include grid;
 
     align-items: start;
@@ -124,7 +125,7 @@
 }
 
 .rail {
-  @include from(layout) {
+  @include from(columns) {
     align-self: stretch;
     grid-column: 1 / span 4;
     padding: var(--space-section-block-sm) var(--space-16) var(--space-section-block) 0;
@@ -141,7 +142,7 @@
   // outer edge, so the 1 px border is taken out of the padding.
   padding: calc(var(--space-2) - var(--stroke-1));
 
-  @include from(layout) {
+  @include from(columns) {
     inset-block-start: calc(var(--space-page-top) + var(--space-6));
     position: sticky;
   }
@@ -207,7 +208,7 @@
   min-inline-size: 0;
   overflow-wrap: break-word;
 
-  @include from(layout) {
+  @include from(columns) {
     grid-column: 5 / span 8;
     padding: var(--space-section-block-sm) 0 var(--space-section-block) var(--space-16);
     // The prose column starts after the indent, so the cap includes it.
@@ -227,7 +228,7 @@
   > section + section {
     margin-block-start: var(--space-32);
 
-    @include from(layout) {
+    @include from(columns) {
       margin-block-start: var(--space-10);
     }
   }

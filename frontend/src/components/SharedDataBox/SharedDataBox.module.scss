@@ -11,6 +11,11 @@
 
 .box {
   position: relative;
+
+  // Focus view: from 1920 px the window keeps the 1440 proportions (CTA 56 px).
+  @include from(wide) {
+    @include tokens-1440;
+  }
 }
 
 .content {
@@ -147,8 +152,11 @@
   color: var(--theme-text-primary);
   text-wrap: pretty;
 
+  // A link name in the consent sentence stays on one line.
   a {
     @include typ('body-xs');
+
+    white-space: nowrap;
   }
 }
 

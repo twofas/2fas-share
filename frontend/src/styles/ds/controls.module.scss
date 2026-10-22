@@ -210,3 +210,61 @@
   border-color: var(--theme-feedback-info-border);
   color: var(--theme-text-accent);
 }
+
+// ── Forced colors (Windows high contrast) ───────────────────
+// The system drops backgrounds and shadows, which carry the switch state and
+// the selected pill. Redraw them in system colors (BEHAVIOR-SPEC 2644).
+@media (forced-colors: active) {
+  .switch {
+    background: Canvas;
+    border: var(--stroke-1) solid ButtonText;
+    forced-color-adjust: none;
+
+    &::before {
+      background: ButtonText;
+      box-shadow: none;
+      inset-block-start: 1px;
+      inset-inline-start: 1px;
+    }
+
+    &:checked {
+      background: Highlight;
+      border-color: Highlight;
+
+      &::before {
+        background: HighlightText;
+      }
+    }
+
+    &:disabled {
+      border-color: GrayText;
+
+      &::before {
+        background: GrayText;
+      }
+    }
+  }
+
+  .segmented {
+    border: var(--stroke-1) solid ButtonText;
+  }
+
+  .indicator {
+    background: Highlight;
+    box-shadow: none;
+    forced-color-adjust: none;
+  }
+
+  .option {
+    .radio:checked + & {
+      background: Highlight;
+      color: HighlightText;
+      forced-color-adjust: none;
+    }
+
+    .radio:focus-visible + & {
+      outline: var(--stroke-2) solid CanvasText;
+      outline-offset: 2px;
+    }
+  }
+}

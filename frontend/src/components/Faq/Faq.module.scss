@@ -34,7 +34,7 @@
   color: var(--theme-text-primary);
   padding-block: var(--space-16) var(--space-12);
 
-  @include from(layout) {
+  @include from(columns) {
     padding-block: var(--space-section-block);
   }
 }
@@ -43,7 +43,7 @@
   // Rows run edge to edge on a phone.
   margin-inline: calc(-1 * var(--space-page-margin));
 
-  @include from(layout) {
+  @include from(columns) {
     grid-column: 5 / -1;
     margin-inline: 0;
   }
@@ -55,7 +55,7 @@
   border-block: var(--stroke-1) solid var(--theme-border-subtle);
   padding: var(--space-section-block) var(--space-16) var(--space-section-block-sm);
 
-  @include from(layout) {
+  @include from(columns) {
     border-inline-start: var(--stroke-1) solid var(--theme-border-subtle);
     border-start-end-radius: var(--radius-lg);
   }
@@ -71,7 +71,7 @@
 .row {
   @include enter-small(calc(0.15s + var(--i, 0) * var(--motion-duration-stagger)));
 
-  @include from(layout) {
+  @include from(columns) {
     border-inline: var(--stroke-1) solid var(--theme-border-subtle);
   }
 }
@@ -87,6 +87,7 @@
 .answer {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  // Figma: paragraphs split by one empty line of Body/base.
+  gap: var(--line-height-body-base);
 }
 

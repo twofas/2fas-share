@@ -13,7 +13,7 @@
     "aboutShare": "About 2FAS Share"
   },
   "footer": {
-    "copyright": "© {year} Two Factor Authentication Service, Inc. All rights reserved.",
+    "copyright": "© {year} Two Factor Authentication Service, Inc.\nAll rights reserved.",
     "privacyPolicy": "Privacy Policy",
     "termsOfUse": "Terms of Use",
     "githubRepository": "GitHub repository",
@@ -22,8 +22,8 @@
     "termsTitle": "Terms & Privacy Policy"
   },
   "qr": {
-    "title": "Access on mobile",
-    "description": "Scan this QR code to access the Item details on your mobile device."
+    "title": "Open on your phone",
+    "description": "Scan the QR code to open this link on your phone."
   },
   "first": {
     "openInApp": "Open in 2FAS Pass app",
@@ -57,8 +57,8 @@
   "common": {
     "copied": "Copied!",
     "copyToClipboard": "Copy to clipboard",
-    "toggleVisibility": "Toggle visibility",
-    "togglePasswordVisibility": "Toggle password visibility",
+    "toggleVisibility": "Show value",
+    "togglePasswordVisibility": "Show value",
     "yes": "Yes",
     "errorPrefix": "Error:"
   },
@@ -153,7 +153,7 @@
     "continue": "By clicking Continue, you agree to our Terms of Use and Privacy Policy."
   },
   "openSourceLicenses": {
-    "title": "Open Source Licenses",
+    "title": "Open Source\nLicenses",
     "intro": "2FAS Share is built on the work of the open-source community. \nWe thank the authors and maintainers of the libraries listed below.",
     "frontendSection": "Frontend dependencies",
     "frontendDesc": "JavaScript packages used to build the web client (npm).",
@@ -237,7 +237,7 @@
     "consentOpenNote": "By clicking Open note, you agree to our Terms of Use and Privacy Policy.",
     "passwordLabel": "Password from the sender",
     "passwordCaption": "The sender shares it separately, for example by text message or phone.",
-    "showPassword": "Show password",
+    "showPassword": "Show value",
     "wrongPasswordTitle": "Wrong password.",
     "wrongPasswordBody": "Check the letter case or ask the sender to share it again.",
     "keepTabTitle": "Don't close or refresh this tab.",
@@ -379,7 +379,15 @@
       "passwordTitle": "Add password",
       "passwordDesc": "Share the password separately, via another channel.",
       "submit": "Create link",
-      "oneTimeAccessTitle": "One-time access"
+      "oneTimeAccessTitle": "One-time access",
+      "contentLeft": {
+        "one": "About {count} character left.",
+        "other": "About {count} characters left."
+      },
+      "errorContentTooLong": {
+        "one": "The note is too long. Shorten it by {count} character.",
+        "other": "The note is too long. Shorten it by {count} characters."
+      }
     },
     "expiry": {
       "5min": "5 minutes",
@@ -415,5 +423,10 @@
       "intro": "2FAS Share is built on the work of the open source community. We thank the authors and maintainers of the libraries below.",
       "frontendDesc": "JavaScript packages used in the web client (npm)."
     }
+  },
+  "meta": {
+    "homeTitle": "2FAS Share – Send a password or a note. Only once.",
+    "pageTitle": "{page} – 2FAS Share",
+    "note": "Private note"
   }
 }

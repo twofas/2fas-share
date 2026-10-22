@@ -10,7 +10,8 @@ import './env';
 import { render } from 'preact';
 import App from './app';
 import { isFontWorking } from './utils/isFontWorking';
-import { currentLang } from './i18n';
+import { currentLang, t } from './i18n';
+import { plainText } from './utils/pageMeta';
 import './styles/global.scss';
 
 /**
@@ -19,6 +20,12 @@ import './styles/global.scss';
  * voice and the browser offers translation only when it makes sense.
  */
 document.documentElement.lang = currentLang;
+
+// The description in index.html is English for crawlers and link previews;
+// in the page it follows the UI language (the hero lead).
+for (const selector of ['meta[name="description"]', 'meta[property="og:description"]', 'meta[name="twitter:description"]']) {
+  document.querySelector(selector)?.setAttribute('content', plainText(t('v2.welcome.subtitle')));
+}
 
 /**
  * Detect when Inter fails to render correctly (e.g. iOS Lockdown Mode

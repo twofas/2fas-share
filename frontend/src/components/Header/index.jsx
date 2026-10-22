@@ -20,9 +20,10 @@ import SunIcon from '@/assets/icons/sun-line.svg?react';
 import MoonIcon from '@/assets/icons/moon-clear-line.svg?react';
 import ArrowIcon from '@/assets/icons/arrow-right-up-line.svg?react';
 import { requestGeneratorFocus } from '@/utils/generatorFocus';
+import { isShareType } from '@/utils/validateShareParams';
 
 const GITHUB_URL = 'https://github.com/twofas/2fas-share';
-const SCROLL_THRESHOLD = 24;
+const SCROLL_THRESHOLD = 340;
 const SECTIONS = [
   { id: 'how-it-works', label: 'nav.howItWorks' },
   { id: 'security', label: 'nav.security' },
@@ -30,11 +31,16 @@ const SECTIONS = [
 ];
 
 /**
- * Whether the hash route is a shared-data link (/:id/:type/:nonce/:key).
+ * Whether the hash route is a shared-data link (/:id/:type/:nonce/:key), also
+ * one cut short after the type (the Broken recipient state).
  * @param {string} location Current wouter location.
  * @returns {boolean} True on the recipient page.
  */
-const isRecipientRoute = location => location.split('/').filter(Boolean).length === 4;
+const isRecipientRoute = location => {
+  const parts = location.split('/').filter(Boolean);
+
+  return parts.length === 4 || (parts.length >= 2 && isShareType(parts[1]));
+};
 
 /**
  * Menu glyph that morphs between the three bars (menu-line) and the cross
@@ -157,9 +163,18 @@ export default function Header () {
     document.addEventListener('keydown', onKey);
     document.addEventListener('pointerdown', onPointer);
 
+    // The page under the scrim is out of reach (Tab, screen reader) while the
+    // menu is open; focus starts on the first menu link.
+    const page = [...(headerRef.current?.parentElement?.children ?? [])]
+      .filter(el => el !== headerRef.current && !el.contains(headerRef.current) && !el.inert);
+
+    page.forEach(el => { el.inert = true; });
+    headerRef.current?.querySelector('#mobile-menu a')?.focus();
+
     return () => {
       document.removeEventListener('keydown', onKey);
       document.removeEventListener('pointerdown', onPointer);
+      page.forEach(el => { el.inert = false; });
     };
   }, [menuOpen]);
 
@@ -192,7 +207,7 @@ export default function Header () {
   ));
 
   const githubLink = (
-    <a className={lnk.navLink} href={GITHUB_URL} target='_blank' rel='noopener noreferrer'>
+    <a className={lnk.navLink} href={GITHUB_URL} target='_blank' rel='noopener noreferrer' onClick={() => setMenuOpen(false)}>
       {t('nav.github')}
       <ArrowIcon />
       <span className='visually-hidden'>{t('nav.newTab')}</span>
@@ -212,7 +227,7 @@ export default function Header () {
 
       <header
         ref={headerRef}
-        className={`${S.header} ${collapsed ? S.scrolled : ''} ${menuOpen ? S.open : ''}`}
+        className={`${S.header} ${collapsed ? S.scrolled : ''} ${menuOpen ? S.open : ''} ${recipient ? S.recipient : ''}`}
       >
         <div className={S.bar}>
           <PrefetchLink href='/' className={S.logo} aria-label={t('header.logoAlt')}>

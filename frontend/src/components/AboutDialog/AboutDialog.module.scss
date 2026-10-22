@@ -24,7 +24,8 @@
   opacity: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: var(--space-4);
+  // Figma draws the stroke inside the box: the border takes its width from the padding.
+  padding: calc(var(--space-4) - var(--stroke-1));
   scale: 0.98;
   transition:
     opacity var(--motion-duration-hover) var(--motion-easing-standard),
@@ -43,7 +44,9 @@
     }
   }
 
+  // theme/overlay/scrim also blurs the page behind (12 px).
   &::backdrop {
+    backdrop-filter: blur(var(--blur-overlay-scrim));
     background: var(--theme-overlay-scrim);
     opacity: 0;
     transition:
@@ -164,6 +167,11 @@
   @include typ('body-sm');
 
   padding-block: 0.125rem;
+
+  // 24 px touch target without growing the footer (Figma: 20 px line).
+  @include from(layout) {
+    margin-block: -0.125rem;
+  }
 
   @include below(layout) {
     align-items: center;

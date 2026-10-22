@@ -25,6 +25,11 @@
 .full {
   max-inline-size: var(--size-column-generator);
   min-block-size: var(--size-generator-full-height);
+
+  // From 1920 px the full view keeps the 1440 window (CTA 56 px).
+  @include from(wide) {
+    @include tokens-1440;
+  }
 }
 
 .content,
@@ -53,6 +58,14 @@
 // The stack gap (8 px) already separates the message from the field.
 .stackMessage.stackMessage {
   margin-block-start: 0;
+}
+
+// Content counter: from 80 % of the server limit, about how much still fits.
+.counter {
+  @include typ('body-xs');
+
+  color: var(--theme-text-secondary);
+  font-variant-numeric: tabular-nums;
 }
 
 .note {
@@ -227,6 +240,11 @@
 
   color: var(--theme-text-primary);
   text-wrap: balance;
+
+  // A link name in the consent sentence stays on one line.
+  a {
+    white-space: nowrap;
+  }
 }
 
 // ── Ready / Copied ──────────────────────────────────────────
@@ -289,10 +307,7 @@
   color: var(--theme-text-primary);
   flex: 1;
   min-inline-size: 0;
-
-  canvas {
-    display: block;
-  }
+  overflow-wrap: anywhere;
 }
 
 .linkCopy.linkCopy {

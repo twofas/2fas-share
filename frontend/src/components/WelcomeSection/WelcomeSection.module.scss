@@ -81,12 +81,20 @@
   @include enter-heading(0.1s, $on: null);
 
   color: var(--theme-text-primary);
-  text-wrap: balance;
+  // A line break in the translation (\n, editable in Loco) is kept.
+  white-space: pre-line;
 }
 
-// Display/H1 is two-tone: the statement in text/primary, the rest in text/secondary.
+// Display/H1 is two-tone: the statement in text/primary, the rest in
+// text/secondary, never split over two lines.
 .titleEnd {
   color: var(--theme-text-secondary);
+  white-space: nowrap;
+}
+
+// Figma: "Then the link disappears." always starts a new line.
+.titleTail {
+  display: block;
 }
 
 .lead {
@@ -95,7 +103,16 @@
 
   color: var(--theme-text-primary);
   margin-block-start: var(--space-12);
-  max-inline-size: 40rem;
+  // Figma: 600 px at 1024, 648 at 1440, 721 from 1920.
+  max-inline-size: 37.5rem;
+
+  @include from(desktop) {
+    max-inline-size: 40.5rem;
+  }
+
+  @include from(wide) {
+    max-inline-size: 45.0625rem;
+  }
 }
 
 .place {

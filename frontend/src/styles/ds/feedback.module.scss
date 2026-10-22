@@ -87,17 +87,19 @@
   --medallion-fg: var(--tone-fg);
 }
 
-// Ring: only for the Ready success moment, a tone ring and a 64 px disc.
+// Ring: only for the Ready success moment, a tone ring and a 64 px disc with
+// a 1 px tone outline and Elevation/sm; the check is 40 px.
 .ring {
   --medallion-bg: var(--theme-feedback-info-ring);
   --medallion-border: var(--tone-border);
   --medallion-fg: var(--tone-fg);
+  --medallion-icon: 2.5rem;
 
   &::before {
     background: var(--theme-bg-raised);
     block-size: 4rem;
     border-radius: var(--radius-full);
-    box-shadow: var(--elevation-md);
+    box-shadow: inset 0 0 0 var(--stroke-1) var(--tone-border), var(--elevation-sm);
     content: '';
     inline-size: 4rem;
     position: absolute;
@@ -133,7 +135,10 @@
   display: flex;
   flex: 1;
   flex-direction: column;
+  // Figma: text frame with 1 px top padding, 2 px between title and body.
+  gap: 0.125rem;
   min-inline-size: 0;
+  padding-block-start: 1px;
 }
 
 .alertTitle {

@@ -30,7 +30,7 @@ export default function Footer () {
         <div className={S.brand}>
           <Logo className={S.logo} role='img' aria-label={t('header.logoAlt')} />
           <p className={S.copyright}>
-            {t('footer.copyright', { year: new Date().getFullYear() }).replace('Inc. ', 'Inc.\n')}
+            {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
         </div>
 
