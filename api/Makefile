@@ -4,11 +4,11 @@ USERID=$(shell id -u)
 
 .PHONY: go-lint
 go-lint:
-	go tool golangci-lint run
+	go tool -modfile ../go.mod golangci-lint run
 
 .PHONY: go-lint-fix
 go-lint-fix:
-	go tool golangci-lint run --fix
+	go tool -modfile ../go.mod golangci-lint run --fix
 
 format:
-	 go tool golangci-lint fmt
+	 go tool -modfile ../go.mod golangci-lint fmt

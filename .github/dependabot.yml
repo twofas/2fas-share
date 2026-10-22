@@ -10,6 +10,16 @@ updates:
         patterns:
           - "*"
 
+  - package-ecosystem: "gomod"
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+    groups:
+      all-tools-updates:
+        patterns:
+          - "*"
+
   - package-ecosystem: "npm"
     directory: "/frontend"
     target-branch: "develop"
