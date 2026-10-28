@@ -21,7 +21,7 @@ import { requestGeneratorFocus } from '@/utils/generatorFocus';
  */
 export default function Banner () {
   const ref = useRef(null);
-  const visible = useInView(ref, 0.25);
+  const visible = useInView(ref);
   const [first, ...rest] = t('v2.banner.title').split(' ');
 
   return (

@@ -7,36 +7,50 @@
 
 import field from '@/styles/ds/field.module.scss';
 import fb from '@/styles/ds/feedback.module.scss';
-import ExclamationIcon from '@/assets/icons/exclamation-mark.svg?react';
+import ErrorIcon from '@/assets/icons/error-warning-line.svg?react';
 import { t } from '@/i18n';
+import usePresence from './usePresence';
 
 /**
- * Field / message, Tone=Error: a 24 px solid error medallion and the message
- * title, under a field that points at it with aria-describedby. A repeated
- * failed attempt does not re-enter the message, only bumps the medallion.
+ * Field / message, Tone=Error (Figma 1475:30203): a 20 px outline
+ * error-warning-line icon beside the first line of the title, and an optional
+ * Body/xs line under it, below a field that points at it with
+ * aria-describedby. It opens in `expand` and, with `open`, closes the same way
+ * in reverse (MOTION.md M-06). A repeated failed attempt does not re-enter the
+ * message, only bumps the icon.
  * @param {Object} props
  * @param {string} props.id - Id referenced by aria-describedby.
- * @param {string} props.children - Message text.
- * @param {number} [props.attempt=1] - Failed attempt number; from 2 up the medallion bumps.
+ * @param {import('preact').ComponentChildren} props.children - Message title.
+ * @param {import('preact').ComponentChildren} [props.body] - Secondary line under the title.
+ * @param {number} [props.attempt=1] - Failed attempt number; from 2 up the icon bumps.
+ * @param {boolean} [props.open=true] - False collapses the message, keeping its last text.
  * @param {string} [props.className] - Extra class.
- * @returns {import('preact').JSX.Element} The message.
+ * @returns {import('preact').JSX.Element|null} The message.
  */
-export default function FieldMessage({ id, children, attempt = 1, className }) {
+export default function FieldMessage({ id, children, body, attempt = 1, open = true, className }) {
+  const { present, closing, content } = usePresence(open, { children, body });
+
+  if (!present) {
+    return null;
+  }
+
   return (
-    <p id={id} className={`${field.message} ${className || ''}`}>
+    <p
+      id={closing ? undefined : id}
+      className={`${field.message} ${className || ''}`}
+      data-closing={closing ? '' : undefined}
+      aria-hidden={closing ? 'true' : undefined}
+    >
       <span className={field.messageRow}>
-        <span
-          key={attempt}
-          className={`${fb.medallion} ${fb.size24} ${fb.solid} ${fb.error} ${attempt > 1 ? fb.bump : ''}`}
-          aria-hidden='true'
-        >
-          <ExclamationIcon />
+        <span key={attempt} className={`${field.messageIcon} ${attempt > 1 ? fb.bump : ''}`} aria-hidden='true'>
+          <ErrorIcon />
         </span>
         <span className={field.messageText}>
           <span className={field.messageTitle}>
             <span className='visually-hidden'>{t('common.errorPrefix')} </span>
-            {children}
+            {content.children}
           </span>
+          {content.body && <span className={field.messageBody}>{content.body}</span>}
         </span>
       </span>
     </p>

@@ -5,8 +5,10 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import { useLayoutEffect, useRef, useContext } from 'preact/hooks';
+import { useLayoutEffect, useEffect, useRef, useContext, useId } from 'preact/hooks';
 import useCopy from './useCopy';
+import { selectContent } from './selectContent';
+import FieldMessage from '@/components/AddNewBox/Views/FieldMessage';
 import { NoteCopyContext } from './context';
 import CopyIcon from '@/assets/icons/file-copy-line.svg?react';
 import CheckIcon from '@/assets/icons/check-line.svg?react';
@@ -100,17 +102,36 @@ export function AlertCard ({ icon, tone = 'warning', id, title, body, className 
 }
 
 /**
+ * Field / message Tone=Error of Copy failed (BEHAVIOR-SPEC 57): the title and
+ * one body line for every device, under the field whose text is selected.
+ * @param {object} props - Component props.
+ * @param {string} props.id - Id referenced by the aria-describedby of the field.
+ * @param {boolean} props.open - Shown; a successful copy closes it in reverse (M-06).
+ * @returns {import('preact').JSX.Element} The message.
+ */
+export function CopyFailedMessage ({ id, open }) {
+  return (
+    <FieldMessage id={id} open={open} body={t('recipient.copyFailedBody')}>
+      {t('recipient.copyFailedTitle')}
+    </FieldMessage>
+  );
+}
+
+/**
  * Copy button: the glyph turns into a checkmark for 2 s and the page status
- * region announces the copy; the button keeps its name.
+ * region announces the copy; the button keeps its name. Its name says what it
+ * copies (ACCESSIBILITY 4, "Copy content", "Copy Username"), without "to
+ * clipboard".
  * @param {object} props - Component props.
  * @param {string} props.value - Text to copy.
  * @param {'icon'|'adornment'} [props.kind='icon'] - Button / icon (44 px) or a field adornment (24 px glyph).
+ * @param {string} [props.label] - Accessible name; "Copy" by default.
  * @param {string} [props.message] - Announced text; "Copied!" by default.
- * @param {{ copied: boolean, copy: function(): Promise<void> }} [props.shared] - Copy state shared with the footer CTA.
+ * @param {{ copied: boolean, copy: function(): Promise<void> }} [props.shared] - Copy state owned by the field or shared with the footer CTA.
  * @param {string} [props.className] - Extra class.
  * @returns {import('preact').JSX.Element} Copy button.
  */
-export function CopyButton ({ value, kind = 'icon', message, shared, className }) {
+export function CopyButton ({ value, kind = 'icon', label, message, shared, className }) {
   const [ownCopied, ownCopy] = useCopy(value, message || t('common.copied'));
   const copied = shared ? shared.copied : ownCopied;
   const copy = shared ? shared.copy : ownCopy;
@@ -124,7 +145,7 @@ export function CopyButton ({ value, kind = 'icon', message, shared, className }
         className
       )}
       onClick={copy}
-      aria-label={t('common.copyToClipboard')}
+      aria-label={label || t('recipient.copy')}
     >
       {copied ? <CheckIcon aria-hidden='true' /> : <CopyIcon aria-hidden='true' />}
     </button>
@@ -135,7 +156,9 @@ export function CopyButton ({ value, kind = 'icon', message, shared, className }
  * Field / textarea, State=Readonly with the Copy button: the shared text,
  * selectable with the keyboard (readonly textarea in the Tab order),
  * growing with its content. When the footer CTA copies the same text, the
- * copy button shows its checkmark too.
+ * copy button shows its checkmark too. When the clipboard refuses, the text
+ * gets focus and is selected, and the Copy failed message stands under the
+ * field (the field keeps its normal border).
  * @param {object} props - Component props.
  * @param {string} props.value - Text.
  * @param {string} [props.id] - Textarea id.
@@ -144,8 +167,17 @@ export function CopyButton ({ value, kind = 'icon', message, shared, className }
  */
 export function SecretField ({ value, id, labelledBy }) {
   const ref = useRef(null);
+  const messageId = useId();
   const noteCopy = useContext(NoteCopyContext);
   const shared = noteCopy && noteCopy.value === value ? noteCopy : undefined;
+  const failures = shared?.failures || 0;
+
+  // Every refused copy selects the whole text again.
+  useEffect(() => {
+    if (failures) {
+      selectContent(ref.current);
+    }
+  }, [failures]);
 
   // Grow with the content where field-sizing: content is not supported.
   useLayoutEffect(() => {
@@ -170,17 +202,28 @@ export function SecretField ({ value, id, labelledBy }) {
   }, [value]);
 
   return (
-    <div className={S.secret}>
-      <textarea
-        ref={ref}
-        id={id}
-        className={`${field.textarea} ${S.secretText}`}
-        value={value}
-        readOnly
-        rows={1}
-        aria-labelledby={labelledBy}
-      />
-      <CopyButton value={value} message={t('recipient.contentCopied')} shared={shared} className={S.secretCopy} />
+    <div>
+      <div className={S.secret}>
+        <textarea
+          ref={ref}
+          id={id}
+          className={`${field.textarea} ${S.secretText}`}
+          value={value}
+          readOnly
+          rows={1}
+          aria-labelledby={labelledBy}
+          aria-describedby={failures ? messageId : undefined}
+        />
+        <CopyButton
+          value={value}
+          label={t('recipient.copyContent')}
+          message={t('recipient.contentCopied')}
+          shared={shared}
+          className={S.secretCopy}
+        />
+      </div>
+
+      <CopyFailedMessage id={messageId} open={failures > 0} />
     </div>
   );
 }

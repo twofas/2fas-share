@@ -19,8 +19,9 @@
 // mobile 0-767 · tablet 768-1279 · desktop 1280-1919 · wide 1920-2559 · ultrawide 2560+
 // The token scales follow those ranges. The section grids (sections 02-07,
 // footer, documents) go to the 4|8 columns at 768 px (`columns`), as in the
-// prototype; the navigation bar, the hero and the window views switch at
-// 1024 px (`layout`).
+// prototype, and the hero puts its text beside the window at 768 px
+// (`tablet`); the navigation bar and the window views switch at 1024 px
+// (`layout`).
 $breakpoints: (
   tablet: 768px,
   columns: 768px,
@@ -86,6 +87,13 @@ $breakpoints: (
   --space-32: 8rem;
   --size-title-lg: 1.25rem;
   --line-height-title-lg: 1.75rem;
+  // "Link ready." (Heading/H3) and the corners that follow the pinned space
+  // tokens (radius/nested/*: the parent radius minus the 1440 spacing).
+  --size-h3: 2rem;
+  --line-height-h3: 2.5rem;
+  --radius-nested-dialog: 2rem;
+  --radius-nested-dialog-inner: 0.5rem;
+  --radius-nested-window: 0.4375rem;
 }
 
 // ── Legacy breakpoints (desktop first) ──────────────────────

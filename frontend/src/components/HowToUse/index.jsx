@@ -57,7 +57,7 @@ export default function HowToUse () {
   const headRef = useRef(null);
   const stepsRef = useRef(null);
   const headVisible = useInView(headRef);
-  const stepsVisible = useInView(stepsRef, 0.1);
+  const stepsVisible = useInView(stepsRef);
 
   return (
     <section id='how-it-works' className={S.howToUse} aria-labelledby='how-it-works-title' tabIndex={-1}>
@@ -77,6 +77,9 @@ export default function HowToUse () {
 
       <div ref={stepsRef} className={`${S.steps} ${stepsVisible ? S.visible : ''}`}>
         <div className={S.stepsInner}>
+          {/* Section 03 has no visible heading; the outline needs one
+              between the h2 above and the h3 steps (ACCESSIBILITY 3). */}
+          <h2 className='visually-hidden'>{t('v2.howToUse.stepsTitle')}</h2>
           <ol className={S.list}>
             {STEPS.map(({ step, titleKey, descKey, optional }, i) => (
               <li key={step} className={S.step} style={{ '--i': i }}>

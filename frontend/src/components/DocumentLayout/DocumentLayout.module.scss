@@ -106,7 +106,9 @@
 // ── Sheet ───────────────────────────────────────────────────
 .sheet {
   background: var(--theme-bg-surface);
-  border-radius: var(--radius-lg);
+  // Below 768 the switcher sits in the sheet corner: radius/2xl, so the
+  // nested corners stay concentric (IMPLEMENTATION-PATTERNS 12).
+  border-radius: var(--radius-2xl);
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -119,6 +121,7 @@
     @include grid;
 
     align-items: start;
+    border-radius: var(--radius-lg);
     gap: 0 var(--space-page-gutter);
     padding: 0 var(--space-page-margin);
   }
@@ -136,13 +139,15 @@
 .switcher {
   background: var(--theme-glass-fill);
   border: var(--stroke-1) solid var(--theme-border-subtle);
-  border-radius: var(--radius-lg);
+  // 48 − 24 = 24 in the sheet corner below 768; in the rail from 768.
+  border-radius: var(--radius-md);
   box-shadow: var(--elevation-md);
   // Figma strokes sit inside the frame: the card starts space/2 from the
   // outer edge, so the 1 px border is taken out of the padding.
   padding: calc(var(--space-2) - var(--stroke-1));
 
   @include from(columns) {
+    border-radius: var(--radius-lg);
     inset-block-start: calc(var(--space-page-top) + var(--space-6));
     position: sticky;
   }
@@ -151,13 +156,19 @@
 .switcherCard {
   background: var(--theme-bg-raised);
   border: var(--stroke-1) solid var(--theme-border-subtle);
-  border-radius: var(--radius-md);
+  // Concentric with the switcher: 24 − 8 = 16 below 768, radius/nested/panel
+  // from 768.
+  border-radius: var(--radius-base);
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
   list-style: none;
   margin: 0;
   padding: var(--space-2);
+
+  @include from(columns) {
+    border-radius: var(--radius-nested-panel);
+  }
 }
 
 .item {
@@ -166,13 +177,19 @@
   @include focus-ring;
 
   align-items: center;
-  border-radius: var(--radius-base);
+  // Concentric with the card: radius/sm below 768, radius/nested/panel-item
+  // from 768.
+  border-radius: var(--radius-sm);
   color: var(--theme-text-secondary);
   display: flex;
   gap: var(--space-2);
   min-block-size: 2.75rem;
   padding: 0 var(--space-4) 0 var(--space-3);
   text-decoration: none;
+
+  @include from(columns) {
+    border-radius: var(--radius-nested-panel-item);
+  }
 
   @include hover {
     color: var(--theme-text-primary);

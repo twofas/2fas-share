@@ -58,7 +58,7 @@
     "copied": "Kopiert!",
     "copyToClipboard": "In Zwischenablage kopieren",
     "toggleVisibility": "Wert anzeigen",
-    "togglePasswordVisibility": "Wert anzeigen",
+    "togglePasswordVisibility": "Passwort anzeigen",
     "yes": "Ja",
     "errorPrefix": "Fehler:"
   },
@@ -237,7 +237,7 @@
     "consentOpenNote": "Durch das Klicken auf Notiz öffnen stimmst du unseren Nutzungsbedingungen und unserer Datenschutzerklärung zu.",
     "passwordLabel": "Passwort vom Absender",
     "passwordCaption": "Der Absender teilt es separat, zum Beispiel per SMS oder Telefon.",
-    "showPassword": "Wert anzeigen",
+    "showPassword": "Passwort anzeigen",
     "wrongPasswordTitle": "Falsches Passwort.",
     "wrongPasswordBody": "Prüfe die Groß- und Kleinschreibung oder bitte den Absender, es noch einmal zu teilen.",
     "keepTabTitle": "Schließe oder aktualisiere diesen Tab nicht.",
@@ -253,6 +253,15 @@
     "expiresAt": "{day} um {time}.",
     "expired": "Der Link ist verschwunden.",
     "infoPrefix": "Information:",
+    "showCode": "Code zeigen",
+    "hideCode": "Code ausblenden",
+    "phoneCodeTitle": "Richte die Kamera deines Telefons auf den Code.",
+    "phoneCodeBody": "Wer diesen Code sieht, kann die Notiz öffnen, also zeige ihn nicht auf geteilten Bildschirmen. Eine einmalige Notiz öffnet sich auf dem Gerät, das den Link zuerst verwendet.",
+    "phoneCodeAlt": "QR-Code mit dem Link zu dieser Notiz",
+    "copyFailedTitle": "Der Inhalt konnte nicht kopiert werden.",
+    "copyFailedBody": "Kopiere ihn selbst: Drücke Strg+C (⌘C auf dem Mac) oder halte gedrückt, markiere den ganzen Text und tippe auf Kopieren.",
+    "copy": "Kopieren",
+    "copyField": "{field} kopieren",
     "headingType": {
       "login": "Anmeldedaten",
       "paymentCard": "Zahlungskarte",
@@ -395,13 +404,19 @@
     },
     "result": {
       "title": "Link bereit.",
-      "oneTimeAccessTitle": "Einmaliger Zugriff"
+      "oneTimeAccessTitle": "Einmaliger Zugriff",
+      "showLink": "Link anzeigen",
+      "hideLink": "Link verbergen",
+      "linkHidden": "(Rest des Links verborgen)",
+      "copyFailedTitle": "Der Link konnte nicht kopiert werden.",
+      "copyFailedBody": "Kopiere ihn selbst: Drücke Strg+C (⌘C auf dem Mac) oder halte den Finger gedrückt, markiere den ganzen Link und tippe auf Kopieren."
     },
     "welcome": {
       "subtitle": "2FAS Share erstellt einen Link, der nach der Nutzung verschwindet. Kein Konto, keine Installation. Du entscheidest, wann und für wen."
     },
     "howToUse": {
       "pill": "Wie funktioniert es?",
+      "stepsTitle": "Vier Schritte",
       "step1Title": "Inhalt eingeben",
       "step1Desc": "Eine Notiz, ein Passwort oder ein kurzer Text – was du willst.",
       "step2Title": "Regeln festlegen",

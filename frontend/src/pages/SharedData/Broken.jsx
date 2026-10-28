@@ -17,7 +17,7 @@ import S from './SharedData.module.scss';
  */
 export default function SharedDataBroken () {
   return (
-    <main className={S.page}>
+    <main id='content' className={S.page}>
       <ArcsDecor />
 
       <div className={S.column}>

@@ -15,9 +15,9 @@
 @use '@/pages/Home/sections' as *;
 
 // Entrance (Figma E · Motion, 05 features; 11.45 s = 0): heading at 0, rows
-// from X −140 on the spring, 0.24 s apart; inside a row the title (X −32)
+// from X −140 on the spring, 0.24 s apart; inside a row the title (X −34)
 // follows at +0.10 s, the description (X −24) at +0.22 s and the ray mark
-// (scale 0.2 → 1, rotate −45° → 0) at +0.28 s.
+// (scale 0.2 → 1, rotate +45° → 0, both on the spring, M-22) at +0.28 s.
 @include motion-keyframes;
 
 $row-start: calc(0.05s + var(--i, 0) * 0.24s);
@@ -140,7 +140,7 @@ $row-start: calc(0.05s + var(--i, 0) * 0.24s);
 
 .rowTitle {
   @include typ('heading-h2');
-  @include enter(calc(#{$row-start} + 0.1s), $x: -2rem);
+  @include enter(calc(#{$row-start} + 0.1s), $x: -2.125rem);
 }
 
 .rowDesc {
@@ -177,7 +177,7 @@ $row-start: calc(0.05s + var(--i, 0) * 0.24s);
 
 // Ray marks: 91 px (the second one 88.7 px, as in Figma).
 .ray {
-  @include enter(calc(#{$row-start} + 0.28s), $scale: 0.2, $rotate: -45deg);
+  @include enter(calc(#{$row-start} + 0.28s), $scale: 0.2, $rotate: 45deg, $rotate-motion: (entrance, spring));
 
   block-size: 5.6875rem;
   flex-shrink: 0;

@@ -51,38 +51,17 @@
   gap: 0.5rem;
   position: relative;
 
-  // 1 px rule under the text.
-  &::after {
-    background: var(--theme-nav-link-hover);
-    block-size: var(--stroke-1);
-    content: '';
-    inset-block-end: 0;
-    inset-inline: 0;
-    opacity: 0;
-    position: absolute;
-    transition:
-      opacity var(--motion-duration-hover) var(--motion-easing-standard),
-      background-color var(--motion-duration-hover) var(--motion-easing-standard);
-  }
+  // D5 (2026-10-23): no rule under the text and no hover change.
 
-  @include hover {
-    color: var(--theme-nav-link-hover);
+  @include focus-ring(var(--theme-nav-cta-highlight));
 
-    &::after {
-      opacity: 0.2;
+  @media (forced-colors: active) {
+    &[aria-current='location'] {
+      text-decoration-line: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
     }
   }
-
-  &[aria-current='location'] {
-    color: var(--theme-text-on-accent);
-
-    &::after {
-      background: var(--theme-nav-cta-highlight);
-      opacity: 1;
-    }
-  }
-
-  @include focus-ring(var(--focus-ring-on-nav));
 
   // External link arrow (arrow-right-up-line, 16 px, fixed 8 px gap).
   svg {
@@ -90,4 +69,66 @@
     flex-shrink: 0;
     inline-size: 1rem;
   }
+
+  // A 24 px target with a mouse; on touch a layer around the label makes it
+  // 44 px without changing the text height (ACCESSIBILITY 7, BEHAVIOR-SPEC
+  // 59.9).
+  @media (pointer: coarse) {
+    &::after {
+      block-size: 2.75rem;
+      content: '';
+      inset-block-start: 50%;
+      inset-inline: 0;
+      position: absolute;
+      translate: 0 -50%;
+    }
+  }
 }
+
+// D5 (2026-10-23): the whole label of the section in view is nav/link/active (violet/200); when a section comes
+// into view its label fills from the left in 320 ms, and the label of the section left behind empties back.
+// Hover (a pointer that can hover) fills the label the same way in the lighter nav/link/hover (violet/100), as a
+// sign it can be clicked, so a hovered label never looks like the current one. Press: 0.97 for 120 ms; after a
+// click the clicked section is active at once and stays active while the page scrolls to it.
+// One label with a two-color gradient clipped to its text.
+// The fill moves the background, not a custom property inside the gradient: Chromium does not repaint
+// `background-clip: text` while a registered custom property transitions (measured 2026-10-23: computed 100%,
+// painted white), while a `background-position` transition repaints every frame.
+.navSection {
+  --fill: 0%;
+  --fill-color: var(--theme-nav-link-hover);
+
+  background: linear-gradient(90deg, var(--fill-color) 50%, var(--theme-text-on-accent) 50%);
+  background-clip: text;
+  background-position: calc(100% - var(--fill, 0%)) 0;
+  background-size: 200% 100%;
+  color: transparent;
+  transition:
+    background-position var(--motion-duration-hover) var(--motion-easing-standard),
+    scale var(--motion-duration-press) var(--motion-easing-standard);
+
+  &[aria-current='location'] {
+    --fill: 100%;
+    --fill-color: var(--theme-nav-link-active);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      --fill: 100%;
+    }
+  }
+
+  &:active {
+    scale: 0.97;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  @media (forced-colors: active) {
+    background: none;
+    color: LinkText;
+  }
+}
+

@@ -65,11 +65,21 @@ export default function AboutDialog () {
   };
 
   /**
-   * Close on a click on the dimmed backdrop (outside the window).
+   * Close on a click on the dimmed backdrop, outside the window. A click on
+   * the frame or the padding of the window also targets the <dialog>, so the
+   * pointer position decides, not the target.
    * @param {MouseEvent} e Click event.
    */
   const onClick = e => {
-    if (e.target === dialogRef.current) {
+    const dialog = dialogRef.current;
+
+    if (e.target !== dialog) {
+      return;
+    }
+
+    const box = dialog.getBoundingClientRect();
+
+    if (e.clientX < box.left || e.clientX > box.right || e.clientY < box.top || e.clientY > box.bottom) {
       close();
     }
   };
@@ -98,7 +108,7 @@ export default function AboutDialog () {
           {STEPS.map(key => <li key={key}>{t(key)}</li>)}
         </ol>
 
-        <div className={`${fb.alert} ${fb.alertWarning}`}>
+        <div className={`${fb.alert} ${fb.alertWarning}`} role='note'>
           <span className={`${fb.medallion} ${fb.size40} ${fb.solid} ${fb.accent}`} aria-hidden='true'>
             <AlertIcon />
           </span>

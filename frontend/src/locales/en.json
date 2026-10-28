@@ -58,7 +58,7 @@
     "copied": "Copied!",
     "copyToClipboard": "Copy to clipboard",
     "toggleVisibility": "Show value",
-    "togglePasswordVisibility": "Show value",
+    "togglePasswordVisibility": "Show password",
     "yes": "Yes",
     "errorPrefix": "Error:"
   },
@@ -237,7 +237,7 @@
     "consentOpenNote": "By clicking Open note, you agree to our Terms of Use and Privacy Policy.",
     "passwordLabel": "Password from the sender",
     "passwordCaption": "The sender shares it separately, for example by text message or phone.",
-    "showPassword": "Show value",
+    "showPassword": "Show password",
     "wrongPasswordTitle": "Wrong password.",
     "wrongPasswordBody": "Check the letter case or ask the sender to share it again.",
     "keepTabTitle": "Don't close or refresh this tab.",
@@ -253,6 +253,15 @@
     "expiresAt": "{day} at {time}.",
     "expired": "The link has disappeared.",
     "infoPrefix": "Information:",
+    "showCode": "Show code",
+    "hideCode": "Hide code",
+    "phoneCodeTitle": "Point your phone's camera at the code.",
+    "phoneCodeBody": "Anyone who sees this code can open the note, so keep it off shared screens. A note that opens only once opens on the device that uses the link first.",
+    "phoneCodeAlt": "QR code with the link to this note",
+    "copyFailedTitle": "Couldn't copy the content.",
+    "copyFailedBody": "Copy it yourself: press Ctrl+C (⌘C on a Mac), or touch and hold, select the whole text and tap Copy.",
+    "copy": "Copy",
+    "copyField": "Copy {field}",
     "headingType": {
       "login": "Login",
       "paymentCard": "Payment card",
@@ -395,13 +404,19 @@
     },
     "result": {
       "title": "Link ready.",
-      "oneTimeAccessTitle": "One-time access"
+      "oneTimeAccessTitle": "One-time access",
+      "showLink": "Show link",
+      "hideLink": "Hide link",
+      "linkHidden": "(rest of the link hidden)",
+      "copyFailedTitle": "Couldn't copy the link.",
+      "copyFailedBody": "Copy it yourself: press Ctrl+C (⌘C on a Mac), or touch and hold, select the whole link and tap Copy."
     },
     "welcome": {
       "subtitle": "2FAS Share creates a link that disappears after use. No account, no installation. You decide when and for whom."
     },
     "howToUse": {
       "pill": "How does it work?",
+      "stepsTitle": "Four steps",
       "step1Title": "Enter content",
       "step1Desc": "A note, a password, or short text, whatever you want.",
       "step2Title": "Set rules",

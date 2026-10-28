@@ -23,6 +23,18 @@
   flex-direction: column;
 }
 
+// The card of Recipient / window hands its inner radius down (concentric
+// corners, IMPLEMENTATION-PATTERNS 12): an alert, the empty slot and the
+// secret of Revealed once sit in its corner, space/6 in from its edge.
+.card {
+  --alert-radius: var(--radius-nested-window);
+}
+
+// Revealed once: the secret is the last box of the card, in its corner.
+.once {
+  --secret-radius: var(--radius-nested-window);
+}
+
 // Form wrapper of the password state; the card and footer stay direct
 // flex children of the window.
 .form {
@@ -45,6 +57,19 @@
 
 .dialogRow {
   gap: 0.75rem;
+}
+
+// "Show code" / "Hide code" in the field header, between the caption and
+// the star (Button / secondary Small, the icon after the label).
+.codeButton {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+// The field and the code panel take turns here (MOTION M-35); during the
+// cross-fade the outgoing one is absolute, the box follows the height.
+.swap {
+  position: relative;
 }
 
 // Intro: the closed note as a slot with a padlock medallion.
@@ -71,7 +96,7 @@
 .slotEmpty {
   background: transparent;
   border-color: var(--theme-border-default);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-nested-window);
   border-style: dashed;
 }
 
@@ -100,7 +125,7 @@
 }
 
 // Revealed once (Figma alert-top): the Warning alert space/6 from the card
-// edge on three sides, radius/md; the title section follows without a
+// edge on three sides, radius/nested/window; the title section follows without a
 // hairline, with its own space/6 top padding.
 .alertRow.alertRow {
   padding: var(--space-6) var(--space-6) 0;
@@ -171,13 +196,6 @@
   @include below(tablet) {
     padding-block-end: var(--space-4);
   }
-}
-
-// Password: the medallion of the error message sits on the first line;
-// 2 px between the title and the sentence.
-.errorText {
-  gap: 0.125rem;
-  padding-block-start: 0.125rem;
 }
 
 // After the window: "Open in 2FAS Pass app" (mobile and tablet) and the

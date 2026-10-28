@@ -25,7 +25,7 @@ const QUESTIONS = [1, 2, 3, 4, 5, 6, 7];
  */
 export default function Faq () {
   const ref = useRef(null);
-  const visible = useInView(ref, 0.1);
+  const visible = useInView(ref);
 
   return (
     <section

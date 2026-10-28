@@ -6,10 +6,14 @@
 // See the LICENSE file for details.
 
 // Section / 01 Hero, generator.
-// Mobile (< 1024): window on top, text column under it, left aligned.
-// Tablet (1024-1279): stacked, the window 10 columns wide and centered.
-// Desktop (1280+): text column (6 columns) beside the window (6 columns),
-// both centered vertically in a section at least one screen high.
+// Mobile (< 768): window on top, text column under it, left aligned.
+// From 768: the text column beside the window, both centered vertically, as
+// in the prototype (owner's decision of 2026-10-28 for the open "hero at
+// 1024" item): the window is 6 of the 12 grid columns (336 px at 768, 464 at
+// 1024, 648 at 1440, 784 at 1920, 920 at 2560), the text column takes the
+// rest after a 24 px gap (792 and 936 px from 1920, BEHAVIOR-SPEC 59.7).
+// From 1280 the section is at least one screen high and its space above and
+// below follows the window height (BEHAVIOR-SPEC 55, low window).
 
 @use '@/styles/variables' as *;
 @use '@/pages/Home/sections' as *;
@@ -28,11 +32,18 @@
     padding-block-end: var(--space-16);
   }
 
+  // Low window (BEHAVIOR-SPEC 55, board 2218:81915): above, the bottom of the
+  // bar plus clamp(24px, 6svh, 64px); below, clamp(24px, 8svh, 64px). The
+  // generator window reads both (AddNewBox .hero) to give up height in a
+  // low window: at 1440 × 768 118 px above, 61 px below, the window 589 px.
   @include from(desktop) {
+    --hero-space-top: calc(var(--nav-bottom) + clamp(1.5rem, 6svh, 4rem));
+    --hero-space-bottom: clamp(1.5rem, 8svh, 4rem);
+
     align-items: center;
     display: flex;
     min-block-size: 100svh;
-    padding-block-start: var(--space-page-top-window);
+    padding-block: var(--hero-space-top) var(--hero-space-bottom);
   }
 }
 
@@ -42,17 +53,16 @@
 
   position: relative;
   // Window to the text column: 48 px on a phone (8 px gap + 40 px padding of
-  // copy-column), 40 px in the Tablet layout.
+  // copy-column).
   row-gap: calc(var(--space-32) + var(--space-2));
   z-index: 1;
 
+  // Text column and window side by side, 24 px apart (prototype .hero-row):
+  // the window keeps its 6 grid columns, the text column fills the rest.
   @include from(tablet) {
-    row-gap: var(--space-16);
-  }
-
-  @include from(desktop) {
     align-items: center;
-    row-gap: var(--space-12);
+    display: flex;
+    gap: 1.5rem;
   }
 }
 
@@ -62,9 +72,8 @@
   grid-row: 2;
   min-inline-size: 0;
 
-  @include from(desktop) {
-    grid-column: 1 / span 6;
-    grid-row: 1;
+  @include from(tablet) {
+    flex: 1 1 0;
   }
 }
 
@@ -127,11 +136,9 @@
     flex: 1;
   }
 
-  @include from(layout) {
-    grid-column: 2 / span 10;
-  }
-
-  @include from(desktop) {
-    grid-column: 7 / span 6;
+  // 6 of the 12 columns from the layout tokens (IMPLEMENTATION-PATTERNS 5).
+  @include from(tablet) {
+    flex: none;
+    inline-size: calc((100% - 11 * var(--space-page-gutter)) / 12 * 6 + 5 * var(--space-page-gutter));
   }
 }

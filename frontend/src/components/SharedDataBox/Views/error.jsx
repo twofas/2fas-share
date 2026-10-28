@@ -36,6 +36,14 @@ const VARIANTS = {
       { icon: LinkIcon, tone: 'info', title: 'recipient.copyAgainTitle', body: 'recipient.copyAgainBody' },
       { icon: MailIcon, title: 'recipient.didntHelpTitle', body: 'recipient.didntHelpBody' }
     ]
+  },
+  // A path that is not a note link (BEHAVIOR-SPEC 59.8): the layout of
+  // Broken with the production texts, no hint rows of its own.
+  notFound: {
+    medallion: { icon: UnlinkIcon, tone: 'accent', variant: 'solid' },
+    title: 'notFound.title',
+    body: 'notFound.description',
+    rows: []
   }
 };
 
@@ -44,7 +52,7 @@ const VARIANTS = {
  * Broken): a dashed slot with a medallion, two hint rows and the secondary
  * action to create your own link.
  * @param {Object} props - Component props.
- * @param {'unavailable'|'broken'} [props.variant='unavailable'] - Which error state.
+ * @param {'unavailable'|'broken'|'notFound'} [props.variant='unavailable'] - Which error state.
  * @returns {import('preact').JSX.Element} Card and footer.
  */
 export function ErrorContent ({ variant = 'unavailable' }) {
@@ -52,7 +60,7 @@ export function ErrorContent ({ variant = 'unavailable' }) {
 
   return (
     <>
-      <WindowCard>
+      <WindowCard className={S.card}>
         <WindowSection>
           <div className={`${S.slot} ${S.slotEmpty}`}>
             <Medallion {...v.medallion} />
@@ -91,7 +99,7 @@ export function ErrorContent ({ variant = 'unavailable' }) {
  * SharedDataBox - standalone error window (the Broken page, where no
  * SharedDataBox is mounted).
  * @param {Object} props - Component props.
- * @param {'unavailable'|'broken'} [props.variant='unavailable'] - Which error state.
+ * @param {'unavailable'|'broken'|'notFound'} [props.variant='unavailable'] - Which error state.
  * @returns {import('preact').JSX.Element} The error window.
  */
 export default function SharedDataBoxError ({ variant = 'unavailable' }) {

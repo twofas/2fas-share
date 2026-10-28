@@ -20,6 +20,7 @@ import {
 import PrefetchLink from '@/components/PrefetchLink';
 import { WindowCard, WindowSection, WindowFooter, FieldHeader } from '@/components/Window';
 import FieldMessage from './FieldMessage';
+import usePresence from './usePresence';
 import btn from '@/styles/ds/button.module.scss';
 import lnk from '@/styles/ds/link.module.scss';
 import field from '@/styles/ds/field.module.scss';
@@ -51,6 +52,8 @@ const MIN_CREATING_MS = 400;
 // The hint types itself once the window has come in (entrance 0.40 + 0.65 s).
 const HINT_DELAY_MS = 1100;
 const HINT_CHAR_MS = 45;
+// The screen reader hears the character count after a pause in typing (BEHAVIOR-SPEC 59.9).
+const COUNTER_PAUSE_MS = 1000;
 
 /**
  * Form for creating a new secure share (custom/text content type).
@@ -59,9 +62,10 @@ const HINT_CHAR_MS = 45;
  * @param {(result: {link: string, expiration: number, oneTimeAccess: boolean, password: string}) => void} props.onSuccess - Called with the share result on success.
  * @param {boolean} [props.focusOnMount] - Focus the content field after mounting.
  * @param {string} [props.labelledBy] - Id of the page heading that names the form.
+ * @param {(text: string) => void} props.announce - Write to the window's role="status" region.
  * @returns {import('preact').JSX.Element} The add new form.
  */
-export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy }) {
+export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy, announce }) {
   const [text, setText] = useState('');
   const [expiration, setExpiration] = useState(3600);
   const [oneTimeAccess, setOneTimeAccess] = useState(true);
@@ -157,6 +161,21 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
 
     return () => window.removeEventListener('resize', lock);
   }, []);
+
+  // The counter is read 1 s after the last keystroke, not on every character;
+  // the visible text follows the typing at once.
+  const counterText = limit.showCounter ? tCount('v2.addForm.contentLeft', limit.remaining) : '';
+  const counter = usePresence(limit.showCounter, counterText);
+
+  useEffect(() => {
+    if (!counterText) {
+      return undefined;
+    }
+
+    const timer = setTimeout(() => announce?.(counterText), COUNTER_PAUSE_MS);
+
+    return () => clearTimeout(timer);
+  }, [counterText]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Field / textarea grows with the content up to a ceiling, then scrolls
   // inside. CSS field-sizing does it where supported; elsewhere measure it.
@@ -258,6 +277,8 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
     } catch (err) {
       await settle();
       setErrors({ submit: t('addForm.errorSubmit') });
+      // The CTA keeps focus: the message reaches the screen reader through role="status".
+      announce?.(`${t('common.errorPrefix')} ${t('addForm.errorSubmit')}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -308,6 +329,7 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
     : limit.over > 0 && tCount('v2.addForm.errorContentTooLong', limit.over);
   const ctaDescribedBy = [
     contentError && id('note-error'),
+    errors.submit && id('submit-error'),
     errors.password && id('password-error')
   ].filter(Boolean).join(' ') || undefined;
 
@@ -385,26 +407,39 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
               captionId={id('note-caption')}
               star
             />
-            <textarea
-              ref={noteRef}
-              id={id('note')}
-              className={`${field.textarea} ${S.note}`}
-              placeholder={hint}
-              value={text}
-              readOnly={isSubmitting}
-              aria-invalid={contentError ? 'true' : undefined}
-              aria-describedby={[
-                id('note-caption'),
-                contentError && id('note-error'),
-                limit.showCounter && id('note-counter')
-              ].filter(Boolean).join(' ')}
-              onInput={(e) => setText(e.target.value)}
-            />
-            {contentError && (
-              <FieldMessage id={id('note-error')} attempt={attempt} className={S.stackMessage}>{contentError}</FieldMessage>
-            )}
-            {limit.showCounter && (
-              <p id={id('note-counter')} className={S.counter}>{tCount('v2.addForm.contentLeft', limit.remaining)}</p>
+            <div className={`${field.arc} ${S.noteWrap}`}>
+              <textarea
+                ref={noteRef}
+                id={id('note')}
+                className={`${field.textarea} ${S.note}`}
+                placeholder={hint}
+                value={text}
+                readOnly={isSubmitting}
+                aria-invalid={contentError ? 'true' : undefined}
+                aria-describedby={[
+                  id('note-caption'),
+                  contentError && id('note-error'),
+                  limit.showCounter && id('note-counter')
+                ].filter(Boolean).join(' ')}
+                onInput={(e) => setText(e.target.value)}
+              />
+            </div>
+            <FieldMessage id={id('note-error')} open={Boolean(contentError)} attempt={attempt} className={S.stackMessage}>
+              {contentError}
+            </FieldMessage>
+            {/* The server refused or the network failed (BEHAVIOR-SPEC 59.8): under the note field. */}
+            <FieldMessage id={id('submit-error')} open={Boolean(errors.submit)} className={S.stackMessage}>
+              {errors.submit}
+            </FieldMessage>
+            {counter.present && (
+              <p
+                id={counter.closing ? undefined : id('note-counter')}
+                className={`${field.collapsible} ${S.counter}`}
+                data-closing={counter.closing ? '' : undefined}
+                aria-hidden={counter.closing ? 'true' : undefined}
+              >
+                <span>{counter.content}</span>
+              </p>
             )}
           </div>
 
@@ -415,15 +450,7 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
           >
             <legend className={S.groupLabel}>{t('v2.addForm.expirationTitle')}</legend>
             <p id={id('expiry-desc')} className='visually-hidden'>{t('addForm.expirationDesc')}</p>
-            <div className={`${ctl.segmented} ${ctl.segmentedSliding} ${S.track}`}>
-              <span
-                className={ctl.indicator}
-                aria-hidden='true'
-                style={{
-                  '--index': otherSelected ? PRESETS.length : PRESETS.findIndex(p => p.value === expiration),
-                  '--count': PRESETS.length + 1
-                }}
-              />
+            <div className={`${ctl.segmented} ${S.track}`}>
               {PRESETS.map((p) => renderOption(
                 'expiry', p.value, !otherSelected && expiration === p.value,
                 t(p.label), t(p.short), selectPreset
@@ -436,12 +463,7 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
             <div className={S.collapseInner}>
               <fieldset className={`${S.group} ${S.custom}`} disabled={isSubmitting}>
                 <legend className={S.groupLabel}>{t('generator.otherDuration')}</legend>
-                <div className={`${ctl.segmented} ${ctl.segmentedSliding} ${S.track} ${S.trackCustom}`}>
-                  <span
-                    className={ctl.indicator}
-                    aria-hidden='true'
-                    style={{ '--index': Math.max(0, CUSTOM.findIndex(c => c.value === expiration)), '--count': CUSTOM.length }}
-                  />
+                <div className={`${ctl.segmented} ${S.track} ${S.trackCustom}`}>
                   {CUSTOM.map((c) => renderOption(
                     'expiry-other', c.value, otherSelected && expiration === c.value,
                     t(c.label), c.short && t(c.short), setExpiration
@@ -501,33 +523,36 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
           >
             <div className={S.collapseInner}>
               <div className={S.collapseBody}>
-                <div className={field.control}>
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    className={field.input}
-                    ref={passwordRef}
-                    placeholder={t('addForm.passwordPlaceholder')}
-                    aria-label={t('content.password')}
-                    autoComplete='new-password'
-                    value={password}
-                    readOnly={isSubmitting}
-                    aria-invalid={errors.password ? 'true' : undefined}
-                    aria-describedby={errors.password ? id('password-error') : undefined}
-                    onInput={(e) => setPassword(e.target.value)}
-                  />
-                  <button
-                    type='button'
-                    className={field.adornment}
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={t('common.togglePasswordVisibility')}
-                    aria-pressed={showPassword ? 'true' : 'false'}
-                  >
-                    {showPassword ? <EyeOffIcon aria-hidden='true' /> : <EyeIcon aria-hidden='true' />}
-                  </button>
+                <div className={field.arc}>
+                  <div className={field.control}>
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      className={field.input}
+                      ref={passwordRef}
+                      placeholder={t('addForm.passwordPlaceholder')}
+                      aria-label={t('content.password')}
+                      autoComplete='new-password'
+                      value={password}
+                      readOnly={isSubmitting}
+                      aria-invalid={errors.password ? 'true' : undefined}
+                      aria-describedby={errors.password ? id('password-error') : undefined}
+                      onInput={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type='button'
+                      className={field.adornment}
+                      disabled={isSubmitting}
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={t('common.togglePasswordVisibility')}
+                      aria-pressed={showPassword ? 'true' : 'false'}
+                    >
+                      {showPassword ? <EyeOffIcon aria-hidden='true' /> : <EyeIcon aria-hidden='true' />}
+                    </button>
+                  </div>
                 </div>
-                {errors.password && (
-                  <FieldMessage id={id('password-error')} attempt={attempt}>{errors.password}</FieldMessage>
-                )}
+                <FieldMessage id={id('password-error')} open={Boolean(errors.password)} attempt={attempt}>
+                  {errors.password}
+                </FieldMessage>
               </div>
             </div>
           </div>
@@ -539,19 +564,13 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
           ref={ctaRef}
           type='submit'
           className={`${btn.cta} ${btn.ctaBig} ${S.cta}`}
-          onMouseEnter={() => runArcsLight({ throttle: true })}
+          onPointerEnter={(e) => e.pointerType === 'mouse' && runArcsLight('cta')}
           aria-busy={isSubmitting ? 'true' : undefined}
           aria-disabled={isSubmitting || blocked ? 'true' : undefined}
           aria-describedby={ctaDescribedBy}
         >
           {isSubmitting ? t('addForm.submitting') : t('v2.addForm.submit')}
         </button>
-
-        <div aria-live='polite' className={S.submitError}>
-          {errors.submit && (
-            <FieldMessage id={id('submit-error')}>{errors.submit}</FieldMessage>
-          )}
-        </div>
 
         <p className={S.legal}>
           {beforeTerms}

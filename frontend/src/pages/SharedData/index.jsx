@@ -9,10 +9,8 @@ import { useState, useRef, useEffect, useCallback } from 'preact/hooks';
 import S from './SharedData.module.scss';
 import SharedDataBox from '../../components/SharedDataBox';
 import { AnnounceContext } from '../../components/SharedDataBox/Parts/context';
-import SharedDataQR from '../../components/SharedDataQR';
 import ArcsDecor, { runArcsLight } from '@/components/ArcsDecor';
 import { RecipientHeading, TrustNote, StatusRegion } from './parts';
-import { isMobileOrTablet } from '@/utils/device';
 
 /** Delay between clearing and filling the status region, so a repeated message is announced again. */
 const ANNOUNCE_GAP_MS = 100;
@@ -27,7 +25,6 @@ const ANNOUNCE_GAP_MS = 100;
  */
 export default function SharedData (props) {
   const { id, type, nonce, key } = props.params;
-  const [hideQR, setHideQR] = useState(false);
   const [secretMeta, setSecretMeta] = useState(null);
   const [state, setState] = useState(type === 'v1p' ? 'password' : 'intro');
   const [contentType, setContentType] = useState(null);
@@ -91,28 +88,17 @@ export default function SharedData (props) {
    * @param {string} [meta.validUntil] - ISO date when the link expires.
    */
   const handleSecretMeta = useCallback((meta) => {
-    if (meta.singleUse) {
-      setHideQR(true);
-    }
-
     setSecretMeta(meta);
   }, []);
 
   /**
-   * Unrecoverable error: the window turns to Unavailable; the QR goes away.
-   */
-  const handleError = useCallback(() => {
-    setHideQR(true);
-  }, []);
-
-  /**
    * The content is revealed: the button that had focus is gone, so focus
-   * goes to the page heading; the arcs light up.
+   * goes to the page heading; the arcs run the `ready` light (M-19).
    */
   const handleReveal = useCallback(() => {
     // Two frames: the heading text of the revealed state is rendered first.
     requestAnimationFrame(() => requestAnimationFrame(() => headingRef.current?.focus()));
-    runArcsLight();
+    runArcsLight('ready');
   }, []);
 
   return (
@@ -130,14 +116,11 @@ export default function SharedData (props) {
             urlSecret={key}
             secretMeta={secretMeta}
             onSecretMeta={handleSecretMeta}
-            onError={handleError}
             onReveal={handleReveal}
             onStateChange={handleStateChange}
           />
 
           <TrustNote />
-
-          {!isMobileOrTablet && <SharedDataQR hidden={hideQR} className={S.qr} />}
         </div>
 
         <StatusRegion message={status} />

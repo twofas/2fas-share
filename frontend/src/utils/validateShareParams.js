@@ -23,6 +23,33 @@ export function isShareType (type) {
 }
 
 /**
+ * Whether the hash route is a shared-data link (/:id/:type/:nonce/:key), also
+ * one cut short after the type (the Broken recipient state).
+ * @param {string} location - Current wouter location.
+ * @returns {boolean} True on the recipient page.
+ */
+export function isRecipientRoute (location) {
+  const parts = location.split('/').filter(Boolean);
+
+  return parts.length === 4 || (parts.length >= 2 && isShareType(parts[1]));
+}
+
+// Routes of the app's own pages (app.jsx); any other path is a note link, a
+// broken one, or "Page not found".
+const PAGE_ROUTES = ['/', '/add', '/terms-of-use', '/privacy-policy', '/open-source-licenses'];
+
+/**
+ * Whether the page uses the recipient layout: the recipient bar and a footer
+ * without the 4|8 line. Besides note links (also Broken) this covers "Page
+ * not found", which is shown in the layout of Broken (BEHAVIOR-SPEC 59.8).
+ * @param {string} location - Current wouter location.
+ * @returns {boolean} True on the recipient page and on the not found page.
+ */
+export function isRecipientLayout (location) {
+  return isRecipientRoute(location) || !PAGE_ROUTES.includes(location);
+}
+
+/**
  * Validates shared data route parameters. A link cut short (for example by a
  * messenger) misses the end of the key, so the lengths are checked before
  * anything is fetched: a one-time note must not be spent on a broken link.

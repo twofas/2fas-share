@@ -5,73 +5,50 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-// QR of the current link for a phone, in the language of Recipient / window:
-// a small glass ring around a raised card. Desktop only (the page decides).
+// Recipient / phone code (2205:39156): the look of the note slot, a white
+// tile with the code and the caption beside it.
 
 @use '@/styles/variables' as *;
 
-.qr {
-  animation: qrIn var(--motion-duration-entrance) var(--motion-easing-spring) 0.6s both;
-  border-radius: var(--radius-lg);
-  inline-size: auto;
-  max-inline-size: 26rem;
-  padding: var(--space-4);
-  transition:
-    opacity var(--motion-duration-hover) var(--motion-easing-in),
-    translate var(--motion-duration-hover) var(--motion-easing-in),
-    visibility 0s linear var(--motion-duration-hover);
-
-  @include from(desktop) {
-    max-inline-size: 13.5rem;
-  }
-}
-
-.hidden {
-  opacity: 0;
-  pointer-events: none;
-  translate: 0 0.5rem;
-  visibility: hidden;
-
-  // Below 1280 px the card stands in the column under the trust note: once
-  // hidden it leaves the flow, so no empty space stays under the page.
-  @include below(desktop) {
-    display: none;
-  }
-}
-
-.card {
+// The same surface as the note slot: theme/bg/surface, 1 px border/subtle,
+// radius/sm; padding space/3 and space/6, so the window grows by at most
+// 80 px and Open note stays on the first screen at 1440 × 900.
+.panel {
   align-items: center;
-  display: flex;
-  flex-direction: row;
-  gap: var(--space-4);
-
-  @include from(desktop) {
-    align-items: stretch;
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-// White tile: the code stays dark on light in both themes for scanners.
-.tile {
-  align-self: center;
-  background: var(--color-base-white);
+  background: var(--theme-bg-surface);
   border: var(--stroke-1) solid var(--theme-border-subtle);
   border-radius: var(--radius-sm);
-  flex-shrink: 0;
-  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  padding: var(--space-3) var(--space-6);
+}
 
-  canvas {
-    block-size: 7rem !important;
+// color/base/white with a space/3 quiet zone, radius/md: the modules stay
+// black on white in both themes, as scanners need.
+.tile {
+  background: var(--color-base-white);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  line-height: 0;
+  padding: var(--space-3);
+
+  img {
+    block-size: 6.5rem;
     display: block;
-    inline-size: 7rem !important;
+    inline-size: 6.5rem;
   }
 }
 
-.text {
+// Label/strong text/primary and Body/xs text/secondary, space/2 apart; in a
+// narrow window the caption wraps under the tile.
+.caption {
   display: flex;
+  flex: 1 1 12rem;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
+  min-inline-size: 0;
 }
 
 .title {
@@ -80,22 +57,9 @@
   color: var(--theme-text-primary);
 }
 
-.description {
+.body {
   @include typ('body-xs');
 
   color: var(--theme-text-secondary);
   text-wrap: pretty;
-}
-
-@keyframes qrIn {
-  from {
-    opacity: 0;
-    translate: 0 1rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .qr {
-    animation: none;
-  }
 }

@@ -5,42 +5,109 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-// Preview / generator step: the generator window drawn at a fixed natural
-// size (428 × 329 px; the Figma thumbnail is 312 × 240 at 1440) and zoomed to the card
-// width. Zoom, unlike transform: scale, takes the height along in the layout.
+// Preview / generator step (833:2904, BEHAVIOR-SPEC 41): the real generator
+// window at the 1440 scale, shrunk by one scale variable, --steps-mini, that
+// multiplies the tokens (IMPLEMENTATION-PATTERNS 5, TYPOGRAPHY "texts without
+// a style"). The thumbnail is drawn at its 1440 width, 312 px, and the whole
+// picture follows the column with a container-unit zoom, as in the prototype:
+// the zoom takes the height along in the layout, which a transform would not.
+//
+// --steps-mini is 0.74, the `rescale` of the window in the Figma base
+// variants (421.6 × 324.3 → 312 × 240; label 10.36 px = 14 × 0.74). The
+// 0.58575 of the prototype belongs to its older thumbnail (157 px white
+// window), which the current Figma set no longer has.
 
 @use '@/styles/variables' as *;
 @use '@/pages/Home/sections' as *;
 
 @include motion-keyframes;
 
+// Token values of the 1440 window, frozen: the thumbnail keeps the same
+// proportions at every width (312 × 240, 342 × 263, 464 × 357: 1.30), so its
+// inside does not follow the frame mode.
+$steps-tokens: (
+  space-1: 0.25rem,
+  space-2: 0.5rem,
+  space-3: 0.75rem,
+  space-4: 1rem,
+  space-5: 1.25rem,
+  space-6: 1.5rem,
+  space-8: 2rem,
+  space-10: 2.5rem,
+  space-12: 3rem,
+  space-16: 4rem,
+  space-20: 5rem,
+  space-24: 6rem,
+  space-32: 8rem,
+  size-body-lg: 1.125rem,
+  line-height-body-lg: 1.75rem,
+  size-body-base: 1rem,
+  line-height-body-base: 1.5rem,
+  size-body-sm: 0.875rem,
+  line-height-body-sm: 1.25rem,
+  size-body-xs: 0.75rem,
+  line-height-body-xs: 1rem,
+  size-caption: 0.75rem,
+  line-height-control: 1.5rem,
+  size-title-lg: 1.25rem,
+  line-height-title-lg: 1.75rem,
+  radius-xs: 0.25rem,
+  radius-sm: 0.5rem,
+  radius-base: 1rem,
+  radius-md: 1.5rem,
+  radius-lg: 2rem,
+  radius-xl: 2.25rem,
+  radius-2xl: 3rem,
+  radius-nested-dialog: 2rem,
+  stroke-1: 1px,
+  stroke-2: 2px,
+  blur-dialog: 4px
+);
+
+// The thumbnail's column: the container the zoom is measured against.
 .preview {
+  container-type: inline-size;
   inline-size: 100%;
   pointer-events: none;
   user-select: none;
+
+  // A picture of the interface, not content (ACCEPTANCE-CHECKLIST 16, 50).
+  @media print {
+    display: none;
+  }
 }
 
-.window {
-  // The inside is always drawn in the 1440 px proportions: the space and
-  // title tokens grow from 1920 px, which would not fit the fixed window.
-  // The whole picture scales with the zoom instead.
-  @include tokens-1440;
+// Doubled with .preview so the size wins over the shared Window rule.
+.preview > .window {
+  --steps-mini: 0.74;
+  // The 1440 thumbnail width: the picture is drawn 1:1 at it.
+  --steps-preview: 19.5rem;
 
-  block-size: 20.5625rem;
+  @each $name, $value in $steps-tokens {
+    --#{$name}: calc(#{$value} * var(--steps-mini));
+  }
+
+  --elevation-sm: 0 0 calc(4px * var(--steps-mini)) var(--theme-shadow-color);
+  --elevation-dialog: 0 calc(32px * var(--steps-mini)) calc(56px * var(--steps-mini)) var(--theme-shadow-color);
+
+  // 312 × 240, the frame of the Figma base variant.
+  aspect-ratio: 13 / 10;
   box-shadow: var(--elevation-dialog);
-  inline-size: 26.75rem;
-  zoom: var(--preview-zoom, 0.73);
-}
-
-// Card hover (HowToUse): the frame, the card outline and the section lines
-// stay still; only the components inside the sections zoom in, clipped by
-// the card.
-.card > * > * {
-  transform: translateY(var(--preview-inner-lift, 0)) scale(var(--preview-inner-zoom, 1));
-  transition: transform var(--motion-duration-reveal) var(--motion-easing-overshoot);
+  inline-size: var(--steps-preview);
+  max-inline-size: 100%;
+  // Where lengths cannot be divided in calc() the picture stays at 312 px,
+  // clipped to the column by max-inline-size.
+  zoom: 1;
+  zoom: calc(100cqw / var(--steps-preview));
 }
 
 .card {
+  flex: 1;
+  min-block-size: 0;
+}
+
+// Content step: the field takes the free height of the card.
+.grow {
   flex: 1;
   min-block-size: 0;
 }
@@ -50,18 +117,57 @@
   justify-content: flex-end;
 }
 
-.footer {
-  padding-block-end: var(--space-2);
+// Sizes the shared controls set as fixed rem values, times --steps-mini.
+.preview .window svg {
+  block-size: calc(1.5rem * var(--steps-mini));
+  inline-size: calc(1.5rem * var(--steps-mini));
 }
 
+.preview .window .eye {
+  block-size: calc(1.5rem * var(--steps-mini));
+  inline-size: calc(1.5rem * var(--steps-mini));
+}
+
+.preview .window .control {
+  min-block-size: calc(3rem * var(--steps-mini));
+}
+
+.preview .window .option {
+  min-block-size: calc(2rem * var(--steps-mini));
+}
+
+// Switch picture: 48 × 27 px track, 23 px knob with a 2 px gap.
+.preview .window .switch {
+  block-size: calc(1.6875rem * var(--steps-mini));
+  inline-size: calc(3rem * var(--steps-mini));
+
+  &::before {
+    block-size: calc(1.4375rem * var(--steps-mini));
+    inline-size: calc(1.4375rem * var(--steps-mini));
+    inset-block-start: calc(2px * var(--steps-mini));
+    inset-inline-start: calc(2px * var(--steps-mini));
+  }
+}
+
+// Grey mock of Button / CTA (Preview / generator step 833:2904): the
+// thumbnail is a picture, so the button is neither violet nor reactive.
 .cta {
+  @include typ('label-button');
+
+  align-items: center;
+  background: var(--theme-border-default);
+  border-radius: var(--radius-lg);
+  color: var(--theme-text-subtle);
+  display: flex;
   inline-size: 100%;
+  justify-content: center;
+  padding: var(--space-4) var(--space-6);
 }
 
 .switchRow {
   align-items: center;
   display: flex;
-  gap: var(--space-6);
+  gap: var(--space-4);
 
   > :first-child {
     flex: 1;
@@ -74,14 +180,14 @@
   background: var(--theme-control-track-on);
 
   &::before {
-    translate: 1.3125rem 0;
+    translate: calc(1.3125rem * var(--steps-mini)) 0;
   }
 }
 
 // Selected segment picture (Segmented / option Selected=True).
 .optionSelected {
   background: var(--theme-bg-raised);
-  box-shadow: inset 0 0 0 var(--stroke-1) var(--theme-border-subtle), var(--elevation-sm);
+  box-shadow: var(--elevation-sm);
   color: var(--theme-text-primary);
 }
 
@@ -90,9 +196,14 @@
 }
 
 .textarea {
-  min-block-size: 5rem;
+  // Field / textarea in the Filled state (Link step); the Content step grows it.
+  min-block-size: calc(5rem * var(--steps-mini));
   position: relative;
   resize: none;
+
+  .grow & {
+    flex: 1;
+  }
 }
 
 // "(optional)" after the password row title: text/secondary, same style.

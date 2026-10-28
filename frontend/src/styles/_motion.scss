@@ -60,17 +60,13 @@ $disabled: ':disabled, [aria-disabled="true"], [aria-busy="true"]';
   }
 }
 
-// Focus ring from a Focus/* effect style (a --focus-ring-* token).
-@mixin focus-ring($ring: var(--focus-ring-accent)) {
+// Keyboard focus ring: a real 2 px outline with a 2 px offset (BEHAVIOR-SPEC
+// 59.7, ACCESSIBILITY 9), so it also shows in forced colors. The Focus/*
+// effect styles are how Figma draws the same ring; the color is theirs.
+@mixin focus-ring($color: var(--theme-border-focus)) {
   &:focus-visible {
-    box-shadow: $ring;
-    outline: none;
-
-    // Forced colors drop box-shadow: draw the ring with an outline instead.
-    @media (forced-colors: active) {
-      outline: var(--stroke-2) solid CanvasText;
-      outline-offset: 2px;
-    }
+    outline: var(--stroke-2) solid $color;
+    outline-offset: 2px;
   }
 }
 

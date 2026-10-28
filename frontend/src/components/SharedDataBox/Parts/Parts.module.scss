@@ -76,6 +76,13 @@
   position: relative;
 }
 
+// The radius comes from the window section: radius/sm, or the concentric
+// radius/nested/window in Revealed once, where the field sits in the card
+// corner (IMPLEMENTATION-PATTERNS 12).
+.secretText.secretText {
+  border-radius: var(--secret-radius, var(--radius-sm));
+}
+
 .secretText {
   field-sizing: content;
   max-block-size: 24rem;

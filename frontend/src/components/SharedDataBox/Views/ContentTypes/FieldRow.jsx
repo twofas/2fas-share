@@ -5,8 +5,10 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import { useState, useId } from 'preact/hooks';
-import { CopyButton } from '../../Parts';
+import { useState, useId, useRef, useEffect } from 'preact/hooks';
+import { CopyButton, CopyFailedMessage } from '../../Parts';
+import useCopy from '../../Parts/useCopy';
+import { selectContent } from '../../Parts/selectContent';
 import EyeIcon from '@/assets/icons/eye-line.svg?react';
 import EyeOffIcon from '@/assets/icons/eye-off-line.svg?react';
 import field from '@/styles/ds/field.module.scss';
@@ -17,7 +19,9 @@ const DEFAULT_MASK = '●●●';
 
 /**
  * A labeled read-only field (Field / password look, readonly): the value,
- * an optional eye toggle for sensitive values and a copy button.
+ * an optional eye toggle for sensitive values and a copy button named after
+ * the field. When the clipboard refuses, the box gets focus, the value is
+ * shown and selected, and the Copy failed message stands under the box.
  * @param {Object} props - Component props.
  * @param {string} props.label - Field label text.
  * @param {string} props.value - Field value to display.
@@ -30,6 +34,19 @@ const DEFAULT_MASK = '●●●';
 export default function FieldRow ({ label, value, sensitive = false, maskedValue, multiline = false, copy = true }) {
   const [visible, setVisible] = useState(!sensitive);
   const labelId = useId();
+  const messageId = useId();
+  const boxRef = useRef(null);
+  const valueRef = useRef(null);
+  const [copied, copyValue, failures] = useCopy(value, t('common.copied'));
+
+  // A refused copy: a masked value is shown first, so the selection holds
+  // the value itself and not the dots.
+  useEffect(() => {
+    if (failures) {
+      setVisible(true);
+      requestAnimationFrame(() => selectContent(boxRef.current, valueRef.current));
+    }
+  }, [failures]);
 
   if (!value) {
     return null;
@@ -40,24 +57,42 @@ export default function FieldRow ({ label, value, sensitive = false, maskedValue
   return (
     <div className={S.row}>
       <span id={labelId} className={S.rowLabel}>{label}</span>
-      <div className={`${S.box} ${multiline ? S.boxMultiline : ''}`} role='group' aria-labelledby={labelId}>
-        <span className={`${S.rowValue} ${!visible ? S.rowMasked : ''}`}>
-          {visible ? value : hiddenDisplay}
-        </span>
-        <div className={S.rowActions}>
-          {sensitive && (
-            <button
-              type='button'
-              className={field.adornment}
-              onClick={() => setVisible(!visible)}
-              aria-label={t('common.toggleVisibility')}
-              aria-pressed={visible ? 'true' : 'false'}
-            >
-              {visible ? <EyeOffIcon aria-hidden='true' /> : <EyeIcon aria-hidden='true' />}
-            </button>
-          )}
-          {copy && <CopyButton value={value} kind='adornment' />}
+      <div>
+        <div
+          ref={boxRef}
+          className={`${S.box} ${multiline ? S.boxMultiline : ''}`}
+          role='group'
+          aria-labelledby={labelId}
+          aria-describedby={failures ? messageId : undefined}
+          tabIndex={failures ? -1 : undefined}
+        >
+          <span ref={valueRef} className={`${S.rowValue} ${!visible ? S.rowMasked : ''}`}>
+            {visible ? value : hiddenDisplay}
+          </span>
+          <div className={S.rowActions}>
+            {sensitive && (
+              <button
+                type='button'
+                className={field.adornment}
+                onClick={() => setVisible(!visible)}
+                aria-label={t('common.toggleVisibility')}
+                aria-pressed={visible ? 'true' : 'false'}
+              >
+                {visible ? <EyeOffIcon aria-hidden='true' /> : <EyeIcon aria-hidden='true' />}
+              </button>
+            )}
+            {copy && (
+              <CopyButton
+                value={value}
+                kind='adornment'
+                label={t('recipient.copyField', { field: label })}
+                shared={{ copied, copy: copyValue }}
+              />
+            )}
+          </div>
         </div>
+
+        <CopyFailedMessage id={messageId} open={failures > 0} />
       </div>
     </div>
   );

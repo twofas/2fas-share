@@ -5,44 +5,31 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import PrefetchLink from '@/components/PrefetchLink';
 import ArcsDecor from '@/components/ArcsDecor';
-import S from './NotFound.module.scss';
-import btn from '@/styles/ds/button.module.scss';
-import fb from '@/styles/ds/feedback.module.scss';
-import UnlinkIcon from '@/assets/icons/link-unlink-m.svg?react';
+import SharedDataBoxError from '@/components/SharedDataBox/Views/error';
+import { TrustNote } from '@/pages/SharedData/parts';
+import S from '@/pages/SharedData/SharedData.module.scss';
 import { t } from '@/i18n';
 
 /**
- * 404 catch-all page for unmatched routes, in the language of the recipient
- * Unavailable state: arcs, a neutral medallion, the title, a lead and the
- * way back to the generator or the home page.
+ * 404 catch-all page for unmatched routes (BEHAVIOR-SPEC 59.8): "Page not
+ * found" and "The page you are looking for doesn't exist or has been
+ * moved." in the layout of Broken (no frame of its own): the heading on the
+ * page axis, the window with the empty slot and "Create your own link", the
+ * trust note under it.
  * @returns {import('preact').JSX.Element} The not found page.
  */
 export default function NotFound () {
   return (
-    <main className={S.page}>
+    <main id='content' className={S.page}>
       <ArcsDecor />
 
-      <div className={S.content}>
-        <span
-          className={`${fb.medallion} ${fb.size96} ${fb.tint} ${fb.neutral} ${S.medallion}`}
-          aria-hidden='true'
-        >
-          <UnlinkIcon />
-        </span>
-
-        <h1 className={S.title}>{t('notFound.title')}</h1>
-        <p className={S.lead}>{t('notFound.description')}</p>
-
-        <div className={S.actions}>
-          <PrefetchLink className={`${btn.cta} ${btn.ctaBig}`} href='/add'>
-            {t('v2.header.shareSecurely')}
-          </PrefetchLink>
-          <PrefetchLink className={`${btn.secondary} ${btn.secondaryBig}`} href='/'>
-            {t('header.aboutShare')}
-          </PrefetchLink>
-        </div>
+      <div className={S.column}>
+        <h1 className={S.heading}>
+          <span className={S.headingPrimary}>{t('notFound.title')}</span>
+        </h1>
+        <SharedDataBoxError variant='notFound' />
+        <TrustNote />
       </div>
     </main>
   );

@@ -57,13 +57,21 @@
     transition-property: --cta-bg-start, --cta-bg-end, --cta-border-start, --cta-border-end, color, scale;
   }
 
-  // Light arc travelling around the border, masked to the 1 px ring.
+  // Light arc travelling around the border (M-03, IMPLEMENTATION-PATTERNS
+  // 9.2): a conic gradient in a 1.5 px ring (no token), light stops at 0.62,
+  // 0.78 and 0.94 of a turn. The loop sits in the base rule, paused, and runs
+  // wherever a fine pointer can light the arc, so fading out after hover
+  // keeps it circling instead of freezing a frame.
   &::before {
+    --cta-arc-angle: 0deg;
+    --cta-ring: 1.5px;
+
+    animation: ctaArc 1.6s linear infinite paused;
     background: conic-gradient(
       from var(--cta-arc-angle),
-      transparent 0deg 250deg,
-      var(--cta-highlight) 320deg,
-      transparent 360deg
+      transparent 0turn 0.62turn,
+      var(--cta-highlight) 0.78turn,
+      transparent 0.94turn 1turn
     );
     border-radius: inherit;
     content: '';
@@ -72,17 +80,57 @@
       linear-gradient(#000 0 0) content-box exclude,
       linear-gradient(#000 0 0);
     opacity: 0;
-    padding: var(--stroke-1);
+    padding: var(--cta-ring);
     pointer-events: none;
     position: absolute;
     transition: opacity var(--motion-duration-hover) var(--motion-easing-standard);
     z-index: -1;
   }
 
+  @media (hover: hover) and (pointer: fine) {
+    &:not(#{$disabled})::before {
+      animation-play-state: running;
+    }
+  }
+
   @include hover {
     &::before {
-      animation: ctaArc 1.6s linear infinite;
       opacity: 1;
+    }
+  }
+
+  // Reduced motion: on hover the whole ring lights up, without circling
+  // (the only motion that carries meaning, IMPLEMENTATION-PATTERNS 3.3).
+  @media (prefers-reduced-motion: reduce) {
+    @include hover {
+      &::before {
+        animation: none;
+        background: var(--cta-highlight);
+      }
+    }
+  }
+
+  // Without a mask with a cut-out center the gradient would cover the label.
+  @supports not ((mask-composite: exclude) or (-webkit-mask-composite: xor)) {
+    &::before {
+      display: none;
+    }
+  }
+
+  // Forced colors: system colors, no arc (IMPLEMENTATION-PATTERNS 3.4).
+  @media (forced-colors: active) {
+    background: ButtonFace;
+    border-color: ButtonBorder;
+    color: ButtonText;
+    forced-color-adjust: none;
+
+    &::before {
+      display: none;
+    }
+
+    &:focus-visible {
+      outline: var(--stroke-2) solid Highlight;
+      outline-offset: 2px;
     }
   }
 
@@ -110,12 +158,6 @@
       @media (forced-colors: active) {
         background: ButtonText;
       }
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    &::before {
-      display: none;
     }
   }
 
@@ -155,7 +197,7 @@
     --cta-border-end: var(--theme-nav-cta-bg-end);
   }
 
-  @include focus-ring(var(--focus-ring-on-nav));
+  @include focus-ring(var(--theme-nav-cta-highlight));
 }
 
 // Size=Big: on the page, 56 px, tokens theme/page/cta/*.
@@ -182,7 +224,7 @@
     --cta-bg-end: var(--theme-page-cta-bg-end-pressed);
   }
 
-  @include focus-ring(var(--focus-ring-page-cta));
+  @include focus-ring(var(--theme-page-cta-focus));
 }
 
 // ── Button / secondary ──────────────────────────────────────
@@ -287,21 +329,22 @@
 }
 
 // ── Navigation bar controls ─────────────────────────────────
-// Button / nav icon (menu, 40 px, 16 px glyph) and Toggle / theme
-// (size/control/nav, aria-pressed carries the state, sun or moon glyph).
+// Button / nav icon (menu, 16 px glyph; close, 20 px) and Toggle / theme
+// (aria-pressed carries the state, sun or moon glyph), both at
+// size/control/nav: 44 px below 768, 40 px from 768, 48 px at 2560.
 .navControl {
   @include interactive;
 
   align-items: center;
   background: transparent;
-  block-size: 2.5rem;
+  block-size: var(--size-control-nav);
   border: var(--stroke-1) solid var(--theme-nav-control-border);
   border-radius: var(--radius-control);
   color: var(--theme-text-on-accent);
   cursor: pointer;
   display: inline-flex;
   flex-shrink: 0;
-  inline-size: 2.5rem;
+  inline-size: var(--size-control-nav);
   justify-content: center;
 
   @include hover {
@@ -312,7 +355,7 @@
     background: var(--theme-nav-control-bg-pressed);
   }
 
-  @include focus-ring(var(--focus-ring-on-nav));
+  @include focus-ring(var(--theme-nav-cta-highlight));
 
   svg {
     block-size: 1rem;

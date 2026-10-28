@@ -8,7 +8,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { Buffer } from 'node:buffer';
-import validateShareParams, { isShareType } from './validateShareParams.js';
+import validateShareParams, { isRecipientLayout, isRecipientRoute, isShareType } from './validateShareParams.js';
 
 /**
  * Base64url without padding of n bytes, as in a share link.
@@ -56,4 +56,27 @@ test('isShareType', () => {
   assert.equal(isShareType('v1p'), true);
   assert.equal(isShareType('toString'), false);
   assert.equal(isShareType('add'), false);
+});
+
+test('recipient routes: a full link, or one cut short after the type', () => {
+  assert.equal(isRecipientRoute(`/${ID}/v1k/${NONCE}/${b64url(32)}`), true);
+  assert.equal(isRecipientRoute(`/${ID}/v1p/${NONCE}`), true);
+  assert.equal(isRecipientRoute(`/${ID}/v1k`), true);
+  assert.equal(isRecipientRoute('/a/b/c/d'), true);
+});
+
+test('other routes are not recipient routes', () => {
+  assert.equal(isRecipientRoute('/'), false);
+  assert.equal(isRecipientRoute('/add'), false);
+  assert.equal(isRecipientRoute('/privacy-policy'), false);
+  assert.equal(isRecipientRoute('/foo/bar'), false);
+});
+
+test('the recipient layout also covers "Page not found", not the app pages', () => {
+  assert.equal(isRecipientLayout(`/${ID}/v1k/${NONCE}/${b64url(32)}`), true);
+  assert.equal(isRecipientLayout('/foo/bar'), true);
+  assert.equal(isRecipientLayout('/nope'), true);
+  for (const page of ['/', '/add', '/terms-of-use', '/privacy-policy', '/open-source-licenses']) {
+    assert.equal(isRecipientLayout(page), false);
+  }
 });

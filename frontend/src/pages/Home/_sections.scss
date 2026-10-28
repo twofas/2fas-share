@@ -212,23 +212,33 @@
   }
 }
 
-// Text presets (Figma summary 3 and 4).
-// Heading: opacity 0.45 s ease-out, Y +48 → 0 in 0.65 s overshoot.
+// Entrance recipes (MOTION section 2).
+// Heading: opacity 0.45 s out, Y +48 → 0 in 0.65 s overshoot.
 @mixin enter-heading($delay: 0s, $on: '.visible') {
   @include enter($delay, $y: 3rem, $move: (entrance, overshoot), $on: $on);
 }
 
-// Eyebrow, badge, small text: Y +16 → 0, 0.45 s ease-out.
+// Text: opacity 0.45 s out, Y +16 → 0 in 0.65 s out.
+@mixin enter-text($delay: 0s, $on: '.visible') {
+  @include enter($delay, $y: 1rem, $move: (entrance, out), $on: $on);
+}
+
+// Block (cards, windows): opacity and Y +32 → 0, both 0.65 s out.
+@mixin enter-block($delay: 0s, $on: '.visible') {
+  @include enter($delay, $y: 2rem, $move: (entrance, out), $fade: var(--motion-duration-entrance), $on: $on);
+}
+
+// Eyebrow, badge, small text: the text recipe.
 @mixin enter-small($delay: 0s, $on: '.visible') {
-  @include enter($delay, $y: 1rem, $on: $on);
+  @include enter-text($delay, $on);
 }
 
-// Lead: Y +24 → 0, 0.45 s ease-out.
+// Lead: the text recipe.
 @mixin enter-lead($delay: 0s, $on: '.visible') {
-  @include enter($delay, $y: 1.5rem, $on: $on);
+  @include enter-text($delay, $on);
 }
 
-// Body copy: fade only.
+// Body copy: the text recipe (M-20 has no fade-only entrance).
 @mixin enter-fade($delay: 0s, $on: '.visible') {
-  @include enter($delay, $on: $on);
+  @include enter-text($delay, $on);
 }

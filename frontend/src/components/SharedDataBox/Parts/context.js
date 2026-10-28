@@ -17,6 +17,6 @@ export const AnnounceContext = createContext(() => {});
 /**
  * Shared copy state of the revealed note: the footer CTA and the copy button
  * in the read-only field copy the same text and show "copied" together.
- * @type {import('preact').Context<{ value: string, copied: boolean, copy: function(): Promise<void> }|null>}
+ * @type {import('preact').Context<{ value: string, copied: boolean, copy: function(): Promise<void>, failures: number }|null>}
  */
 export const NoteCopyContext = createContext(null);

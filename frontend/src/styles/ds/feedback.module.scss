@@ -106,18 +106,22 @@
   }
 }
 
-// Repeated failed attempt: scale 1 → 1.08 → 1, no shaking.
+// Repeated failed attempt: scale 1 → 1.08 → 1 in toggle, no shaking (M-34);
+// on the medallion or on the 20 px icon of Field / message.
 .bump {
-  animation: bump var(--motion-duration-hover) var(--motion-easing-standard);
+  animation: bump var(--motion-duration-toggle) var(--motion-easing-standard);
 }
 
 // ── Alert / card ────────────────────────────────────────────
 // <div role="note" class={fb.alert}>: stroke only, no fill, no shadow.
 // Medallion 40 by tone: Neutral Inverse, Info Tint Info, Warning Solid Accent.
+// The radius comes from the card that holds the alert (concentric corners,
+// IMPLEMENTATION-PATTERNS 12): the recipient card and the About card set
+// --alert-radius; radius/md elsewhere.
 .alert {
   align-items: flex-start;
   border: var(--stroke-1) solid var(--theme-border-default);
-  border-radius: var(--radius-md);
+  border-radius: var(--alert-radius, var(--radius-md));
   display: flex;
   gap: var(--space-4);
   padding: var(--space-4);

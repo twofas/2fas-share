@@ -6,17 +6,36 @@
 // See the LICENSE file for details.
 
 // Section / 08 Navigation, sticky: a glass capsule pinned to the top of the
-// view. Collapsed after scrolling: more transparent glass (0.55 against 0.85),
-// stronger blur, logo without the wordmark and, from 1024 px, scale 0.94.
-// Collapses after 340 px of scroll (BEHAVIOR-SPEC 48.2) in 480 ms.
+// view. Collapsed after scrolling: more transparent glass (nav-scrolled at
+// 0.75 against nav at 0.85), stronger blur and, from 1024 px, the logo without
+// the wordmark and scale 0.94. Collapses after 340 px of scroll (BEHAVIOR-SPEC
+// 48.2, MOTION M-15) in 480 ms.
 
 @use '@/styles/variables' as *;
 
 $collapse: var(--motion-duration-layout);
 
-.header {
-  --nav-top: 0.5rem;
+// The full bar (links, theme toggle, capsule that hugs its content) from
+// 1024 px, and only while the bar is at least 43.25 rem wide, so enlarged text
+// falls back to the menu button instead of pushing it out of the window. The
+// same condition hides the menu button and the panel (MOBILE-MENU.md, "One
+// condition"); the script reads whether the menu button is displayed.
+// Browsers without container queries go by the width alone.
+@mixin full-bar {
+  @include from(layout) {
+    @container navbar (width >= 43.25rem) {
+      @content;
+    }
+  }
 
+  @supports not (container-type: inline-size) {
+    @include from(layout) {
+      @content;
+    }
+  }
+}
+
+.header {
   // Entrance on page load (Figma E · Motion, nav): opacity 0.4 s, Y −72 → 0 in 0.55 s.
   // Fill backwards, not both: a finished animation that keeps holding opacity
   // makes the header a group with animated opacity, which cuts the backdrop
@@ -29,6 +48,8 @@ $collapse: var(--motion-duration-layout);
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  // The offset from the top (safe area included below 1024 px) is shared on
+  // :root with the anchor offset (global.scss).
   inset-block-start: var(--nav-top);
   inset-inline: 0;
   padding-inline: var(--space-page-margin);
@@ -36,20 +57,10 @@ $collapse: var(--motion-duration-layout);
   position: fixed;
   z-index: 50;
 
-  @include from(desktop) {
-    --nav-top: 1rem;
-  }
-
-  @include from(wide) {
-    --nav-top: 2rem;
-  }
-
-  // Narrow phones: on a bar narrower than 20.25 rem (BEHAVIOR-SPEC,
-  // navigation) the logo drops the wordmark, so "Create link" keeps one line
-  // in every language. The header content box is the bar width.
-  @include below(layout) {
-    container-type: inline-size;
-  }
+  // The header content box is the content width: the container of the full
+  // bar condition and of the narrow logo (below 20.25 rem of bar the logo
+  // drops the wordmark, so "Create link" keeps one line in every language).
+  container: navbar / inline-size;
 
   > * {
     pointer-events: auto;
@@ -66,7 +77,7 @@ $collapse: var(--motion-duration-layout);
   gap: var(--space-4);
   justify-content: space-between;
   padding: 0.375rem 0.375rem 0.375rem 1rem;
-  transform-origin: top center;
+  transform-origin: 50% 0;
   transition:
     background-color $collapse var(--motion-easing-out),
     backdrop-filter $collapse var(--motion-easing-out),
@@ -76,29 +87,36 @@ $collapse: var(--motion-duration-layout);
   @include from(layout) {
     gap: var(--space-10);
     padding: var(--space-2) var(--space-2) var(--space-2) var(--space-6);
+  }
+
+  @include full-bar {
     width: auto;
   }
 
+  // theme/bg/nav-scrolled at 0.75 (IMPLEMENTATION-PATTERNS 8.6).
   .scrolled & {
     backdrop-filter: blur(var(--blur-nav-scrolled));
-    background: color-mix(in srgb, var(--theme-bg-nav-scrolled) 55%, transparent);
+    background: color-mix(in srgb, var(--theme-bg-nav-scrolled) 75%, transparent);
 
-    @include from(layout) {
+    // Scale only on the capsule that hugs its content; on a full-width bar it
+    // would pull the edges off the page margin (IMPLEMENTATION-PATTERNS 8.5).
+    @include full-bar {
       scale: 0.94;
     }
   }
 }
 
-// Logo: collapsing, the wordmark fades first (0.3 s), then the frame narrows
-// to the mark (0.5 s after 0.1 s). Expanding plays it backwards: the frame
-// grows first, the wordmark shows once it is full width, so no cut letters.
-// Lettering is white on the dark glass.
+// Logo (M-15, no tokens): collapsing, the wordmark fades at once (300 ms) and
+// the frame narrows from 112 to 26.134 px, the mark alone (500 ms after
+// 100 ms). Expanding: the frame widens in 500 ms without a delay and the
+// wordmark fades in 300 ms after 500 ms, so letters show only in the full
+// frame. Lettering is white on the dark glass.
 .logo {
   border-radius: var(--radius-xs);
   color: var(--theme-text-on-accent);
   display: block;
   flex-shrink: 0;
-  inline-size: 7.0625rem;
+  inline-size: 7.0234rem;
   overflow: hidden;
   transition: inline-size 0.5s var(--motion-easing-standard) 0s;
 
@@ -112,11 +130,11 @@ $collapse: var(--motion-duration-layout);
     }
   }
 
-  @include focus-ring(var(--focus-ring-on-nav));
+  @include focus-ring(var(--theme-nav-cta-highlight));
 
-  @include from(layout) {
+  @include full-bar {
     .scrolled & {
-      inline-size: 1.6875rem;
+      inline-size: 1.6334rem;
       transition-delay: 0.1s;
 
       svg path:last-of-type {
@@ -127,7 +145,7 @@ $collapse: var(--motion-duration-layout);
   }
 
   @container (max-width: 20.25rem) {
-    inline-size: 1.6875rem;
+    inline-size: 1.6334rem;
 
     svg path:last-of-type {
       opacity: 0;
@@ -138,7 +156,7 @@ $collapse: var(--motion-duration-layout);
   // "Was ist diese Seite?"), so the wordmark goes below 21 rem of bar.
   @container (max-width: 21rem) {
     .recipient & {
-      inline-size: 1.6875rem;
+      inline-size: 1.6334rem;
 
       svg path:last-of-type {
         opacity: 0;
@@ -154,47 +172,39 @@ $collapse: var(--motion-duration-layout);
 }
 
 // Recipient context: "What is this page?" sits 8 px before the theme toggle
-// (Layout=Mobile, action-row) and is a 44 px touch target there.
+// (Layout=Mobile, action-row); on touch it is a 44 px target (Link / nav).
 .recipientMenu {
   @include below(layout) {
     margin-inline: auto calc(var(--space-2) - var(--space-4));
   }
 }
 
-.aboutLink {
-  @include below(layout) {
-    min-block-size: 2.75rem;
-  }
-}
-
-// Menu=Open: theme/overlay/scrim (60 % black, the alpha is in the token) dims
-// the page behind the bar and the panel; it fades with the panel and a tap
-// on it closes the menu.
+// Menu=Open: #menu-backdrop below the bar dims the page with
+// theme/overlay/scrim (60 % black in Light, 80 % in Dark) and takes the click
+// outside the bar; it is left out of the inert page. It fades in with the
+// panel (expand, standard) and out with it (toggle, in), and a fading
+// backdrop takes no clicks. Hidden by the menu state, not by the width: the
+// script closes the menu when the menu button goes.
 .scrim {
   background: var(--theme-overlay-scrim);
-  display: none;
   inset: 0;
   opacity: 0;
+  pointer-events: none;
   position: fixed;
   transition:
-    opacity var(--motion-duration-hover) var(--motion-easing-in),
-    display var(--motion-duration-hover) allow-discrete;
+    opacity var(--motion-duration-toggle) var(--motion-easing-in),
+    visibility 0s linear var(--motion-duration-toggle);
+  visibility: hidden;
   z-index: 49;
-
-  @include from(layout) {
-    display: none !important;
-  }
 }
 
 .scrimVisible {
-  display: block;
   opacity: 1;
-  transition-duration: var(--motion-duration-expand);
-  transition-timing-function: var(--motion-easing-standard);
-
-  @starting-style {
-    opacity: 0;
-  }
+  pointer-events: auto;
+  transition:
+    opacity var(--motion-duration-expand) var(--motion-easing-standard),
+    visibility 0s;
+  visibility: visible;
 }
 
 .actions {
@@ -203,32 +213,86 @@ $collapse: var(--motion-duration-layout);
   gap: var(--space-2);
 }
 
+// The bar links and the theme toggle of the bar: only in the full bar.
 .desktopOnly {
-  @include below(layout) {
-    display: none !important;
+  display: none !important;
+
+  @include full-bar {
+    display: flex !important;
   }
 }
 
+// The menu button and the panel: everywhere but the full bar.
 .mobileOnly {
-  @include from(layout) {
+  @include full-bar {
     display: none !important;
   }
 }
 
-// Mobile: the touch target of the bar controls is 44 px.
-@include below(layout) {
-  .actions > a,
-  .actions > button {
-    min-block-size: 2.75rem;
+// Button / nav icon at size/control/nav (44 px at 390, 40 px from 768); the
+// 44 px touch rule applies only to a coarse pointer (BEHAVIOR-SPEC 59.9).
+.menuButton {
+  position: relative;
+
+  // The open state has no fill of its own: the hover fill follows the
+  // pointer only (it is not kept by the press that opened the menu).
+  svg {
+    fill: currentColor;
+    inset: 50% auto auto 50%;
+    position: absolute;
+    transition:
+      opacity var(--motion-duration-toggle) var(--motion-easing-standard),
+      scale var(--motion-duration-toggle) var(--motion-easing-standard);
+    translate: -50% -50%;
   }
 
-  .actions > button {
-    block-size: 2.75rem;
-    inline-size: 2.75rem;
+  .iconMenu {
+    block-size: 1rem;
+    inline-size: 1rem;
+  }
+
+  .iconClose {
+    block-size: 1.25rem;
+    inline-size: 1.25rem;
+    opacity: 0;
+    scale: 0.6;
+  }
+
+  &[aria-expanded='true'] {
+    .iconMenu {
+      opacity: 0;
+      scale: 0.6;
+    }
+
+    .iconClose {
+      opacity: 1;
+      scale: 1;
+    }
   }
 }
 
-// ── Mobile menu panel ───────────────────────────────────────
+@media (pointer: coarse) {
+  @include below(layout) {
+    .actions > a,
+    .actions > button {
+      min-block-size: 2.75rem;
+    }
+
+    .actions > button {
+      block-size: 2.75rem;
+      inline-size: 2.75rem;
+    }
+
+    .themeRow > button {
+      block-size: 2.75rem;
+      inline-size: 2.75rem;
+    }
+  }
+}
+
+// ── Menu panel (MOBILE-MENU.md) ─────────────────────────────
+// The width of the bar (342 px at 390, the content width up to 1023 px), 8 px
+// under it, the glass of the bar at rest without an outline.
 .panel {
   backdrop-filter: blur(var(--blur-nav));
   background: var(--theme-bg-nav);
@@ -238,44 +302,70 @@ $collapse: var(--motion-duration-layout);
   display: flex;
   flex-direction: column;
   // Low screens (landscape phone): the panel scrolls inside instead of
-  // running off the bottom. 2.75 rem bar + 0.375 rem padding twice.
-  max-block-size: calc(100dvh - var(--nav-top) - 3.5rem - var(--space-2) - var(--space-2));
+  // running off the bottom; the bottom safe area and a space/4 margin stay.
+  max-block-size: calc(100dvh - var(--nav-bottom) - env(safe-area-inset-bottom) - var(--space-2) - var(--space-4));
+  opacity: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: var(--space-2);
+  // M-16: closing 320 ms (toggle, in): opacity and the 8 px shift back;
+  // hidden at the end. The panel is inert from the first frame (script).
+  transition:
+    opacity var(--motion-duration-toggle) var(--motion-easing-in),
+    translate var(--motion-duration-toggle) var(--motion-easing-in),
+    visibility 0s linear var(--motion-duration-toggle);
+  translate: 0 -0.5rem;
+  visibility: hidden;
   width: 100%;
 
-  // Opening 400 ms (standard), closing 320 ms (ease-in, Figma: exit and
-  // close); display is animated as a discrete step so the exit can play.
-  transition:
-    opacity var(--motion-duration-expand) var(--motion-easing-standard),
-    translate var(--motion-duration-expand) var(--motion-easing-standard),
-    display var(--motion-duration-expand) allow-discrete;
-
-  @starting-style {
-    opacity: 0;
-    translate: 0 -0.5rem;
-  }
-
-  &[hidden] {
-    display: none;
-    opacity: 0;
-    transition-duration: var(--motion-duration-hover);
-    transition-timing-function: var(--motion-easing-in);
-    translate: 0 -0.5rem;
-  }
-
-  @include from(layout) {
-    display: none;
+  @media (prefers-reduced-motion: reduce) {
+    translate: none;
   }
 }
 
+// M-16: opening 400 ms (expand, standard): opacity 0 to 1, Y -8 px to 0.
+.panelOpen {
+  opacity: 1;
+  transition:
+    opacity var(--motion-duration-expand) var(--motion-easing-standard),
+    translate var(--motion-duration-expand) var(--motion-easing-standard),
+    visibility 0s;
+  translate: 0 0;
+  visibility: visible;
+}
+
+// Menu / item (2325:84117): a 48 px row, padding space/4 by space/2, radius
+// radius/base (the panel radius/md minus its space/2 padding, concentric,
+// IMPLEMENTATION-PATTERNS 12). With a fine pointer the hover fills the whole
+// row; the focus ring follows the same radius. The label keeps the colors of
+// the bar links (BEHAVIOR-SPEC 54).
 .panelLinks {
   display: flex;
   flex-direction: column;
 
+  // The fill is a layer under the label: the section labels clip their own
+  // background to the text (the current-section wipe), so it cannot carry it.
   > a {
-    padding: var(--space-4) var(--space-2);
+    border-radius: var(--radius-base);
+    min-block-size: 3rem;
+    // space/4 by space/2 as at 390; from 768 space/4 grows, but the rows keep
+    // 48 px up to 1023 px (BEHAVIOR-SPEC 59.9).
+    padding: min(var(--space-4), 0.75rem) var(--space-2);
+
+    &::before {
+      border-radius: inherit;
+      content: '';
+      inset: 0;
+      position: absolute;
+      transition: background-color var(--motion-duration-hover) var(--motion-easing-standard);
+      z-index: -1;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover::before {
+        background-color: var(--theme-nav-control-bg-hover);
+      }
+    }
   }
 }
 
@@ -298,35 +388,5 @@ $collapse: var(--motion-duration-layout);
 @keyframes navDrop {
   from {
     translate: 0 -4.5rem;
-  }
-}
-
-// Button / nav icon: Icon=Menu ↔ Icon=Close in 320 ms (toggle, standard).
-.menuGlyph {
-  fill: currentColor;
-
-  rect {
-    transform-box: fill-box;
-    transform-origin: center;
-    transition:
-      translate var(--motion-duration-toggle) var(--motion-easing-standard),
-      rotate var(--motion-duration-toggle) var(--motion-easing-standard),
-      opacity var(--motion-duration-toggle) var(--motion-easing-standard);
-  }
-
-  [aria-expanded='true'] > & {
-    .barTop {
-      rotate: 45deg;
-      translate: 0 7px;
-    }
-
-    .barMiddle {
-      opacity: 0;
-    }
-
-    .barBottom {
-      rotate: -45deg;
-      translate: 0 -7px;
-    }
   }
 }

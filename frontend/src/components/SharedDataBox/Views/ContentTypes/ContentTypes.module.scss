@@ -30,12 +30,13 @@
   color: var(--theme-text-secondary);
 }
 
-// Read-only box: bg/surface, border/subtle, radius/sm, 48 px.
+// Read-only box: bg/surface, border/subtle, radius/sm, 48 px; in Revealed
+// once the section hands down radius/nested/window (--secret-radius).
 .box {
   align-items: center;
   background: var(--theme-bg-surface);
   border: var(--stroke-1) solid var(--theme-border-subtle);
-  border-radius: var(--radius-sm);
+  border-radius: var(--secret-radius, var(--radius-sm));
   display: flex;
   gap: var(--space-3);
   min-block-size: 3rem;

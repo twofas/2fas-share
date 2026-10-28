@@ -1,0 +1,78 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Field / link (Figma 2210:38955), Visibility=Hidden and Shown: Field /
+// textarea State=Readonly with the copy button 12 px from the top right
+// corner and the eye under it; the text keeps 68 px clear of them.
+
+@use '@/styles/variables' as *;
+
+.field {
+  align-self: stretch;
+  background: var(--theme-bg-surface);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-sm);
+  // The two buttons: 12 + 44 + 4 + 40 + 16 px.
+  min-block-size: 7.25rem;
+  padding: var(--space-4) 4.25rem var(--space-4) var(--space-4);
+  position: relative;
+  text-align: start;
+
+  // Focused by script only (Copy failed); the border stays as it is.
+  &:focus {
+    outline: none;
+  }
+
+  @include focus-ring;
+}
+
+.text {
+  @include typ('body-base');
+
+  color: var(--theme-text-primary);
+  word-break: break-all;
+
+  // While hidden the dust is the target of a click that reveals.
+  &:not([data-shown]) {
+    cursor: pointer;
+  }
+
+  // Origin and slashes.
+  :global(.pub) {
+    color: var(--theme-text-secondary);
+  }
+
+  // One box per secret character: empty and of one width while hidden; the
+  // letter fades in once the ripple has turned its grains into it (--t).
+  :global(.ch) {
+    block-size: 1lh;
+    color: transparent;
+    display: inline-block;
+    text-align: center;
+    transition: color 180ms var(--motion-easing-standard) var(--t, 0ms);
+    vertical-align: top;
+  }
+
+  &[data-shown] :global(.ch) {
+    color: var(--theme-text-primary);
+  }
+}
+
+.canvas {
+  block-size: 100%;
+  inline-size: 100%;
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+// Button / icon (40 px) under the 44 px copy button.
+.eye.eye {
+  inset-block-start: 3.75rem;
+  inset-inline-end: 1rem;
+  position: absolute;
+}

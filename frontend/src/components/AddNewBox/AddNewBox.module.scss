@@ -20,6 +20,16 @@
 
 .hero {
   min-block-size: var(--size-generator-height);
+
+  // Low window (BEHAVIOR-SPEC 55): the token height while it fits, otherwise
+  // the room between the space above and below the hero (WelcomeSection);
+  // only the note field gives up height, nothing scrolls inside the window.
+  @include from(desktop) {
+    min-block-size: min(
+      var(--size-generator-height),
+      calc(100svh - var(--hero-space-top, 0px) - var(--hero-space-bottom, 0px))
+    );
+  }
 }
 
 .full {
@@ -55,12 +65,34 @@
   gap: var(--space-2);
 }
 
-// The stack gap (8 px) already separates the message from the field.
+// The stack gap (8 px) already separates the message from the field; a
+// closing message gives the gap back with its height.
 .stackMessage.stackMessage {
   margin-block-start: 0;
+
+  &[data-closing] {
+    margin-block-start: calc(-1 * var(--space-2));
+  }
 }
 
-// Content counter: from 80 % of the server limit, about how much still fits.
+// Wrapper of the note field: carries the light arc (field.arc) and is the
+// flex item of the stack, so the field inside fills it.
+.noteWrap {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+// Content counter: from 80 % of the server limit, about how much still fits;
+// opens and closes like Field / message (M-06).
+.counter.counter {
+  margin-block-start: 0;
+
+  &[data-closing] {
+    margin-block-start: calc(-1 * var(--space-2));
+  }
+}
+
 .counter {
   @include typ('body-xs');
 
@@ -70,10 +102,17 @@
 
 .note {
   field-sizing: content;
-  flex: 1 0 auto;
+  // Grows into the spare height of the window and, in a low window from
+  // 1280 px, gives it back down to its own minimum (BEHAVIOR-SPEC 55, 59.9).
+  flex: 1 1 auto;
   max-block-size: 60vh;
   overflow-y: auto;
   resize: none;
+
+  // 141 px below 1280 (Field / textarea), 120 px from 1280.
+  @include from(desktop) {
+    min-block-size: 7.5rem;
+  }
 }
 
 // ── Expiry (Segmented / expiry and Generator / custom expiry) ──
@@ -143,8 +182,17 @@
 }
 
 // ── Generator / option row ──────────────────────────────────
+// Hover on the row fills the whole section (the label does not cover the
+// section padding), mouse only, not while the switch is disabled.
 .option {
   gap: 0;
+  transition: background-color var(--motion-duration-hover) var(--motion-easing-standard);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:has(.optionRow:hover):not(:has(:disabled)) {
+      background: var(--theme-button-ghost-bg-hover);
+    }
+  }
 }
 
 .optionRow {
@@ -159,6 +207,8 @@
 }
 
 .optionText {
+  // Creating greys the row out in toggle (M-27), not at once.
+  transition: opacity var(--motion-duration-toggle) var(--motion-easing-standard);
   display: flex;
   flex-direction: column;
   min-inline-size: 0;
@@ -222,19 +272,6 @@
   }
 }
 
-.submitError {
-  align-self: stretch;
-  text-align: start;
-
-  &:empty {
-    display: none;
-  }
-
-  > p {
-    margin-block-start: 0;
-  }
-}
-
 .legal {
   @include typ('body-xs');
 
@@ -288,28 +325,7 @@
   color: var(--theme-text-secondary);
 }
 
-// Link field: Field / textarea State=Readonly; the 44 px copy button sits
-// 12 px from the top right corner, the text keeps 68 px clear of it.
-.linkField {
-  align-self: stretch;
-  background: var(--theme-bg-surface);
-  border: var(--stroke-1) solid var(--theme-border-subtle);
-  border-radius: var(--radius-sm);
-  min-block-size: 3.5rem;
-  padding: var(--space-4) 4.25rem var(--space-4) var(--space-4);
-  position: relative;
-  text-align: start;
-}
-
-.linkValue {
-  @include typ('body-base');
-
-  color: var(--theme-text-primary);
-  flex: 1;
-  min-inline-size: 0;
-  overflow-wrap: anywhere;
-}
-
+// Copy button in Field / link: 44 px, 12 px from the top right corner.
 .linkCopy.linkCopy {
   block-size: 2.75rem;
   inline-size: 2.75rem;
@@ -320,6 +336,48 @@
   svg {
     block-size: 1.5rem;
     inline-size: 1.5rem;
+  }
+}
+
+// Copy glyph and checkmark in one place: the checkmark comes in with opacity
+// and scale 0.6 to 1 in toggle, and goes back the same way (M-30).
+.copyIcons {
+  display: grid;
+
+  > svg {
+    grid-area: 1 / 1;
+    transition:
+      opacity var(--motion-duration-toggle) var(--motion-easing-standard),
+      scale var(--motion-duration-toggle) var(--motion-easing-standard);
+  }
+
+  > svg:last-child {
+    opacity: 0;
+    scale: 0.6;
+  }
+
+  &[data-copied] {
+    > svg:first-child {
+      opacity: 0;
+      scale: 0.6;
+    }
+
+    > svg:last-child {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+}
+
+// Copy failed: Field / message under the link field, left-aligned in the
+// centered Ready stack; the stack gap keeps it 24 px from the field.
+.copyFailed.copyFailed {
+  align-self: stretch;
+  margin-block-start: 0;
+  text-align: start;
+
+  &[data-closing] {
+    margin-block-start: calc(-1 * var(--space-6));
   }
 }
 
@@ -359,14 +417,15 @@
   @include focus-ring;
 }
 
-// Ready footer: 12 px between the CTA and "Create new link"; on a phone
-// the link is a 44 px touch target and the footer ends 4 px lower.
+// Ready footer: 12 px between the CTA and "Create new link"; with a touch
+// pointer the link is a 44 px target (BEHAVIOR-SPEC 59.9) and the footer
+// ends 4 px lower.
 .footerReady {
   gap: 0.75rem;
 
   // Doubled class: wins over the padding of WindowFooter.
   &.footerReady {
-    @include below(layout) {
+    @media (pointer: coarse) {
       padding-block-end: 0.25rem;
     }
   }
@@ -379,7 +438,7 @@
 
   @include focus-ring;
 
-  @include below(layout) {
+  @media (pointer: coarse) {
     min-block-size: 2.75rem;
   }
 }

@@ -7,7 +7,8 @@
 
 // Decor / arcs. Circles enter from the center (opacity 450 ms, scale 0.78 → 1
 // in 650 ms, 120 ms stagger). The light is a conic streak masked to the circle
-// line, rotated once along the side of the circle; no loop, no timer.
+// line on a 0 × 0 rotor at the circle center; only the rotor rotates, once
+// per run, never in a loop (background-arcs-light.html).
 
 @use '@/styles/variables' as *;
 
@@ -45,53 +46,38 @@
   transform-origin: 694px 0;
 }
 
-.light {
-  animation:
-    lightTravel var(--duration) var(--motion-easing-in-out) var(--delay) both,
-    lightFade var(--duration) linear var(--delay) both;
-  aspect-ratio: 1;
-  inline-size: var(--size);
+.rotor {
+  block-size: 0;
+  inline-size: 0;
   inset-block-start: 0;
-  inset-inline-start: 50%;
+  position: absolute;
+  transform: rotate(0deg);
+  will-change: transform;
+}
+
+// The streak: a small box whose gradient and mask center lies outside it, at
+// the circle center (index.jsx sets the box and the masks for the radius).
+.streak {
+  background: conic-gradient(
+    from 0deg at var(--cx) var(--cy),
+    transparent 0deg,
+    transparent calc(180deg - var(--arc)),
+    var(--theme-decor-arc-light) 179.2deg,
+    transparent 180deg
+  );
+  mask: var(--mask);
   opacity: 0;
   position: absolute;
-  translate: -50% -50%;
+  will-change: opacity;
 }
 
-.core,
-.halo {
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg calc(360deg - var(--streak)),
-    var(--theme-decor-arc-light) 360deg
-  );
-  border-radius: 50%;
+// Glow: the same arc in a ±7 px band with soft edges, quieter. No blur.
+.glow {
+  background: inherit;
   inset: 0;
-  position: absolute;
-}
-
-// Core: 1.5 px centered on the circle line.
-.core {
-  mask: radial-gradient(
-    closest-side,
-    transparent calc(100% - 0.75px),
-    #000 calc(100% - 0.75px),
-    #000 calc(100% + 0.75px),
-    transparent calc(100% + 0.75px)
-  );
-}
-
-// Halo: 6 px, blurred 3 px, 0.35 of the core.
-.halo {
-  filter: blur(3px);
-  mask: radial-gradient(
-    closest-side,
-    transparent calc(100% - 3px),
-    #000 calc(100% - 3px),
-    #000 calc(100% + 3px),
-    transparent calc(100% + 3px)
-  );
+  mask: var(--glow-mask);
   opacity: 0.35;
+  position: absolute;
 }
 
 @keyframes arcFade {
@@ -106,37 +92,14 @@
   }
 }
 
-@keyframes lightTravel {
-  from {
-    rotate: var(--from);
-  }
-
-  to {
-    rotate: var(--to);
-  }
-}
-
-@keyframes lightFade {
-  0% {
-    opacity: 0;
-  }
-
-  22%,
-  68% {
-    opacity: 0.8;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .arc {
     animation: none;
   }
 
-  .light {
+  // Also when the setting changes during the visit; the script does not
+  // start a run either (IMPLEMENTATION-PATTERNS 9.1).
+  .rotor {
     display: none;
   }
 }

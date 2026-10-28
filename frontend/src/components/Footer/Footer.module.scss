@@ -6,7 +6,8 @@
 // See the LICENSE file for details.
 
 // Section / 07 Footer: brand on 4 columns, links on 8 behind the 4|8 line
-// (Desktop from 768 px); stacked on mobile without the vertical line.
+// (Desktop from 768 px, on the reading pages only); stacked on mobile without
+// the vertical line.
 
 @use '@/styles/variables' as *;
 
@@ -75,6 +76,11 @@
 
     .inner > & {
       grid-column: 5 / span 8;
+    }
+
+    // Focus views: no 4|8 line (the reading pages keep it).
+    .focusView & {
+      border-inline-start: 0;
     }
   }
 }

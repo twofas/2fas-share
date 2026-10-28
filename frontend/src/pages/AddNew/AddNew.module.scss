@@ -6,7 +6,8 @@
 // See the LICENSE file for details.
 
 // Full generator view: heading and lead centered above the window on the
-// page axis, the benefits (below 1024 px) and "More about the tool" under it.
+// page axis, the benefits (below 768 px) and "More about the tool" under it.
+// From 768 px the view has the layout of the 1024 frames (BEHAVIOR-SPEC 59.6).
 
 @use '@/styles/variables' as *;
 
@@ -37,19 +38,19 @@
 
   // Layout=Mobile: section-copy has 24/16 px padding on both sides and the
   // window follows 8 px lower.
-  @include below(layout) {
+  @include below(tablet) {
     margin-block-end: var(--space-2);
     padding-block: var(--space-6);
   }
 }
 
-// Display/H1 in Layout=Mobile, Heading/H3 from 1024 px.
+// Display/H1 in Layout=Mobile, Heading/H3 from 768 px.
 .title {
   @include typ('display-h1');
 
   color: var(--theme-text-primary);
 
-  @include from(layout) {
+  @include from(tablet) {
     @include typ('heading-h3');
   }
 }
@@ -62,7 +63,7 @@
   max-inline-size: 36rem;
   text-wrap: balance;
 
-  @include from(layout) {
+  @include from(tablet) {
     @include typ('body-lg');
   }
 }
@@ -75,19 +76,19 @@
   margin-block-start: var(--space-12);
 
   // Layout=Mobile: 8 px gap plus 40 px padding of copy-column.
-  @include below(layout) {
+  @include below(tablet) {
     margin-block-start: calc(var(--space-32) + var(--space-2));
   }
 }
 
 .benefits {
-  @include from(layout) {
+  @include from(tablet) {
     display: none;
   }
 }
 
 // "More about the tool": Button / secondary Big (48 px, no chevron) in
-// Layout=Mobile, Small (32 px) with the 16 px chevron from 1024 px.
+// Layout=Mobile, Small (32 px) with the 16 px chevron from 768 px.
 .more.more {
   svg {
     block-size: 1rem;
@@ -96,11 +97,11 @@
   }
 
   // Small: 32 px high, the 24 px label fills it.
-  @include from(layout) {
+  @include from(tablet) {
     padding-block: 0;
   }
 
-  @include below(layout) {
+  @include below(tablet) {
     min-block-size: 3rem;
     padding-inline: var(--space-6);
 
