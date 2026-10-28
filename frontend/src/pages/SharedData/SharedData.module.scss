@@ -7,8 +7,7 @@
 
 // Section / 10 Recipient: a focus page. The heading, the window and the
 // trust note stand on the page axis (the axis of the arcs) in a
-// size/column/narrow column; on a desktop the QR card sits in the right
-// margin next to the window, so it never moves the axis.
+// size/column/narrow column (342, 624, 648, 784 px).
 
 @use '@/styles/variables' as *;
 
@@ -22,9 +21,8 @@
   display: grid;
   grid-template-columns: minmax(0, var(--size-column-narrow));
   justify-content: center;
-  // Top: below 1024 the room under the bar (space/page-top, 80 at 390),
-  // from 1024 space/32 (72 at 1024, 128 at 1440), plus the column's own
-  // space/10 above the heading.
+  // Top below 768: the room under the bar (space/page-top, 80 at 390) plus
+  // the column's own space/10 above the heading.
   padding:
     calc(var(--space-page-top) + var(--space-10))
     var(--space-page-margin)
@@ -38,17 +36,11 @@
     min-inline-size: 0;
   }
 
-  @include from(layout) {
-    padding-block-start: calc(var(--space-32) + var(--space-10));
-  }
-
-  @include from(desktop) {
-    column-gap: var(--space-10);
-    grid-template-columns: 1fr minmax(0, var(--size-column-narrow)) 1fr;
-
-    > * {
-      grid-column: 2;
-    }
+  // From 768 (BEHAVIOR-SPEC 59.3, 55): the bottom of the pinned bar plus a
+  // space that follows the window height; the column has no top padding of
+  // its own (space/page/top-focus in Figma is the value at a typical height).
+  @include from(tablet) {
+    padding-block-start: calc(var(--nav-bottom) + clamp(1.5rem, 6svh, 4rem));
   }
 }
 
@@ -108,21 +100,4 @@
 .column :global(#twofas-pass-extension-container) > * {
   grid-column: 1;
   justify-self: center;
-
-  @include from(desktop) {
-    grid-column: 2;
-  }
-}
-
-// QR card: under the trust note below 1280 px, in the right margin next to
-// the window from 1280 px (grid row 2 = the window).
-.column > .qr {
-  justify-self: center;
-
-  @include from(desktop) {
-    align-self: start;
-    grid-column: 3;
-    grid-row: 2;
-    justify-self: start;
-  }
 }

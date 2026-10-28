@@ -92,9 +92,40 @@ input {
   }
 }
 
+// Position of the pinned bar (Section / 08), shared by the bar, the anchor
+// offset and the space above the focus views and the hero (BEHAVIOR-SPEC 55,
+// 59.3). The capsule is 56 px high (72 px at 2560); below 1024 the script
+// measures the row (--navbar-row), so enlarged text moves the offsets too.
+// Its top edge is 8 px from the window below 1280 (plus the safe area below
+// 1024), 16 px from 1280 and 32 px from 1920.
+:root {
+  --nav-top: calc(env(safe-area-inset-top) + 0.5rem);
+  --nav-bar-height: var(--navbar-row, 3.5rem);
+  --nav-bottom: calc(var(--nav-top) + var(--nav-bar-height));
+
+  @include from(layout) {
+    --nav-top: 0.5rem;
+    --nav-bar-height: 3.5rem;
+  }
+
+  @include from(desktop) {
+    --nav-top: 1rem;
+  }
+
+  @include from(wide) {
+    --nav-top: 2rem;
+  }
+
+  @include from(ultrawide) {
+    --nav-bar-height: 4.5rem;
+  }
+}
+
 html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   background: var(--theme-bg-canvas);
   color: var(--theme-text-primary);
   font-family: var(--type-family-sans);
@@ -105,24 +136,11 @@ html {
   text-rendering: optimizeLegibility;
 
   // The pinned bar must not cover the anchor target or the focused element:
-  // bar offset + bar height + 8 px (Figma: Link / nav, Navigation bar notes).
-  scroll-padding-top: 4.5rem;
-
-  @include from(desktop) {
-    scroll-padding-top: 5rem;
-  }
-
-  @include from(wide) {
-    scroll-padding-top: 6rem;
-  }
-
-  @include from(ultrawide) {
-    scroll-padding-top: 7rem;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    scroll-behavior: smooth;
-  }
+  // the bottom of the bar plus space/6 (16, 20, 24, 28 and 36 px at 390,
+  // 1024, 1440, 1920 and 2560; ACCESSIBILITY 6, MOBILE-MENU). Anchors scroll
+  // in JavaScript (utils/scrollToSection.js, MOTION M-24), so there is no
+  // scroll-behavior: smooth here.
+  scroll-padding-top: calc(var(--nav-bottom) + var(--space-6));
 
   &.system-font {
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
@@ -198,6 +216,22 @@ main {
     animation-delay: 0ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    transition-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  // Pseudo-elements the universal selector does not reach, each in its own
+  // rule: an unknown one would invalidate a whole selector list.
+  ::backdrop {
+    transition-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  ::details-content {
     transition-delay: 0ms !important;
     transition-duration: 0.01ms !important;
   }

@@ -11,3 +11,8 @@
 .link-expiry {
   inline-size: 100%;
 }
+
+// The counter changes every second: tabular figures keep its width steady.
+.count {
+  font-variant-numeric: tabular-nums;
+}

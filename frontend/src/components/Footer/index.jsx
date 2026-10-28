@@ -6,11 +6,13 @@
 // See the LICENSE file for details.
 
 import PrefetchLink from '@/components/PrefetchLink';
+import { useHashLocation } from 'wouter-preact/use-hash-location';
 import S from './Footer.module.scss';
 import lnk from '@/styles/ds/link.module.scss';
 import { t } from '@/i18n';
 import Logo from '@/assets/logo-share.svg?react';
 import GithubIcon from '@/assets/icons/github-fill.svg?react';
+import { isRecipientLayout } from '@/utils/validateShareParams';
 
 const LEGAL_LINKS = [
   { href: '/privacy-policy', label: 'footer.privacyPolicy' },
@@ -20,12 +22,17 @@ const LEGAL_LINKS = [
 
 /**
  * Application footer (Section / 07): brand column with the legal note and a
- * column of legal links plus the source code link, on the 4|8 grid.
+ * column of legal links plus the source code link, on the 4|8 grid. The focus
+ * views (the full generator and the recipient page) have no 4|8 line, so the
+ * footer drops its vertical line there (BEHAVIOR-SPEC 51.1).
  * @returns {import('preact').JSX.Element} The footer component.
  */
 export default function Footer () {
+  const [location] = useHashLocation();
+  const focusView = location === '/add' || isRecipientLayout(location);
+
   return (
-    <footer className={S.footer}>
+    <footer className={`${S.footer} ${focusView ? S.focusView : ''}`}>
       <div className={S.inner}>
         <div className={S.brand}>
           <Logo className={S.logo} role='img' aria-label={t('header.logoAlt')} />

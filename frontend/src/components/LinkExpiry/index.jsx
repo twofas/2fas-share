@@ -73,7 +73,7 @@ export default function LinkExpiry ({ validUntil, className }) {
     <div className={`${S.linkExpiry}${className ? ` ${className}` : ''}`}>
       <InfoRow
         icon={TimeIcon}
-        title={remainingTitle(remaining)}
+        title={<span className={S.count}>{remainingTitle(remaining)}</span>}
         body={iso && (
           <time dateTime={iso}>
             {t('recipient.expiresAt', {

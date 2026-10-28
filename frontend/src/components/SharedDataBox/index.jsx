@@ -12,6 +12,7 @@ import { deriveKeyFromPassword, decryptData } from '@/crypto/encrypt';
 import { prefersReducedMotion } from '@/utils/reducedMotion';
 import { openInApp } from '@/utils/openInApp';
 import { isMobileOrTablet } from '@/utils/device';
+import { readMotionTokens, viewChangeTimings } from './viewMotion';
 import SharedDataBoxFirst from './Views/first';
 import SharedDataBoxPassword from './Views/password';
 import SharedDataBoxData from './Views/data';
@@ -105,10 +106,12 @@ export default function SharedDataBox (props) {
   };
 
   /**
-   * Changes the view with a 3-step animation:
-   * 1. Fade out current view
-   * 2. Animate height to fit new view
-   * 3. Fade in new view
+   * Changes the view in the window (durations and curves from the motion
+   * tokens, viewMotion.js):
+   * 1. the current content fades out;
+   * 2. the window takes the new height while the new content fades in:
+   *    to Revealed in `layout` with the content in `reveal` `out` (M-33),
+   *    any other change in `toggle` with an 8 px rise (M-28).
    * @param {string} nextView - The view to switch to.
    */
   const changeView = useCallback(async (nextView) => {
@@ -127,10 +130,11 @@ export default function SharedDataBox (props) {
     animatingRef.current = true;
 
     try {
-      // Step 1: Fade out current view
+      const timing = viewChangeTimings(readMotionTokens(), nextView === SHARED_VIEWS.DATA);
+
       await content.animate(
         [{ opacity: 1 }, { opacity: 0 }],
-        { duration: 150, easing: 'ease-in' }
+        { duration: timing.outMs, easing: timing.outEasing }
       ).finished;
 
       content.style.opacity = '0';
@@ -141,24 +145,27 @@ export default function SharedDataBox (props) {
       // Wait for render
       await new Promise((r) => requestAnimationFrame(r));
 
-      // Step 2: Animate height
       const toHeight = el.offsetHeight;
+      const animations = [];
+      content.style.opacity = '';
 
       if (fromHeight !== toHeight) {
         el.style.overflow = 'clip';
-        await el.animate(
+        animations.push(el.animate(
           [{ height: `${fromHeight}px` }, { height: `${toHeight}px` }],
-          { duration: 400, easing: 'cubic-bezier(0.4, 0, 0.6, 1)' }
-        ).finished;
-        el.style.overflow = '';
+          { duration: timing.heightMs, easing: timing.heightEasing }
+        ));
       }
 
-      // Step 3: Fade in new view
-      content.style.opacity = '';
-      await content.animate(
-        [{ opacity: 0 }, { opacity: 1 }],
-        { duration: 150, easing: 'ease-out' }
-      ).finished;
+      animations.push(content.animate(
+        timing.rise
+          ? [{ opacity: 0, translate: '0 0.5rem' }, { opacity: 1, translate: '0 0' }]
+          : [{ opacity: 0 }, { opacity: 1 }],
+        { duration: timing.inMs, easing: timing.inEasing }
+      ));
+
+      await Promise.all(animations.map((animation) => animation.finished));
+      el.style.overflow = '';
     } finally {
       animatingRef.current = false;
     }
@@ -264,6 +271,14 @@ export default function SharedDataBox (props) {
   }, [props.nonce, props.urlSecret, fetchSecret, changeView, showError]);
 
   const beforeFetch = !fetched && (view === SHARED_VIEWS.FIRST || view === SHARED_VIEWS.PASSWORD);
+  // The code for a phone: on a computer, the inverse of "Open in 2FAS Pass
+  // app", and only before the fetch (BEHAVIOR-SPEC 59.3).
+  const offerCode = beforeFetch && !isMobileOrTablet;
+
+  /**
+   * Typing in the password field clears the wrong-password message.
+   */
+  const clearDecryptError = useCallback(() => setDecryptError(''), []);
   const appLink = `${import.meta.env.VITE_UNIVERSAL_LINK_PROTOCOL || 'twofaspass'}://share/${props.id}/${props.type}/${props.nonce}/${props.urlSecret}`;
   const openInAppLabel = t('first.openInApp');
 
@@ -295,6 +310,8 @@ export default function SharedDataBox (props) {
             decryptAttempt={decryptAttempt}
             fetched={fetched}
             secretMeta={props.secretMeta}
+            offerCode={offerCode}
+            onClearError={clearDecryptError}
           />
         </div>
       </section>

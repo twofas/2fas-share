@@ -34,7 +34,7 @@ export default function EncryptionBand () {
   const headRef = useRef(null);
   const bodyRef = useRef(null);
   const headVisible = useInView(headRef);
-  const bodyVisible = useInView(bodyRef, 0.1);
+  const bodyVisible = useInView(bodyRef);
 
   return (
     <section id='security' className={S.band} aria-labelledby='security-title' tabIndex={-1}>

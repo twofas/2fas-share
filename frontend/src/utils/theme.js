@@ -72,6 +72,36 @@ export function setTheme (theme) {
   requestAnimationFrame(() => requestAnimationFrame(done));
 }
 
+let tabsSynced = false;
+
+/**
+ * Follow a theme picked in another tab of the page (the storage event fires
+ * only in the other tabs). The theme is set at once, without the View
+ * Transition of a click; a cleared storage returns to the system theme.
+ */
+function syncThemeAcrossTabs () {
+  if (tabsSynced) {
+    return;
+  }
+
+  tabsSynced = true;
+  window.addEventListener('storage', e => {
+    if (e.key !== THEME_STORAGE_KEY && e.key !== null) {
+      return;
+    }
+
+    const root = document.documentElement;
+
+    if (e.newValue === 'light' || e.newValue === 'dark') {
+      root.dataset.theme = e.newValue;
+    } else {
+      delete root.dataset.theme;
+    }
+
+    window.dispatchEvent(new CustomEvent('themechange', { detail: getActiveTheme() }));
+  });
+}
+
 /**
  * Active theme as state, following the system until the user picks one.
  * @returns {['light'|'dark', () => void]} Theme and a toggle function.
@@ -86,6 +116,7 @@ export function useTheme () {
     };
     const query = darkQuery();
 
+    syncThemeAcrossTabs();
     query.addEventListener('change', sync);
     window.addEventListener('themechange', sync);
 

@@ -5,7 +5,6 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import { useState, useEffect } from 'preact/hooks';
 import ArcsDecor from '@/components/ArcsDecor';
 import AddNewBox from '@/components/AddNewBox';
 import Benefits from './Benefits';
@@ -14,21 +13,11 @@ import S from './WelcomeSection.module.scss';
 
 /**
  * Section / 01 Hero, generator: the headline column and the generator window
- * over the background circles. The window sits above the text below 1280 px
- * (Mobile and Tablet layouts) and beside it from 1280 px.
+ * over the background circles. The window sits above the text below 768 px
+ * (Mobile layout) and beside it from 768 px.
  * @returns {import('preact').JSX.Element} The welcome section component.
  */
 export default function WelcomeSection () {
-  const [resetKey, setResetKey] = useState(0);
-
-  useEffect(() => {
-    /** Remount the generator in the Empty state ("Create new link"). */
-    const handler = () => setResetKey(k => k + 1);
-    window.addEventListener('resetAddForm', handler);
-
-    return () => window.removeEventListener('resetAddForm', handler);
-  }, []);
-
   return (
     <section id='hero' className={S.hero} aria-labelledby='hero-title'>
       <ArcsDecor />
@@ -45,7 +34,7 @@ export default function WelcomeSection () {
         </div>
 
         <div className={S.place}>
-          <AddNewBox key={resetKey} variant='hero' focusOnMount={resetKey > 0} />
+          <AddNewBox variant='hero' />
         </div>
       </div>
     </section>

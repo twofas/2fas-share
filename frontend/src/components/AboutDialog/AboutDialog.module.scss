@@ -6,8 +6,10 @@
 // See the LICENSE file for details.
 
 // Dialog / about: a double frame like the generator window, but the ring sits
-// on bg/surface (glass turns gray over the scrim). Opening: scrim by opacity
-// in 320 ms, window by opacity and scale 0.98 → 1 in 400 ms; closing 320 ms.
+// on bg/surface (glass turns gray over the scrim). MOTION M-36: opening, the
+// scrim by opacity in 320 ms (toggle) and the window by opacity and scale
+// 0.98 → 1 in 400 ms (expand), both standard; closing, both in 320 ms
+// (toggle) on the in curve.
 
 @use '@/styles/variables' as *;
 
@@ -28,15 +30,16 @@
   padding: calc(var(--space-4) - var(--stroke-1));
   scale: 0.98;
   transition:
-    opacity var(--motion-duration-hover) var(--motion-easing-standard),
-    scale var(--motion-duration-hover) var(--motion-easing-standard),
-    overlay var(--motion-duration-hover) allow-discrete,
-    display var(--motion-duration-hover) allow-discrete;
+    opacity var(--motion-duration-toggle) var(--motion-easing-in),
+    scale var(--motion-duration-toggle) var(--motion-easing-in),
+    overlay var(--motion-duration-toggle) allow-discrete,
+    display var(--motion-duration-toggle) allow-discrete;
 
   &[open] {
     opacity: 1;
     scale: 1;
     transition-duration: var(--motion-duration-expand);
+    transition-timing-function: var(--motion-easing-standard);
 
     @starting-style {
       opacity: 0;
@@ -50,13 +53,14 @@
     background: var(--theme-overlay-scrim);
     opacity: 0;
     transition:
-      opacity var(--motion-duration-hover) var(--motion-easing-standard),
-      overlay var(--motion-duration-hover) allow-discrete,
-      display var(--motion-duration-hover) allow-discrete;
+      opacity var(--motion-duration-toggle) var(--motion-easing-in),
+      overlay var(--motion-duration-toggle) allow-discrete,
+      display var(--motion-duration-toggle) allow-discrete;
   }
 
   &[open]::backdrop {
     opacity: 1;
+    transition-timing-function: var(--motion-easing-standard);
 
     @starting-style {
       opacity: 0;
@@ -67,15 +71,16 @@
 .card {
   background: var(--theme-bg-raised);
   border: var(--stroke-1) solid var(--theme-border-subtle);
-  border-radius: var(--radius-xl);
+  // Concentric with the dialog (radius/2xl minus its space/4 padding) at
+  // every width; the warning inside takes radius/nested/dialog-inner
+  // (IMPLEMENTATION-PATTERNS 12).
+  --alert-radius: var(--radius-nested-dialog-inner);
+
+  border-radius: var(--radius-nested-dialog);
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
   padding: var(--space-6);
-
-  @include from(tablet) {
-    border-radius: var(--radius-lg);
-  }
 }
 
 .header {

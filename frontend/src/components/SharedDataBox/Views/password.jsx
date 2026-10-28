@@ -7,16 +7,16 @@
 
 import { useState, useRef, useEffect } from 'preact/hooks';
 import { WindowCard, WindowSection, WindowFooter, FieldHeader } from '@/components/Window';
-import { Medallion, InfoRow, AlertCard } from '../Parts';
+import { InfoRow, AlertCard } from '../Parts';
 import ConsentNote from './consent';
+import FieldMessage from '@/components/AddNewBox/Views/FieldMessage';
+import { useCodeSwap, ShowCodeButton, CodeSwap } from './phoneCode';
 import EyeIcon from '@/assets/icons/eye-line.svg?react';
 import EyeOffIcon from '@/assets/icons/eye-off-line.svg?react';
-import ExclamationIcon from '@/assets/icons/exclamation-mark.svg?react';
 import ShieldIcon from '@/assets/icons/shield-keyhole-line.svg?react';
 import AlertIcon from '@/assets/icons/alert-line.svg?react';
 import btn from '@/styles/ds/button.module.scss';
 import field from '@/styles/ds/field.module.scss';
-import fb from '@/styles/ds/feedback.module.scss';
 import S from '../SharedDataBox.module.scss';
 import { runArcsLight } from '@/components/ArcsDecor';
 import { t } from '@/i18n';
@@ -36,21 +36,63 @@ const ALERT_ID = 'shared-password-alert';
  * @param {boolean} props.loading - Whether the request or decryption is in progress.
  * @param {boolean} [props.fetched] - Whether the data was already fetched (the consent was given).
  * @param {Object} [props.secretMeta] - Secret metadata; a one-time link shows the warning after the fetch.
+ * @param {function} [props.onClearError] - Clears the wrong-password error of the last attempt (typing).
+ * @param {boolean} [props.offerCode] - Whether the code for a phone is offered (a computer, before the fetch).
  * @returns {import('preact').JSX.Element} The password entry view.
  */
 export default function SharedDataBoxPassword (props) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [attempt, setAttempt] = useState(0);
+  // Errors in a row since the field was last edited: from the second one the
+  // icon pulses instead of a new entrance (MOTION M-34).
+  const [errorCount, setErrorCount] = useState(0);
   const inputRef = useRef(null);
+  const swap = useCodeSwap(Boolean(props.offerCode));
 
   // After a failed attempt, focus goes back to the field; the password stays.
   useEffect(() => {
     if (props.decryptAttempt) {
+      setErrorCount((n) => n + 1);
       inputRef.current?.focus();
     }
   }, [props.decryptAttempt]);
+
+  /**
+   * A local check failed: the message under the field, focus in the field
+   * (the code panel gives the field back first, so the message shows).
+   * @param {string} message - Error text.
+   */
+  const fail = (message) => {
+    swap.hide();
+    setError(message);
+    setErrorCount((n) => n + 1);
+    requestAnimationFrame(() => inputRef.current?.focus());
+  };
+
+  /**
+   * Typing clears the error (MOTION M-34, M-06 reversed).
+   * @param {InputEvent} e - Input event.
+   */
+  const handleInput = (e) => {
+    setPassword(e.target.value);
+
+    if (error || props.decryptError) {
+      setError('');
+      setErrorCount(0);
+      props.onClearError?.();
+    }
+  };
+
+  /**
+   * The light run of the CTA, for a mouse only (MOTION M-19).
+   * @param {PointerEvent} e - Pointer event.
+   */
+  const handlePointerEnter = (e) => {
+    if (e.pointerType === 'mouse') {
+      runArcsLight('cta');
+    }
+  };
 
   /**
    * Validate the password and submit for decryption.
@@ -60,17 +102,13 @@ export default function SharedDataBoxPassword (props) {
       return;
     }
 
-    setAttempt((n) => n + 1);
-
     if (!password.trim()) {
-      setError(t('password.errorRequired'));
-      inputRef.current?.focus();
+      fail(t('password.errorRequired'));
       return;
     }
 
     if (password.trim().length < 8) {
-      setError(t('password.errorMinLength'));
-      inputRef.current?.focus();
+      fail(t('password.errorMinLength'));
       return;
     }
 
@@ -92,65 +130,59 @@ export default function SharedDataBoxPassword (props) {
         handleContinue();
       }}
     >
-      <WindowCard>
+      <WindowCard className={S.card}>
         <WindowSection className={`${S.dialogRow} ${S.header}`}>
           <FieldHeader
             htmlFor={INPUT_ID}
             title={t('recipient.passwordLabel')}
             caption={t('recipient.passwordCaption')}
             star
-          />
+          >
+            {props.offerCode && <ShowCodeButton shown={swap.shown} onClick={swap.toggle} />}
+          </FieldHeader>
 
-          <div>
-            <div className={field.control}>
-              <input
-                ref={inputRef}
-                id={INPUT_ID}
-                type={showPassword ? 'text' : 'password'}
-                className={field.input}
-                placeholder={t('password.placeholder')}
-                aria-invalid={displayError ? 'true' : undefined}
-                aria-describedby={describedBy}
-                autoComplete='current-password'
-                value={password}
-                onInput={(e) => setPassword(e.target.value)}
-                readOnly={props.loading}
-              />
-              <button
-                type='button'
-                className={field.adornment}
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={t('recipient.showPassword')}
-                aria-pressed={showPassword ? 'true' : 'false'}
-              >
-                {showPassword ? <EyeOffIcon aria-hidden='true' /> : <EyeIcon aria-hidden='true' />}
-              </button>
+          <CodeSwap swap={swap} offered={Boolean(props.offerCode)}>
+            <div className={field.arc}>
+              <div className={field.control}>
+                <input
+                  ref={inputRef}
+                  id={INPUT_ID}
+                  type={showPassword ? 'text' : 'password'}
+                  className={field.input}
+                  placeholder={t('password.placeholder')}
+                  aria-invalid={displayError ? 'true' : undefined}
+                  aria-describedby={describedBy}
+                  autoComplete='current-password'
+                  value={password}
+                  onInput={handleInput}
+                  readOnly={props.loading}
+                />
+                <button
+                  type='button'
+                  className={field.adornment}
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={t('recipient.showPassword')}
+                  aria-pressed={showPassword ? 'true' : 'false'}
+                >
+                  {showPassword ? <EyeOffIcon aria-hidden='true' /> : <EyeIcon aria-hidden='true' />}
+                </button>
+              </div>
             </div>
 
-            {displayError ? (
-              <div id={MESSAGE_ID} className={field.message}>
-                <div className={field.messageRow}>
-                  <Medallion
-                    key={attempt}
-                    icon={ExclamationIcon}
-                    tone='error'
-                    variant='solid'
-                    size={24}
-                    className={attempt > 1 ? fb.bump : undefined}
-                  />
-                  <p className={`${field.messageText} ${S.errorText}`}>
-                    <span className={field.messageTitle}>
-                      <span className='visually-hidden'>{t('recipient.errorPrefix')} </span>
-                      {wrongPassword ? t('recipient.wrongPasswordTitle') : displayError}
-                    </span>
-                    {wrongPassword && <span className={field.messageBody}>{t('recipient.wrongPasswordBody')}</span>}
-                  </p>
-                </div>
-              </div>
-            ) : (
+            {/* Typing closes the message in reverse (M-06); the hint comes back. */}
+            <FieldMessage
+              id={MESSAGE_ID}
+              open={Boolean(displayError)}
+              attempt={Math.max(errorCount, 1)}
+              body={wrongPassword ? t('recipient.wrongPasswordBody') : undefined}
+            >
+              {wrongPassword ? t('recipient.wrongPasswordTitle') : displayError}
+            </FieldMessage>
+
+            {!displayError && (
               <p id={MESSAGE_ID} className={`${field.message} ${field.hint}`}>{t('recipient.passwordHint')}</p>
             )}
-          </div>
+          </CodeSwap>
         </WindowSection>
 
         <WindowSection className={S.rows}>
@@ -176,7 +208,7 @@ export default function SharedDataBoxPassword (props) {
         <button
           type='submit'
           className={`${btn.cta} ${btn.ctaBig}`}
-          onMouseEnter={() => runArcsLight({ throttle: true })}
+          onPointerEnter={handlePointerEnter}
           aria-busy={props.loading ? 'true' : undefined}
           aria-disabled={props.loading ? 'true' : undefined}
         >

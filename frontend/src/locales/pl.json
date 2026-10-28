@@ -58,7 +58,7 @@
     "copied": "Skopiowano!",
     "copyToClipboard": "Kopiuj do schowka",
     "toggleVisibility": "Pokaż wartość",
-    "togglePasswordVisibility": "Pokaż wartość",
+    "togglePasswordVisibility": "Pokaż hasło",
     "yes": "Tak",
     "errorPrefix": "Błąd:"
   },
@@ -237,7 +237,7 @@
     "consentOpenNote": "Klikając „Otwórz notatkę”, akceptujesz nasze Warunki korzystania oraz Politykę prywatności.",
     "passwordLabel": "Hasło od nadawcy",
     "passwordCaption": "Nadawca przekazuje je osobno, na przykład SMS-em albo telefonicznie.",
-    "showPassword": "Pokaż wartość",
+    "showPassword": "Pokaż hasło",
     "wrongPasswordTitle": "Nieprawidłowe hasło.",
     "wrongPasswordBody": "Sprawdź wielkość liter albo poproś nadawcę, aby przekazał je jeszcze raz.",
     "keepTabTitle": "Nie zamykaj ani nie odświeżaj tej karty.",
@@ -253,6 +253,15 @@
     "expiresAt": "{day} o {time}.",
     "expired": "Link już zniknął.",
     "infoPrefix": "Informacja:",
+    "showCode": "Pokaż kod",
+    "hideCode": "Ukryj kod",
+    "phoneCodeTitle": "Skieruj aparat telefonu na kod.",
+    "phoneCodeBody": "Każdy, kto zobaczy ten kod, może otworzyć notatkę, więc nie pokazuj go na udostępnianym ekranie. Notatka jednorazowa otworzy się na urządzeniu, które pierwsze użyje linku.",
+    "phoneCodeAlt": "Kod QR z linkiem do tej notatki",
+    "copyFailedTitle": "Nie udało się skopiować treści.",
+    "copyFailedBody": "Skopiuj ją samodzielnie: naciśnij Ctrl+C (⌘C na Macu) albo przytrzymaj palec, zaznacz cały tekst i wybierz Kopiuj.",
+    "copy": "Kopiuj",
+    "copyField": "Kopiuj: {field}",
     "headingType": {
       "login": "Dane logowania",
       "paymentCard": "Karta płatnicza",
@@ -399,13 +408,19 @@
     },
     "result": {
       "title": "Link gotowy.",
-      "oneTimeAccessTitle": "Jednorazowy dostęp"
+      "oneTimeAccessTitle": "Jednorazowy dostęp",
+      "showLink": "Pokaż link",
+      "hideLink": "Ukryj link",
+      "linkHidden": "(reszta linku ukryta)",
+      "copyFailedTitle": "Nie udało się skopiować linku.",
+      "copyFailedBody": "Skopiuj go samodzielnie: naciśnij Ctrl+C (⌘C na Macu) albo przytrzymaj palec, zaznacz cały link i wybierz Kopiuj."
     },
     "welcome": {
       "subtitle": "2FAS Share tworzy link, który znika po użyciu. Bez konta, bez instalacji. Ty decydujesz, kiedy i dla kogo."
     },
     "howToUse": {
       "pill": "Jak to działa?",
+      "stepsTitle": "Cztery kroki",
       "step1Title": "Wpisz treść",
       "step1Desc": "Notatka, hasło lub krótki tekst – co tylko chcesz.",
       "step2Title": "Ustaw zasady",

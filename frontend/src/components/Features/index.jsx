@@ -71,7 +71,7 @@ export default function Features () {
   const headRef = useRef(null);
   const bodyRef = useRef(null);
   const headVisible = useInView(headRef);
-  const bodyVisible = useInView(bodyRef, 0.1);
+  const bodyVisible = useInView(bodyRef);
 
   return (
     <section className={S.features} aria-labelledby='features-title'>

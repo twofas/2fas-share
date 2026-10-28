@@ -5,12 +5,84 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
+import { useRef, useEffect, useId } from 'preact/hooks';
 import FieldRow from './FieldRow';
-import { CopyButton } from '../../Parts';
+import { CopyButton, CopyFailedMessage } from '../../Parts';
+import useCopy from '../../Parts/useCopy';
+import { selectContent } from '../../Parts/selectContent';
 import link from '@/styles/ds/link.module.scss';
 import S from './ContentTypes.module.scss';
 import normalizeUrl from '@/utils/normalizeUrl';
 import { t } from '@/i18n';
+
+/**
+ * One address of a login: a link (new tab) or plain text, and its copy
+ * button; when the clipboard refuses, the address is focused and selected
+ * and the Copy failed message stands under it.
+ * @param {Object} props - Component props.
+ * @param {string} props.text - The address as stored.
+ * @returns {import('preact').JSX.Element} The list item.
+ */
+function UriItem ({ text }) {
+  const ref = useRef(null);
+  const textRef = useRef(null);
+  const messageId = useId();
+  const [copied, copy, failures] = useCopy(text, t('common.copied'));
+  let href = null;
+
+  try {
+    href = normalizeUrl(text);
+  } catch {
+    href = null;
+  }
+
+  useEffect(() => {
+    if (failures) {
+      selectContent(ref.current, textRef.current);
+    }
+  }, [failures]);
+
+  return (
+    <li>
+      <div className={S.box}>
+        {href ? (
+          <a
+            ref={ref}
+            href={href}
+            title={text}
+            target='_blank'
+            rel='noopener noreferrer'
+            className={`${link.link} ${link.linkAccent} ${S.rowValue} ${S.uriLink}`}
+            aria-describedby={failures ? messageId : undefined}
+          >
+            <span ref={textRef}>{text}</span>
+            <span className='visually-hidden'> {t('nav.newTab')}</span>
+          </a>
+        ) : (
+          <span
+            ref={ref}
+            className={`${S.rowValue} ${S.uriLink}`}
+            title={text}
+            tabIndex={failures ? -1 : undefined}
+            aria-describedby={failures ? messageId : undefined}
+          >
+            <span ref={textRef}>{text}</span>
+          </span>
+        )}
+        <div className={S.rowActions}>
+          <CopyButton
+            value={text}
+            kind='adornment'
+            label={t('recipient.copyField', { field: text })}
+            shared={{ copied, copy }}
+          />
+        </div>
+      </div>
+
+      <CopyFailedMessage id={messageId} open={failures > 0} />
+    </li>
+  );
+}
 
 /**
  * Login content type view - displays login credentials as field rows.
@@ -41,38 +113,9 @@ export default function ContentLogin ({ content }) {
         <div className={S.row}>
           <span className={S.rowLabel}>{t('content.urls')}</span>
           <ul className={S.uriList}>
-            {uris.map((entry, index) => {
-              let href = null;
-
-              try {
-                href = normalizeUrl(entry.text);
-              } catch {
-                href = null;
-              }
-
-              return (
-                <li key={`${entry.text}-${index}`} className={S.box}>
-                  {href ? (
-                    <a
-                      href={href}
-                      title={entry.text}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className={`${link.link} ${link.linkAccent} ${S.rowValue} ${S.uriLink}`}
-                    >
-                      {entry.text}
-                    </a>
-                  ) : (
-                    <span className={`${S.rowValue} ${S.uriLink}`} title={entry.text}>
-                      {entry.text}
-                    </span>
-                  )}
-                  <div className={S.rowActions}>
-                    <CopyButton value={entry.text} kind='adornment' />
-                  </div>
-                </li>
-              );
-            })}
+            {uris.map((entry, index) => (
+              <UriItem key={`${entry.text}-${index}`} text={entry.text} />
+            ))}
           </ul>
         </div>
       )}

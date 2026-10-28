@@ -132,6 +132,9 @@
 .stages {
   display: grid;
   gap: var(--space-2);
+  // The four tiles stay equal in height: the tallest content decides, the
+  // token is only a floor (BEHAVIOR-SPEC 59.7).
+  grid-auto-rows: 1fr;
   list-style: none;
 
   @include from(tablet) {
@@ -139,18 +142,20 @@
   }
 }
 
-// Cards 01-04 from 0.90 s, 0.18 s apart: opacity and Y +16 in 0.45 s,
-// scale 0.85 → 1 on the spring.
+// Cards 01-04 from 0.90 s, 0.18 s apart: opacity and Y +18 in 0.45 s,
+// scale 0.85 → 1 on the spring (M-21).
 .stage {
-  @include enter(calc(0.9s + var(--i, 0) * 0.18s), $y: 1rem, $scale: 0.85);
+  @include enter(calc(0.9s + var(--i, 0) * 0.18s), $y: 1.125rem, $scale: 0.85);
 
   background: var(--theme-bg-canvas);
   border-block-end: var(--stroke-1) solid var(--theme-border-subtle);
-  border-radius: var(--radius-md);
+  // Concentric with the panel: radius/lg minus its space/2 padding.
+  border-radius: var(--radius-nested-panel);
   color: var(--theme-text-primary);
   display: flex;
   flex-direction: column;
   // The bottom stroke is drawn inside the card in Figma.
+  min-block-size: var(--size-encryption-step-min-height);
   padding: var(--space-4) var(--space-4) calc(var(--space-4) - var(--stroke-1));
 }
 
@@ -169,7 +174,8 @@
     linear-gradient(180deg, var(--theme-page-cta-border-start), var(--theme-page-cta-border-end)) border-box;
   block-size: 3.5rem;
   border: var(--stroke-1) solid transparent;
-  border-radius: var(--radius-base);
+  // Concentric with the card: radius/nested/panel minus its space/4 padding.
+  border-radius: var(--radius-nested-panel-icon);
   color: var(--theme-text-on-accent);
   display: inline-flex;
   flex-shrink: 0;

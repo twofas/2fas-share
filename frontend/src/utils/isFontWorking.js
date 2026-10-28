@@ -18,6 +18,9 @@ export function isFontWorking (family) {
   el.textContent = 'BESbswy';
   el.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;font-size:300px';
   document.body.appendChild(el);
+  // The global reduced-motion rule gives every element a 0.01 ms transition;
+  // with it the width below would be read before font-weight applies.
+  el.style.transitionProperty = 'none';
 
   el.style.fontFamily = 'monospace';
   el.style.fontWeight = '400';

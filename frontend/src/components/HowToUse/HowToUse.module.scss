@@ -91,24 +91,13 @@
   }
 }
 
-// Card: opacity 0.45 s, Y +32 → 0 in 0.65 s ease-out, 0.12 s stagger (--i).
+// Card: the block recipe (opacity and Y +32 → 0 in 0.65 s out), 0.12 s
+// stagger (--i). No hover reaction and no zoom (M-26, decision D4).
 .step {
   padding-block-end: var(--space-8);
   position: relative;
 
-  @include enter(calc(var(--i, 0) * var(--motion-duration-stagger)), $y: 2rem, $move: (entrance, out));
-
-  // Hover (fine pointer): the card and the thumbnail frame stay still; only
-  // the components inside the thumbnail window zoom in slightly (StepPreview
-  // reads --preview-inner-zoom). Off with reduced motion.
-  @media (prefers-reduced-motion: no-preference) {
-    @include hover {
-      .thumb {
-        --preview-inner-zoom: 1.06;
-        --preview-inner-lift: -0.25rem;
-      }
-    }
-  }
+  @include enter-block(calc(var(--i, 0) * var(--motion-duration-stagger)));
 }
 
 .stepBody {

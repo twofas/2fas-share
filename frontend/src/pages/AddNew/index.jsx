@@ -5,7 +5,7 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import { useState, useEffect } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import AddNewBox from '@/components/AddNewBox';
 import ArcsDecor from '@/components/ArcsDecor';
 import Benefits from '@/components/WelcomeSection/Benefits';
@@ -22,17 +22,9 @@ import { consumeGeneratorFocus } from '@/utils/generatorFocus';
  * @returns {import('preact').JSX.Element} The add new page.
  */
 export default function AddNew() {
-  const [resetKey, setResetKey] = useState(0);
   // Arrived through a "create" CTA: start with focus in the content field.
+  // "Create new link" is handled inside the generator window (M-28).
   const [focusFromCta] = useState(consumeGeneratorFocus);
-
-  useEffect(() => {
-    /** Remount the generator in the Empty state ("Create new link"). */
-    const handler = () => setResetKey(k => k + 1);
-    window.addEventListener('resetAddForm', handler);
-
-    return () => window.removeEventListener('resetAddForm', handler);
-  }, []);
 
   return (
     <main className={S.page}>
@@ -44,7 +36,7 @@ export default function AddNew() {
           <p className={S.lead}>{t('v2.addNew.subtitle')}</p>
         </header>
 
-        <AddNewBox key={resetKey} variant='full' focusOnMount={resetKey > 0 || focusFromCta} />
+        <AddNewBox variant='full' focusOnMount={focusFromCta} />
 
         <div className={S.after}>
           <Benefits className={S.benefits} centered />

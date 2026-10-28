@@ -98,12 +98,12 @@ export default function SharedDataBoxData (props) {
     ? 'recipient.oneTimeNote'
     : (CONTENT_TITLE_KEYS[contentType] || 'data.contentType.fallback');
   const copyText = noteText(contentType, content);
-  const [copied, copy] = useCopy(copyText, t('recipient.contentCopied'));
-  const noteCopy = copyText ? { value: copyText, copied, copy } : null;
+  const [copied, copy, failures] = useCopy(copyText, t('recipient.contentCopied'));
+  const noteCopy = copyText ? { value: copyText, copied, copy, failures } : null;
 
   return (
     <NoteCopyContext.Provider value={noteCopy}>
-      <WindowCard>
+      <WindowCard className={S.card}>
         {meta.singleUse && (
           <WindowSection className={S.alertRow}>
             <AlertCard
@@ -115,7 +115,7 @@ export default function SharedDataBoxData (props) {
           </WindowSection>
         )}
 
-        <WindowSection className={`${S.dialogRow} ${S.header} ${meta.singleUse ? S.afterAlert : ''}`}>
+        <WindowSection className={`${S.dialogRow} ${S.header} ${meta.singleUse ? `${S.afterAlert} ${S.once}` : ''}`}>
           <FieldHeader
             id={TITLE_ID}
             title={t(titleKey)}

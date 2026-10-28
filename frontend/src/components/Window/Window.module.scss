@@ -27,16 +27,14 @@
 
 .card {
   background: var(--theme-bg-raised);
-  border-radius: var(--radius-xl);
+  // Concentric with the ring: radius/2xl minus the space/4 padding at every
+  // width (IMPLEMENTATION-PATTERNS 12).
+  border-radius: var(--radius-nested-dialog);
   outline: var(--stroke-1) solid var(--theme-border-subtle);
   outline-offset: calc(-1 * var(--stroke-1));
   display: flex;
   flex-direction: column;
   overflow: hidden;
-
-  @include from(tablet) {
-    border-radius: var(--radius-lg);
-  }
 }
 
 .section {

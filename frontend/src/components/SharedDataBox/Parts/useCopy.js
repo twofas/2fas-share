@@ -7,18 +7,27 @@
 
 import { useState, useRef, useEffect, useContext } from 'preact/hooks';
 import { AnnounceContext } from './context';
+import { t } from '@/i18n';
 
 export const COPIED_MS = 2000;
+
+/** How long the Copy failed instruction stays in the status region. */
+const FAILED_ANNOUNCE_MS = 5000;
 
 /**
  * Clipboard copy with a "copied" flag that resets after 2 s; the message is
  * announced in the page role="status" region (no focus move, no toast).
+ * When the clipboard refuses (BEHAVIOR-SPEC 57) the label stays, there is no
+ * checkmark, the failure count goes up (the field selects its text and shows
+ * the instruction) and the instruction goes to the same status region; a
+ * later successful copy clears it.
  * @param {string} value - Text to copy.
  * @param {string} [message] - Text announced after a successful copy.
- * @returns {[boolean, function(): Promise<void>]} The copied flag and the copy handler.
+ * @returns {[boolean, function(): Promise<void>, number]} The copied flag, the copy handler and the number of failed copies since the last success.
  */
 export default function useCopy (value, message) {
   const [copied, setCopied] = useState(false);
+  const [failures, setFailures] = useState(0);
   const timerRef = useRef(null);
   const announce = useContext(AnnounceContext);
 
@@ -30,6 +39,7 @@ export default function useCopy (value, message) {
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(value);
+      setFailures(0);
       setCopied(true);
 
       if (message) {
@@ -39,9 +49,13 @@ export default function useCopy (value, message) {
       clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => setCopied(false), COPIED_MS);
     } catch {
-      // Clipboard API unavailable (e.g. non-HTTPS context)
+      // The clipboard refused (permission, a frame, an old browser).
+      clearTimeout(timerRef.current);
+      setCopied(false);
+      setFailures((n) => n + 1);
+      announce(`${t('recipient.copyFailedTitle')} ${t('recipient.copyFailedBody')}`, FAILED_ANNOUNCE_MS);
     }
   };
 
-  return [copied, copy];
+  return [copied, copy, failures];
 }

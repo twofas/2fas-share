@@ -164,7 +164,8 @@
   --theme-nav-cta-bg-start-hover: var(--color-violet-600);
   --theme-nav-cta-bg-start-pressed: var(--color-violet-700);
   --theme-nav-cta-highlight: var(--color-violet-300);
-  --theme-nav-link-hover: var(--color-violet-200);
+  --theme-nav-link-hover: var(--color-violet-100);
+  --theme-nav-link-active: var(--color-violet-200);
   --theme-overlay-scrim: var(--color-base-black-a60);
   --theme-page-cta-bg-end: var(--color-violet-600);
   --theme-page-cta-bg-end-hover: var(--color-violet-700);
@@ -264,7 +265,7 @@
 
   --blur-nav: 8px;
   --blur-nav-scrolled: 14px;
-  --blur-dialog: 2px;
+  --blur-dialog: 4px;
   --blur-overlay-scrim: 12px;
 
   // Ring = 2 px gap in the surface color, then the focus color out to 4 px.
@@ -385,6 +386,16 @@
   --size-column-generator: 21.375rem;
   --size-column-prose: 21.375rem;
   --size-control-nav: 2.75rem;
+  --space-page-top-focus: 6.25rem;
+  --size-encryption-step-min-height: 0;
+  // Concentric corners (IMPLEMENTATION-PATTERNS 12): a box in the corner of a
+  // rounded container takes the container radius minus the distance.
+  --radius-nested-dialog: 2.25rem;
+  --radius-nested-dialog-inner: 1.25rem;
+  --radius-nested-panel: 1.5rem;
+  --radius-nested-panel-icon: 0.75rem;
+  --radius-nested-panel-item: 0.9375rem;
+  --radius-nested-window: 1.1875rem;
   --space-section-block: var(--space-20);
   --space-section-block-sm: var(--space-16);
 }
@@ -412,6 +423,12 @@
     --size-column-generator: 39rem;
     --size-column-prose: 39rem;
     --size-control-nav: 2.5rem;
+    --space-page-top-focus: 6.875rem;
+    --size-encryption-step-min-height: 11.5rem;
+    --radius-nested-dialog: 2rem;
+    --radius-nested-dialog-inner: 0.75rem;
+    --radius-nested-panel-icon: 0.5rem;
+    --radius-nested-window: 0.6875rem;
   }
 }
 
@@ -435,6 +452,10 @@
     --size-column-narrow: 40.5rem;
     --size-column-generator: 54.5rem;
     --size-column-prose: 40.5rem;
+    --space-page-top-focus: 7.875rem;
+    --size-encryption-step-min-height: 10.25rem;
+    --radius-nested-dialog-inner: 0.5rem;
+    --radius-nested-window: 0.4375rem;
   }
 }
 
@@ -459,6 +480,12 @@
     --size-generator-height: 43rem;
     --size-column-narrow: 49rem;
     --size-column-prose: 42.5rem;
+    --space-page-top-focus: 9.5rem;
+    --size-encryption-step-min-height: 12.5rem;
+    --radius-nested-dialog: 1.75rem;
+    --radius-nested-dialog-inner: 0.25rem;
+    --radius-nested-panel-icon: 0.25rem;
+    --radius-nested-window: 0.25rem;
   }
 }
 
@@ -484,5 +511,10 @@
     --size-generator-height: 46.5rem;
     --size-column-prose: 45rem;
     --size-control-nav: 3rem;
+    --space-page-top-focus: 10.5rem;
+    --size-encryption-step-min-height: 13rem;
+    --radius-nested-dialog: 1.5rem;
+    --radius-nested-panel: 1.25rem;
+    --radius-nested-panel-item: 0.4375rem;
   }
 }

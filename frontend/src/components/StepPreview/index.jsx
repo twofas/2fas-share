@@ -5,21 +5,14 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import { useLayoutEffect, useRef } from 'preact/hooks';
 import { Window, WindowCard, WindowSection, WindowFooter, FieldHeader } from '@/components/Window';
 import { t } from '@/i18n';
-import btn from '@/styles/ds/button.module.scss';
 import ctl from '@/styles/ds/controls.module.scss';
 import field from '@/styles/ds/field.module.scss';
 import W from '@/components/Window/Window.module.scss';
 import Star from '@/assets/star.svg?react';
 import EyeIcon from '@/assets/icons/eye-line.svg?react';
 import S from './StepPreview.module.scss';
-
-// Natural width of the miniature generator window; the thumbnail is zoomed
-// from it to the card width (Figma: Preview / generator step, scale = card / 312
-// on top of the 0.586 base at 1440 px).
-const BASE_WIDTH = 428;
 
 const EXPIRY = ['expiry.1hour', 'expiry.1day', 'generator.week', 'generator.other'];
 
@@ -37,7 +30,7 @@ function SwitchRow ({ title, caption, switchClassName, children }) {
     <WindowSection compact>
       <span className={S.switchRow}>
         <FieldHeader as='p' title={title} caption={caption} />
-        <span className={`${ctl.switch} ${S.fakeSwitchOn} ${switchClassName || ''}`} />
+        <span className={`${ctl.switch} ${S.switch} ${S.fakeSwitchOn} ${switchClassName || ''}`} />
       </span>
       {children}
     </WindowSection>
@@ -70,7 +63,7 @@ function StepContent ({ step }) {
           <div className={ctl.segmented}>
             {EXPIRY.map((key, i) => (
               <span key={key} className={S.segment}>
-                <span className={`${ctl.option} ${i === 0 ? `${S.optionSelected} ${S.pillPress}` : ''}`}>{t(key)}</span>
+                <span className={`${ctl.option} ${S.option} ${i === 0 ? `${S.optionSelected} ${S.pillPress}` : ''}`}>{t(key)}</span>
               </span>
             ))}
           </div>
@@ -89,12 +82,12 @@ function StepContent ({ step }) {
           caption={t('v2.addForm.passwordDesc')}
           switchClassName={S.switchOn}
         >
-          <div className={`${field.control} ${S.fieldDrop}`}>
+          <div className={`${field.control} ${S.control} ${S.fieldDrop}`}>
             <span className={`${field.input} ${S.typedField}`}>
               <span className={`${S.placeholder} ${S.ghost} ${S.passwordGhost}`}>{t('addForm.passwordPlaceholder')}</span>
               <span className={`${S.typed} ${S.typedPassword}`}>••••••••••••</span>
             </span>
-            <span className={`${field.adornment} ${S.eyePop}`}><EyeIcon /></span>
+            <span className={`${field.adornment} ${S.eye} ${S.eyePop}`}><EyeIcon /></span>
           </div>
         </SwitchRow>
       </>
@@ -119,7 +112,7 @@ function StepContent ({ step }) {
   }
 
   return (
-    <WindowSection>
+    <WindowSection className={S.grow}>
       <FieldHeader as='p' title={t('v2.addForm.secureNote')} caption={t('stepPreview.noteCaption')} star />
       <PreviewField>
         <span className={`${S.placeholder} ${S.ghost} ${S.noteGhost}`}>{t('v2.addForm.notePlaceholder')}</span>
@@ -133,10 +126,10 @@ function StepContent ({ step }) {
 /**
  * Decorative thumbnail of the generator window for a step card of section 03.
  * A picture, not an interface (Figma: aria-hidden and inert, no focusable
- * elements): built only from <span>s and not reacting to the pointer; the
- * hover effect belongs to the whole step card (HowToUse). Zoomed (not
- * transformed) to the width of its box, so the layout takes the scaled height
- * along.
+ * elements): built only from <span>s, with a grey mock button, and not
+ * reacting to the pointer at all (no hover, no zoom: M-26). Drawn at the
+ * 1440 size with the tokens times --steps-mini and zoomed to its column by
+ * CSS alone (container units), so the layout takes the scaled height along.
  * With `play`, the step's micro-sequence (Figma E · Motion, 03) runs once:
  * typing, the CTA press, the pill press, the switch turning on, "Link ready".
  * Without it, or under prefers-reduced-motion, the final state shows.
@@ -147,56 +140,14 @@ function StepContent ({ step }) {
  * @returns {import('preact').JSX.Element} Step thumbnail.
  */
 export default function StepPreview ({ step, play, className }) {
-  const ref = useRef(null);
-
-  useLayoutEffect(() => {
-    const box = ref.current;
-
-    if (!box) {
-      return;
-    }
-
-    let frame = 0;
-    let width = 0;
-
-    /** Match the zoom to the current box width, only when the width changed. */
-    const fit = () => {
-      const next = box.clientWidth;
-
-      if (next && next !== width) {
-        width = next;
-        box.style.setProperty('--preview-zoom', String(next / BASE_WIDTH));
-      }
-    };
-
-    fit();
-
-    if (typeof ResizeObserver === 'undefined') {
-      return;
-    }
-
-    // Applied in the next frame: the new zoom changes the box height, which
-    // must not feed back into the same observer delivery.
-    const observer = new ResizeObserver(() => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(fit);
-    });
-    observer.observe(box);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-    };
-  }, []);
-
   return (
-    <div ref={ref} className={`${S.preview} ${play ? S.play : ''} ${className || ''}`} aria-hidden='true' inert>
+    <div className={`${S.preview} ${play ? S.play : ''} ${className || ''}`} aria-hidden='true' inert>
       <Window as='div' className={S.window}>
         <WindowCard className={`${S.card} ${step === 'password' ? S.cardEnd : ''}`}>
           <StepContent step={step} />
         </WindowCard>
-        <WindowFooter className={S.footer}>
-          <span className={`${btn.cta} ${btn.ctaBig} ${S.cta} ${step === 'content' ? S.ctaPress : ''} ${step === 'link' ? S.ctaAppear : ''}`}>
+        <WindowFooter>
+          <span className={`${S.cta} ${step === 'content' ? S.ctaPress : ''} ${step === 'link' ? S.ctaAppear : ''}`}>
             {t(step === 'link' ? 'result.copyShareLink' : 'v2.addForm.submit')}
           </span>
         </WindowFooter>

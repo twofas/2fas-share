@@ -12,7 +12,8 @@
 @use '@/pages/Home/sections' as *;
 
 // Entrance (Figma E · Motion, 06; 18.45 s = 0): badges at 0 / 0.12 / 0.24 s,
-// the heading and lead from X −88 at 0.05 s (overshoot), the CTA at 0.45 s.
+// the heading and lead from X −88 at 0.05 s (overshoot), the CTA one stagger
+// (120 ms) after the heading, at 0.17 s (M-23).
 @include motion-keyframes;
 
 .banner {
@@ -77,9 +78,9 @@
   color: var(--theme-text-primary);
 }
 
-// CTA: opacity 0.45 s, scale 0.9 → 1 on the spring, around its own center.
+// CTA: opacity 0.45 s, scale 0.55 → 1 on the spring, around its own center.
 .action {
-  @include enter(0.45s, $scale: 0.9);
+  @include enter(calc(0.05s + var(--motion-duration-stagger)), $scale: 0.55);
 
   @include from(tablet) {
     inline-size: fit-content;

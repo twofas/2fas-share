@@ -5,8 +5,9 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import { useState, useEffect, useRef } from 'preact/hooks';
-import GlitchText from '@/components/GlitchText';
+import { useState, useEffect, useRef, useId } from 'preact/hooks';
+import HiddenLink from '@/components/HiddenLink';
+import FieldMessage from './FieldMessage';
 import { WindowCard, WindowSection, WindowFooter } from '@/components/Window';
 import btn from '@/styles/ds/button.module.scss';
 import lnk from '@/styles/ds/link.module.scss';
@@ -26,6 +27,22 @@ import { t } from '@/i18n';
 const EXPIRATIONS = [300, 1800, 3600, 86400, 604800, 2592000];
 
 /**
+ * The copy glyph and the checkmark that replaces it in Copied: both stay in
+ * the button and cross-fade (opacity, scale 0.6 to 1, toggle; M-30).
+ * @param {Object} props
+ * @param {boolean} props.copied - Show the checkmark.
+ * @returns {import('preact').JSX.Element} The two icons.
+ */
+function CopyIcons({ copied }) {
+  return (
+    <span className={S.copyIcons} data-copied={copied ? '' : undefined} aria-hidden='true'>
+      <CopyIcon />
+      <CheckIcon />
+    </span>
+  );
+}
+
+/**
  * Generator window in the Ready and Copied states: success medallion, the
  * link in a read-only field, the rules as Chip / fact and the copy actions.
  * @param {Object} props
@@ -40,7 +57,14 @@ const EXPIRATIONS = [300, 1800, 3600, 86400, 604800, 2592000];
 export default function ShareLinkResult({ link, expiration, oneTimeAccess, password, onReset, announce }) {
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedPassword, setCopiedPassword] = useState(false);
+  // Copy failed (BEHAVIOR-SPEC 57): the clipboard refused the link.
+  const [copyFailed, setCopyFailed] = useState(false);
   const ctaRef = useRef(null);
+  const linkApi = useRef(null);
+  const idBase = useId();
+  const timers = useRef({});
+
+  useEffect(() => () => Object.values(timers.current).forEach(clearTimeout), []);
 
   // The "Create link" button turned into "Copy link": focus stays on the
   // button (Figma: generator notes); "Link created" goes to role="status".
@@ -49,24 +73,52 @@ export default function ShareLinkResult({ link, expiration, oneTimeAccess, passw
   }, []);
 
   /**
-   * Copy a value to the clipboard and flash a copied state.
+   * Copy a value to the clipboard and flash the copied state for 2000 ms
+   * (no token, M-30); "Copied" goes to the role="status" region.
    * @param {string} value - The text to copy.
    * @param {(v: boolean) => void} setter - State setter for the copied flag.
+   * @param {string} message - Text for the status region.
+   * @returns {Promise<boolean>} Whether the clipboard took the text.
    */
-  const copyToClipboard = async (value, setter) => {
-    await navigator.clipboard.writeText(value);
+  const copyToClipboard = async (value, setter, message) => {
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch {
+      return false;
+    }
+
     setter(true);
-    announce(setter === setCopiedLink ? t('result.linkCopied') : t('common.copied'));
-    setTimeout(() => {
-      setter(false);
-    }, 2000);
+    announce(message);
+    clearTimeout(timers.current[message]);
+    timers.current[message] = setTimeout(() => setter(false), 2000);
+    return true;
   };
 
   /**
-   * Copy the link (CTA and the button in the field).
+   * Copy the link (CTA and the button in the field). When the clipboard
+   * refuses, the label stays, the link is revealed (the dust removed, as
+   * with the eye), the field takes focus and the address is selected, and
+   * the instruction opens under the field and is announced.
    * @returns {Promise<void>} Resolves after copying.
    */
-  const copyLink = () => copyToClipboard(link, setCopiedLink);
+  const copyLink = async () => {
+    if (await copyToClipboard(link, setCopiedLink, t('result.linkCopied'))) {
+      setCopyFailed(false);
+      return;
+    }
+
+    setCopiedLink(false);
+    setCopyFailed(true);
+    linkApi.current?.reveal();
+    linkApi.current?.select();
+    announce(`${t('v2.result.copyFailedTitle')} ${t('v2.result.copyFailedBody')}`);
+  };
+
+  /**
+   * Copy the password from its chip.
+   * @returns {Promise<boolean>} Whether the clipboard took it.
+   */
+  const copyPassword = () => copyToClipboard(password, setCopiedPassword, t('common.copied'));
 
   return (
     <div className={S.view}>
@@ -82,19 +134,25 @@ export default function ShareLinkResult({ link, expiration, oneTimeAccess, passw
             <p className={S.readyCaption}>{t('generator.readyCaption')}</p>
           </div>
 
-          <div className={S.linkField}>
-            <div className={S.linkValue}>
-              <GlitchText text={link} />
-            </div>
+          <HiddenLink link={link} apiRef={linkApi}>
             <button
               type='button'
               className={`${btn.icon} ${S.linkCopy}`}
               onClick={copyLink}
-              aria-label={t('common.copyToClipboard')}
+              aria-label={t('result.copyShareLink')}
             >
-              {copiedLink ? <CheckIcon aria-hidden='true' /> : <CopyIcon aria-hidden='true' />}
+              <CopyIcons copied={copiedLink} />
             </button>
-          </div>
+          </HiddenLink>
+
+          <FieldMessage
+            id={`${idBase}-copy-failed`}
+            open={copyFailed}
+            body={t('v2.result.copyFailedBody')}
+            className={S.copyFailed}
+          >
+            {t('v2.result.copyFailedTitle')}
+          </FieldMessage>
 
           <ul className={`${ctl.chips} ${S.facts}`}>
             <li className={ctl.chip}>
@@ -114,10 +172,10 @@ export default function ShareLinkResult({ link, expiration, oneTimeAccess, passw
                 <button
                   type='button'
                   className={S.chipButton}
-                  onClick={() => copyToClipboard(password, setCopiedPassword)}
+                  onClick={copyPassword}
                   aria-label={t('result.copyPassword')}
                 >
-                  {copiedPassword ? <CheckIcon aria-hidden='true' /> : <CopyIcon aria-hidden='true' />}
+                  <CopyIcons copied={copiedPassword} />
                 </button>
               </li>
             ) : (
