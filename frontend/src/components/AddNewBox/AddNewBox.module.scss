@@ -160,7 +160,7 @@
 
 // Custom track: 4 px gap between pills (Figma options frame).
 .trackCustom {
-  gap: var(--space-1);
+  --seg-gap: var(--space-1);
 }
 
 .custom {
