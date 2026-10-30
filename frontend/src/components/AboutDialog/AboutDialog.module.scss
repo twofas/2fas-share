@@ -6,7 +6,7 @@
 // See the LICENSE file for details.
 
 // Dialog / about: a double frame like the generator window, but the ring sits
-// on bg/surface (glass turns gray over the scrim). MOTION M-36: opening, the
+// on bg/raised (glass turns gray over the scrim). MOTION M-36: opening, the
 // scrim by opacity in 320 ms (toggle) and the window by opacity and scale
 // 0.98 → 1 in 400 ms (expand), both standard; closing, both in 320 ms
 // (toggle) on the in curve.
@@ -14,7 +14,9 @@
 @use '@/styles/variables' as *;
 
 .dialog {
-  background: var(--theme-bg-surface);
+  // The outer layer of the double frame on bg/raised (COMPONENT-MAP,
+  // Dialog / about; review of 2026-10-29, item 3).
+  background: var(--theme-bg-raised);
   border: var(--stroke-1) solid var(--theme-border-subtle);
   border-radius: var(--radius-2xl);
   box-shadow: var(--elevation-dialog);
@@ -103,7 +105,7 @@
 
   // 44 px touch target in Layout=Mobile (doubled class: wins over Button / icon).
   &.close {
-    @include below(layout) {
+    @include below(tablet) {
       block-size: 2.75rem;
       inline-size: 2.75rem;
     }
@@ -161,7 +163,7 @@
 
   // CTA Big is 48 px high in Layout=Mobile.
   &.back {
-    @include below(layout) {
+    @include below(tablet) {
       min-block-size: 3rem;
     }
   }
@@ -174,11 +176,11 @@
   padding-block: 0.125rem;
 
   // 24 px touch target without growing the footer (Figma: 20 px line).
-  @include from(layout) {
+  @include from(tablet) {
     margin-block: -0.125rem;
   }
 
-  @include below(layout) {
+  @include below(tablet) {
     align-items: center;
     display: inline-flex;
     min-block-size: 2.75rem;

@@ -20,10 +20,11 @@ const FAILED_ANNOUNCE_MS = 5000;
  * When the clipboard refuses (BEHAVIOR-SPEC 57) the label stays, there is no
  * checkmark, the failure count goes up (the field selects its text and shows
  * the instruction) and the instruction goes to the same status region; a
- * later successful copy clears it.
+ * later successful copy clears it, and so does `clearFailures` (a masked
+ * value hidden again).
  * @param {string} value - Text to copy.
  * @param {string} [message] - Text announced after a successful copy.
- * @returns {[boolean, function(): Promise<void>, number]} The copied flag, the copy handler and the number of failed copies since the last success.
+ * @returns {[boolean, function(): Promise<void>, number, function(): void]} The copied flag, the copy handler, the number of failed copies since the last success and a reset of that number.
  */
 export default function useCopy (value, message) {
   const [copied, setCopied] = useState(false);
@@ -57,5 +58,12 @@ export default function useCopy (value, message) {
     }
   };
 
-  return [copied, copy, failures];
+  /**
+   * Forget the failed copies: the Copy failed message closes.
+   */
+  const clearFailures = () => {
+    setFailures(0);
+  };
+
+  return [copied, copy, failures, clearFailures];
 }

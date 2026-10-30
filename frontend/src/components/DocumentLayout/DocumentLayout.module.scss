@@ -223,7 +223,7 @@
   color: var(--theme-text-primary);
   max-inline-size: var(--size-column-prose);
   min-inline-size: 0;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 
   @include from(columns) {
     grid-column: 5 / span 8;

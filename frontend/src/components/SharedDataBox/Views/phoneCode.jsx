@@ -31,7 +31,7 @@ const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => res
  * running cross-fade is ignored. When the code is no longer offered (the
  * note was fetched) the field comes back at once.
  * @param {boolean} offered - Whether the code is offered (a computer, before the fetch).
- * @returns {{ shown: boolean, fieldHidden: boolean, panelHidden: boolean, toggle: function(): Promise<void>, hide: function(): void, swapRef: import('preact').RefObject<HTMLDivElement>, fieldRef: import('preact').RefObject<HTMLDivElement>, panelRef: import('preact').RefObject<HTMLDivElement> }} Swap state and refs.
+ * @returns {{ shown: boolean, fieldHidden: boolean, panelHidden: boolean, toggle: function(): Promise<void>, hide: function(): void, close: function(): Promise<void>, swapRef: import('preact').RefObject<HTMLDivElement>, fieldRef: import('preact').RefObject<HTMLDivElement>, panelRef: import('preact').RefObject<HTMLDivElement> }} Swap state and refs.
  */
 export function useCodeSwap (offered) {
   const [shown, setShown] = useState(false);
@@ -123,7 +123,26 @@ export function useCodeSwap (offered) {
     crossingRef.current = false;
   }, [shown]);
 
-  return { shown, fieldHidden, panelHidden, toggle, hide, swapRef, fieldRef, panelRef };
+  /**
+   * Give the field back as Hide code does ("Open note" with the code shown,
+   * BEHAVIOR-SPEC 59.3): the reversed cross-fade, at once with reduced
+   * motion; during a running cross-fade at once.
+   * @returns {Promise<void>} Resolves when the field is back.
+   */
+  const close = useCallback(async () => {
+    if (!shown) {
+      return;
+    }
+
+    if (crossingRef.current) {
+      hide();
+      return;
+    }
+
+    await toggle();
+  }, [shown, toggle, hide]);
+
+  return { shown, fieldHidden, panelHidden, toggle, hide, close, swapRef, fieldRef, panelRef };
 }
 
 /**

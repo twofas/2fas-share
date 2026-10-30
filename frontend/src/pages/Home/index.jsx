@@ -19,7 +19,7 @@ import Banner from '../../components/Banner';
  */
 export default function Home () {
   return (
-    <main>
+    <main id='content'>
       <WelcomeSection />
       <HowToUse />
       <EncryptionBand />

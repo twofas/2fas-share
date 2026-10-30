@@ -54,17 +54,20 @@
   @include disabled;
 }
 
-// Hover lights the track from anywhere on the option row.
+// Hover lights the track from anywhere on the option row, never on a
+// disabled switch (Creating).
 .switchRow {
   cursor: pointer;
 
-  @include hover {
-    .switch:not(:checked) {
-      background: var(--theme-control-track-off-hover);
-    }
+  &:not(:has(.switch:disabled)) {
+    @include hover {
+      .switch:not(:checked) {
+        background: var(--theme-control-track-off-hover);
+      }
 
-    .switch:checked {
-      background: var(--theme-control-track-on-hover);
+      .switch:checked {
+        background: var(--theme-control-track-on-hover);
+      }
     }
   }
 
@@ -122,8 +125,11 @@
     min-block-size: 2rem;
   }
 
-  @include hover {
-    color: var(--theme-text-primary);
+  // No hover on a disabled pill (Creating).
+  @media (hover: hover) and (pointer: fine) {
+    .radio:not(:disabled) + &:hover {
+      color: var(--theme-text-primary);
+    }
   }
 
   // The selected pill: a fill and a shadow, no border.
@@ -159,12 +165,13 @@
 
   align-items: center;
   background: var(--theme-bg-surface);
-  block-size: 2rem;
   border: var(--stroke-1) solid var(--theme-border-subtle);
   border-radius: var(--radius-full);
   color: var(--theme-text-primary);
   display: inline-flex;
   gap: 0.375rem;
+  // 32 px with a 24 px line; grows with enlarged text or a second line.
+  min-block-size: 2rem;
   padding-inline: 0.625rem 0.75rem;
 
   svg {

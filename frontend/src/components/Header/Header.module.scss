@@ -84,6 +84,13 @@ $collapse: var(--motion-duration-layout);
     scale $collapse var(--motion-easing-out);
   width: 100%;
 
+  // 56 px row at every width (MOBILE-MENU, bar row height): at 390 44 px
+  // controls and 6 px padding, from 768 40 px controls and space/2.
+  @include from(tablet) {
+    padding-block: var(--space-2);
+    padding-inline-end: var(--space-2);
+  }
+
   @include from(layout) {
     gap: var(--space-10);
     padding: var(--space-2) var(--space-2) var(--space-2) var(--space-6);
@@ -338,7 +345,7 @@ $collapse: var(--motion-duration-layout);
 // radius/base (the panel radius/md minus its space/2 padding, concentric,
 // IMPLEMENTATION-PATTERNS 12). With a fine pointer the hover fills the whole
 // row; the focus ring follows the same radius. The label keeps the colors of
-// the bar links (BEHAVIOR-SPEC 54).
+// the bar links at rest (BEHAVIOR-SPEC 54), but not their hover fill.
 .panelLinks {
   display: flex;
   flex-direction: column;
@@ -361,9 +368,16 @@ $collapse: var(--motion-duration-layout);
       z-index: -1;
     }
 
+    // Hover changes the row background only (MOBILE-MENU, link text, v2.1):
+    // the label gets no fill from the left and keeps its color, white or
+    // violet/200 on the current section.
     @media (hover: hover) and (pointer: fine) {
       &:hover::before {
         background-color: var(--theme-nav-control-bg-hover);
+      }
+
+      &:hover:not([aria-current='location']) {
+        --fill: 0%;
       }
     }
   }

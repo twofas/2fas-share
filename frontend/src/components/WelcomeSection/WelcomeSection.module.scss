@@ -42,7 +42,8 @@
 
     align-items: center;
     display: flex;
-    min-block-size: 100svh;
+    // Very tall windows: at most 1320 px (ACCESSIBILITY 8, decided 2026-09-19).
+    min-block-size: min(100svh, 82.5rem);
     padding-block: var(--hero-space-top) var(--hero-space-bottom);
   }
 }

@@ -52,10 +52,13 @@
 .head {
   @include enter-lead(0s);
 
-  border-block: var(--stroke-1) solid var(--theme-border-subtle);
+  border-block-start: var(--stroke-1) solid var(--theme-border-subtle);
   padding: var(--space-section-block) var(--space-16) var(--space-section-block-sm);
 
+  // At 390 no line between the heading and the first question (BEHAVIOR-SPEC
+  // 52.4); from 768 the heading block is framed on both sides.
   @include from(columns) {
+    border-block-end: var(--stroke-1) solid var(--theme-border-subtle);
     border-inline-start: var(--stroke-1) solid var(--theme-border-subtle);
     border-start-end-radius: var(--radius-lg);
   }

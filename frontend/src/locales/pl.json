@@ -91,7 +91,7 @@
     "passwordDesc": "Odbiorca będzie potrzebował tego hasła, aby otworzyć link.",
     "passwordPlaceholder": "Wprowadź hasło",
     "errorSubmit": "Nie udało się wygenerować linku. Spróbuj ponownie.",
-    "submitting": "Tworzenie linku...",
+    "submitting": "Tworzenie",
     "submit": "Udostępnij"
   },
   "expiry": {
@@ -413,7 +413,10 @@
       "hideLink": "Ukryj link",
       "linkHidden": "(reszta linku ukryta)",
       "copyFailedTitle": "Nie udało się skopiować linku.",
-      "copyFailedBody": "Skopiuj go samodzielnie: naciśnij Ctrl+C (⌘C na Macu) albo przytrzymaj palec, zaznacz cały link i wybierz Kopiuj."
+      "copyFailedBody": "Skopiuj go samodzielnie: naciśnij Ctrl+C (⌘C na Macu) albo przytrzymaj palec, zaznacz cały link i wybierz Kopiuj.",
+      "passwordCopied": "Hasło skopiowane",
+      "passwordCopyFailedTitle": "Nie udało się skopiować hasła.",
+      "passwordCopyFailedBody": "Wpisz je samodzielnie, gdy będziesz je wysyłać osobno."
     },
     "welcome": {
       "subtitle": "2FAS Share tworzy link, który znika po użyciu. Bez konta, bez instalacji. Ty decydujesz, kiedy i dla kogo."

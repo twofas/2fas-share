@@ -87,8 +87,8 @@
   }
 }
 
-// "More about the tool": Button / secondary Big (48 px, no chevron) in
-// Layout=Mobile, Small (32 px) with the 16 px chevron from 768 px.
+// "More about the tool": Button / secondary Big (48 px) in Layout=Mobile,
+// Small (32 px) from 768 px, both with the 16 px chevron (BEHAVIOR-SPEC 59.7).
 .more.more {
   svg {
     block-size: 1rem;
@@ -107,10 +107,6 @@
 
     &::after {
       content: none;
-    }
-
-    svg {
-      display: none;
     }
   }
 }
