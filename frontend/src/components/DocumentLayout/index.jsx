@@ -32,7 +32,7 @@ const DOCUMENTS = [
  */
 export default function DocumentLayout ({ current, title, meta, lang, children }) {
   return (
-    <main className={S.page}>
+    <main id='content' className={S.page}>
       <ArcsDecor />
 
       <div className={S.header}>

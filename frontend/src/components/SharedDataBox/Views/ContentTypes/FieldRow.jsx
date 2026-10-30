@@ -21,7 +21,8 @@ const DEFAULT_MASK = '●●●';
  * A labeled read-only field (Field / password look, readonly): the value,
  * an optional eye toggle for sensitive values and a copy button named after
  * the field. When the clipboard refuses, the box gets focus, the value is
- * shown and selected, and the Copy failed message stands under the box.
+ * shown and selected, and the Copy failed message stands under the box
+ * until a successful copy or until the value is hidden again.
  * @param {Object} props - Component props.
  * @param {string} props.label - Field label text.
  * @param {string} props.value - Field value to display.
@@ -37,7 +38,7 @@ export default function FieldRow ({ label, value, sensitive = false, maskedValue
   const messageId = useId();
   const boxRef = useRef(null);
   const valueRef = useRef(null);
-  const [copied, copyValue, failures] = useCopy(value, t('common.copied'));
+  const [copied, copyValue, failures, clearFailures] = useCopy(value, t('common.copied'));
 
   // A refused copy: a masked value is shown first, so the selection holds
   // the value itself and not the dots.
@@ -47,6 +48,18 @@ export default function FieldRow ({ label, value, sensitive = false, maskedValue
       requestAnimationFrame(() => selectContent(boxRef.current, valueRef.current));
     }
   }, [failures]);
+
+  /**
+   * The eye: hiding the value again also closes the Copy failed message
+   * (BEHAVIOR-SPEC 57, masked recipient fields).
+   */
+  const toggleVisible = () => {
+    if (visible && failures) {
+      clearFailures();
+    }
+
+    setVisible(!visible);
+  };
 
   if (!value) {
     return null;
@@ -74,7 +87,7 @@ export default function FieldRow ({ label, value, sensitive = false, maskedValue
               <button
                 type='button'
                 className={field.adornment}
-                onClick={() => setVisible(!visible)}
+                onClick={toggleVisible}
                 aria-label={t('common.toggleVisibility')}
                 aria-pressed={visible ? 'true' : 'false'}
               >

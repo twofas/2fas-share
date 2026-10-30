@@ -143,9 +143,10 @@
 }
 
 // Cards 01-04 from 0.90 s, 0.18 s apart: opacity and Y +18 in 0.45 s,
-// scale 0.85 → 1 on the spring (M-21).
+// scale 0.85 → 1 on the out curve; the spring is only for the window and
+// the "Four things" rows (M-21).
 .stage {
-  @include enter(calc(0.9s + var(--i, 0) * 0.18s), $y: 1.125rem, $scale: 0.85);
+  @include enter(calc(0.9s + var(--i, 0) * 0.18s), $y: 1.125rem, $scale: 0.85, $scale-motion: (entrance, out));
 
   background: var(--theme-bg-canvas);
   border-block-end: var(--stroke-1) solid var(--theme-border-subtle);

@@ -62,9 +62,10 @@ export default function SharedDataBoxPassword (props) {
    * A local check failed: the message under the field, focus in the field
    * (the code panel gives the field back first, so the message shows).
    * @param {string} message - Error text.
+   * @returns {Promise<void>} Resolves when the message is set.
    */
-  const fail = (message) => {
-    swap.hide();
+  const fail = async (message) => {
+    await swap.close();
     setError(message);
     setErrorCount((n) => n + 1);
     requestAnimationFrame(() => inputRef.current?.focus());
@@ -113,6 +114,8 @@ export default function SharedDataBoxPassword (props) {
     }
 
     setError('');
+    // The code hides together with the change of the button to Loading.
+    swap.close();
     props.onPasswordSubmit(password.trim());
   };
 
@@ -185,7 +188,10 @@ export default function SharedDataBoxPassword (props) {
           </CodeSwap>
         </WindowSection>
 
-        <WindowSection className={S.rows}>
+        {/* The warning appears after an action (a wrong password on a one-time
+            link): the section is a polite live region, so the added alert is
+            announced (ACCESSIBILITY 17, alerts; AC 71). */}
+        <WindowSection className={S.rows} aria-live='polite'>
           <InfoRow
             icon={ShieldIcon}
             title={t('recipient.privacyTitle')}

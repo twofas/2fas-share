@@ -37,9 +37,10 @@
   border-radius: var(--radius-sm);
   color: var(--theme-text-primary);
 
-  // Hover skips a focused field: the focus border wins under the cursor.
+  // Hover skips a focused field (the focus border wins under the cursor) and
+  // a field with an error (Error wins over Hover).
   @media (hover: hover) and (pointer: fine) {
-    &:hover:not(:focus-within, #{$disabled}) {
+    &:hover:not(:focus-within, #{$disabled}, [aria-invalid='true'], :has([aria-invalid='true'])) {
       border-color: var(--theme-field-border-hover);
     }
   }
@@ -73,21 +74,25 @@
 // <div class={field.arc}><textarea class={field.textarea} /></div>, or
 // <div class={field.arc}><div class={field.control}>…</div></div>. The wrapper
 // has no padding and the control is a block of full width, so the box of the
-// wrapper is the box of the control and the 2 px ring lies on its border. The
-// arc circles once per 1.6 s (no token, as the CTA arc) only while the field
-// has focus; Error focus, read-only and disabled have no arc.
+// wrapper is the box of the control and the 2 px ring lies on its border.
+//
+// MOTION.md M-05 (v2.1): the arc (`::before`) circles once per 1.6 s (no
+// token, as the CTA arc) only while the field has focus and is empty, at most
+// 3 turns (4.8 s). After the third turn, or from the first character, it
+// cross-fades into the still ring (`::after`), the reduced-motion ring. The
+// animation is set only on focus of an empty field, so every new focus and
+// every clearing of the field starts the 3 turns again. "Empty" is
+// :placeholder-shown: all three fields carry a placeholder. Error focus,
+// read-only and disabled have neither the arc nor the ring.
+$arc-turn: 1.6s;
+$arc-turns: 3;
+
 .arc {
   border-radius: var(--radius-sm);
   position: relative;
 
-  &::before {
-    animation: fieldArc 1.6s linear infinite paused;
-    background: conic-gradient(
-      from var(--field-arc-angle, 0deg),
-      transparent 0turn 0.62turn,
-      var(--theme-accent-default) 0.78turn,
-      transparent 0.94turn 1turn
-    );
+  &::before,
+  &::after {
     border-radius: inherit;
     content: '';
     inset: 0;
@@ -102,29 +107,77 @@
     z-index: 1;
   }
 
-  &:focus-within::before {
-    animation-play-state: running;
-    opacity: 1;
+  &::before {
+    background: conic-gradient(
+      from var(--field-arc-angle, 0deg),
+      transparent 0turn 0.62turn,
+      var(--theme-accent-default) 0.78turn,
+      transparent 0.94turn 1turn
+    );
   }
 
-  &:has([aria-invalid='true'], [readonly], :disabled)::before {
-    animation-play-state: paused;
-    opacity: 0;
+  &::after {
+    background: var(--theme-accent-default);
+  }
+
+  // Empty and focused: 3 turns, then the arc fades out and the ring in.
+  &:focus-within:has(:placeholder-shown) {
+    &::before {
+      animation:
+        fieldArc $arc-turn linear $arc-turns,
+        fieldArcOut var(--motion-duration-hover) var(--motion-easing-standard) ($arc-turn * $arc-turns) forwards;
+      opacity: 1;
+    }
+
+    &::after {
+      animation: fieldRingIn var(--motion-duration-hover) var(--motion-easing-standard) ($arc-turn * $arc-turns) forwards;
+    }
+  }
+
+  // With text: the still ring at once (the arc fades out, if it ran).
+  &:focus-within:not(:has(:placeholder-shown))::after {
+    opacity: 1;
   }
 
   // Reduced motion: the whole ring lit, not circling.
   @media (prefers-reduced-motion: reduce) {
     &::before {
+      display: none;
+    }
+
+    &:focus-within:has(:placeholder-shown)::after {
       animation: none;
-      background: var(--theme-accent-default);
+      opacity: 1;
+    }
+  }
+
+  // Last and with a doubled class, so it wins over every focus rule above.
+  &.arc:has([aria-invalid='true'], [readonly], :disabled) {
+    &::before,
+    &::after {
+      animation: none;
+      opacity: 0;
     }
   }
 
   // Without mask-composite the ring would fill the whole field.
   @supports not (mask-composite: exclude) {
-    &::before {
+    &::before,
+    &::after {
       display: none;
     }
+  }
+}
+
+@keyframes fieldArcOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fieldRingIn {
+  to {
+    opacity: 1;
   }
 }
 
@@ -154,10 +207,7 @@
 
   // Error wins over Hover; Error focus over Focus.
   &[aria-invalid='true'] {
-    &,
-    &:hover {
-      @include field-error;
-    }
+    @include field-error;
 
     &:focus {
       @include field-error-focus;
@@ -208,10 +258,7 @@
   }
 
   &:has([aria-invalid='true']) {
-    &,
-    &:hover {
-      @include field-error;
-    }
+    @include field-error;
 
     &:focus-within {
       @include field-error-focus;
@@ -248,7 +295,7 @@
 
   align-items: center;
   block-size: 1.5rem;
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-full);
   color: var(--theme-text-secondary);
   cursor: pointer;
   display: inline-flex;
@@ -364,7 +411,8 @@
     color: CanvasText;
   }
 
-  .arc::before {
+  .arc::before,
+  .arc::after {
     display: none;
   }
 

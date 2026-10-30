@@ -9,6 +9,9 @@
 // Button / CTA (Small in the bar, Big on the page), Button / secondary,
 // Button / icon, Button / nav icon and Toggle / theme.
 //
+// Every button is a pill (radius/full, COMPONENT-MAP buttons): round ends at
+// any height and with a label on two lines; the CTA arc inherits the radius.
+//
 // States: :hover (fine pointer only), :active, :focus-visible,
 // aria-disabled="true" (prefer it over the native disabled, it keeps the
 // button in the Tab order) and aria-busy="true" for loading.
@@ -60,8 +63,7 @@
   // Light arc travelling around the border (M-03, IMPLEMENTATION-PATTERNS
   // 9.2): a conic gradient in a 1.5 px ring (no token), light stops at 0.62,
   // 0.78 and 0.94 of a turn. The loop sits in the base rule, paused, and runs
-  // wherever a fine pointer can light the arc, so fading out after hover
-  // keeps it circling instead of freezing a frame.
+  // only while the arc is lit (hover), so nothing turns unseen at rest.
   &::before {
     --cta-arc-angle: 0deg;
     --cta-ring: 1.5px;
@@ -87,14 +89,9 @@
     z-index: -1;
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    &:not(#{$disabled})::before {
-      animation-play-state: running;
-    }
-  }
-
   @include hover {
     &::before {
+      animation-play-state: running;
       opacity: 1;
     }
   }
@@ -161,6 +158,18 @@
     }
   }
 
+  // Reduced motion: the spinner would not turn, so the label says what
+  // happens instead ("Creating", M-27).
+  @media (prefers-reduced-motion: reduce) {
+    &[aria-busy='true'] {
+      color: var(--theme-text-on-accent);
+
+      &::after {
+        content: none;
+      }
+    }
+  }
+
   svg {
     block-size: 1.25rem;
     flex-shrink: 0;
@@ -177,7 +186,7 @@
   --cta-highlight: var(--theme-nav-cta-highlight);
   --cta-spinner: 1.25rem;
 
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-full);
   // Heights follow Figma, where the 1 px stroke sits inside the frame: the
   // border takes its width from the padding (24 px label + padding = 40 px).
   min-block-size: var(--size-control-nav);
@@ -209,7 +218,7 @@
   --cta-highlight: var(--theme-page-cta-highlight);
   --cta-spinner: 1.5rem;
 
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-full);
   // 24 px label + 2 × space/4: 48 px on a phone, 56 at 1024 and 1440, 64 at
   // 1920 and 72 at 2560 (Figma CTA / create link, Recipient / window).
   padding: calc(var(--space-4) - var(--stroke-1)) calc(var(--space-8) - var(--stroke-1));
@@ -292,7 +301,7 @@
   background: var(--theme-bg-canvas);
   block-size: 2.5rem;
   border: var(--stroke-1) solid var(--theme-border-subtle);
-  border-radius: var(--radius-control);
+  border-radius: var(--radius-full);
   color: var(--theme-button-ghost-text);
   cursor: pointer;
   display: inline-flex;
@@ -339,7 +348,7 @@
   background: transparent;
   block-size: var(--size-control-nav);
   border: var(--stroke-1) solid var(--theme-nav-control-border);
-  border-radius: var(--radius-control);
+  border-radius: var(--radius-full);
   color: var(--theme-text-on-accent);
   cursor: pointer;
   display: inline-flex;

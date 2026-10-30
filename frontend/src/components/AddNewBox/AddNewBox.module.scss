@@ -113,6 +113,22 @@
   @include from(desktop) {
     min-block-size: 7.5rem;
   }
+
+  // Creating: read-only, but the look unchanged (BEHAVIOR-SPEC 48.1, 59.8),
+  // not the quiet border of the recipient's Readonly field. Tripled class:
+  // wins over `.textarea[readonly]` and its hover.
+  &.note.note[readonly] {
+    &,
+    &:hover {
+      border-color: var(--theme-field-border);
+    }
+
+    &:focus,
+    &:focus-visible {
+      border-color: var(--theme-field-border-hover);
+      outline: none;
+    }
+  }
 }
 
 // ── Expiry (Segmented / expiry and Generator / custom expiry) ──
@@ -132,7 +148,8 @@
 
   color: var(--theme-text-primary);
   float: inline-start;
-  margin-block-end: var(--space-1);
+  // 8 px to the track, also under "Link disappears after" (review 2026-10-29).
+  margin-block-end: var(--space-2);
   padding: 0;
   width: 100%;
 }
@@ -150,10 +167,6 @@
   // Room for the focus ring of the pills inside the clipped block.
   margin: -0.25rem;
   padding: 0.25rem;
-
-  .groupLabel {
-    margin-block-end: var(--space-2);
-  }
 }
 
 // The block sits in the section stack; when collapsed it gives back its gap.
@@ -200,6 +213,19 @@
   display: flex;
   gap: var(--space-4);
   justify-content: space-between;
+  // The whole row is the target, edge to edge and at least 44 px (AC 10):
+  // the label reaches over the section padding (Window .compact) without
+  // moving anything. Downwards only in the last row of the section, so it
+  // never covers the password field under it.
+  margin-block-start: calc(-1 * var(--space-4));
+  margin-inline: calc(-1 * var(--space-6));
+  padding-block-start: var(--space-4);
+  padding-inline: var(--space-6);
+
+  &:last-child {
+    margin-block-end: calc(-1 * var(--space-4));
+    padding-block-end: var(--space-4);
+  }
 
   &:has(:disabled) .optionText {
     opacity: var(--opacity-disabled);
@@ -403,10 +429,13 @@
   justify-content: center;
   position: relative;
 
-  &::after {
-    content: '';
-    inset: -0.625rem;
-    position: absolute;
+  // A 24 px target with a mouse, 44 px on touch (AC 120).
+  @media (pointer: coarse) {
+    &::after {
+      content: '';
+      inset: -0.625rem;
+      position: absolute;
+    }
   }
 
   @include hover {

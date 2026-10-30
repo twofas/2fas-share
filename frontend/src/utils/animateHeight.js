@@ -6,6 +6,7 @@
 // See the LICENSE file for details.
 
 import { prefersReducedMotion } from '@/utils/reducedMotion';
+import { motionMs, motionEasing } from '@/components/Window/motion';
 
 /**
  * Animates the height change of an element using Web Animations API.
@@ -26,6 +27,7 @@ export default function animateHeight (el, fromHeight) {
       { height: `${fromHeight}px` },
       { height: `${toHeight}px` }
     ],
-    { duration: 500, easing: 'ease-in-out' }
+    // motion/duration/layout on motion/easing/standard, never literals (MOTION.md).
+    { duration: motionMs('layout', 480), easing: motionEasing('standard', 'cubic-bezier(0.4, 0, 0.6, 1)') }
   );
 }

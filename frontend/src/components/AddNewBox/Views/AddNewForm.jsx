@@ -375,6 +375,9 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
           checked={checked}
           aria-label={short ? label : undefined}
           onKeyDown={selectEdge}
+          // A click on the pill focuses its radio, so the next arrow starts
+          // from it (AC 83).
+          onClick={(e) => e.currentTarget.focus({ preventScroll: true })}
           onChange={() => onSelect(value)}
         />
         <label className={ctl.option} htmlFor={optionId}>

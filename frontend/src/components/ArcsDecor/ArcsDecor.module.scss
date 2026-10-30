@@ -13,8 +13,10 @@
 @use '@/styles/variables' as *;
 
 .arcs {
+  // A constant 1388 × 696 frame at every width (BEHAVIOR-SPEC 52, arcs axis;
+  // IMPLEMENTATION-PATTERNS 9.1); narrower windows clip it.
   aspect-ratio: 1388 / 696;
-  inline-size: max(86.75rem, 72vw);
+  inline-size: 86.75rem;
   inset-block-start: 0;
   inset-inline-start: 50%;
   overflow: hidden;

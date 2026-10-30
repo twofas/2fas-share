@@ -56,8 +56,10 @@
   inline-size: 2.75rem;
 }
 
+// The check keeps the glyph color of the button (button/ghost/text), as in
+// the generator (COMPONENT-MAP, Generator / dialog Copied).
 .copied {
-  color: var(--theme-text-accent);
+  color: var(--theme-button-ghost-text);
 
   svg {
     animation: copiedIn var(--motion-duration-hover) var(--motion-easing-out);

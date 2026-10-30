@@ -75,8 +75,10 @@ svg {
     border-radius: 3px;
     background: var(--theme-border-default);
 
-    &:hover {
-      background: var(--theme-field-border-hover);
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background: var(--theme-field-border-hover);
+      }
     }
   }
 }

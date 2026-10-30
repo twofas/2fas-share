@@ -59,6 +59,9 @@ export default function ShareLinkResult({ link, expiration, oneTimeAccess, passw
   const [copiedPassword, setCopiedPassword] = useState(false);
   // Copy failed (BEHAVIOR-SPEC 57): the clipboard refused the link.
   const [copyFailed, setCopyFailed] = useState(false);
+  // The clipboard refused the password: a message under the chips; the
+  // password itself is never shown (BEHAVIOR-SPEC 57, password chip).
+  const [passwordCopyFailed, setPasswordCopyFailed] = useState(false);
   const ctaRef = useRef(null);
   const linkApi = useRef(null);
   const idBase = useId();
@@ -115,10 +118,21 @@ export default function ShareLinkResult({ link, expiration, oneTimeAccess, passw
   };
 
   /**
-   * Copy the password from its chip.
-   * @returns {Promise<boolean>} Whether the clipboard took it.
+   * Copy the password from its chip: "Password copied" on success. When the
+   * clipboard refuses there is no check, focus stays on the button and the
+   * message opens under the chips and is announced.
+   * @returns {Promise<void>} Resolves after copying.
    */
-  const copyPassword = () => copyToClipboard(password, setCopiedPassword, t('common.copied'));
+  const copyPassword = async () => {
+    if (await copyToClipboard(password, setCopiedPassword, t('v2.result.passwordCopied'))) {
+      setPasswordCopyFailed(false);
+      return;
+    }
+
+    setCopiedPassword(false);
+    setPasswordCopyFailed(true);
+    announce(`${t('v2.result.passwordCopyFailedTitle')} ${t('v2.result.passwordCopyFailedBody')}`);
+  };
 
   return (
     <div className={S.view}>
@@ -185,6 +199,17 @@ export default function ShareLinkResult({ link, expiration, oneTimeAccess, passw
               </li>
             )}
           </ul>
+
+          {password && (
+            <FieldMessage
+              id={`${idBase}-password-copy-failed`}
+              open={passwordCopyFailed}
+              body={t('v2.result.passwordCopyFailedBody')}
+              className={S.copyFailed}
+            >
+              {t('v2.result.passwordCopyFailedTitle')}
+            </FieldMessage>
+          )}
         </WindowSection>
       </WindowCard>
 

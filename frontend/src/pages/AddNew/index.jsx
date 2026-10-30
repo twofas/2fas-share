@@ -27,7 +27,7 @@ export default function AddNew() {
   const [focusFromCta] = useState(consumeGeneratorFocus);
 
   return (
-    <main className={S.page}>
+    <main id='content' className={S.page}>
       <ArcsDecor />
 
       <section className={S.section} aria-labelledby='generator-title'>

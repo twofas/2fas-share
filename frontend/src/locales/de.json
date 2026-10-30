@@ -91,7 +91,7 @@
     "passwordDesc": "Der Empfänger benötigt dieses Passwort, um den Link zu öffnen.",
     "passwordPlaceholder": "Passwort eingeben",
     "errorSubmit": "Link konnte nicht erstellt werden. Bitte erneut versuchen.",
-    "submitting": "Wird geteilt...",
+    "submitting": "Wird erstellt",
     "submit": "Teilen"
   },
   "expiry": {
@@ -409,7 +409,10 @@
       "hideLink": "Link verbergen",
       "linkHidden": "(Rest des Links verborgen)",
       "copyFailedTitle": "Der Link konnte nicht kopiert werden.",
-      "copyFailedBody": "Kopiere ihn selbst: Drücke Strg+C (⌘C auf dem Mac) oder halte den Finger gedrückt, markiere den ganzen Link und tippe auf Kopieren."
+      "copyFailedBody": "Kopiere ihn selbst: Drücke Strg+C (⌘C auf dem Mac) oder halte den Finger gedrückt, markiere den ganzen Link und tippe auf Kopieren.",
+      "passwordCopied": "Passwort kopiert",
+      "passwordCopyFailedTitle": "Das Passwort konnte nicht kopiert werden.",
+      "passwordCopyFailedBody": "Gib es selbst ein, wenn du es separat sendest."
     },
     "welcome": {
       "subtitle": "2FAS Share erstellt einen Link, der nach der Nutzung verschwindet. Kein Konto, keine Installation. Du entscheidest, wann und für wen."
