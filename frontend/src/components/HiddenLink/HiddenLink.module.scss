@@ -36,38 +36,59 @@
   color: var(--theme-text-primary);
   word-break: break-all;
 
-  // While hidden the dust is the target of a click that reveals.
-  &:not([data-shown]) {
-    cursor: pointer;
-  }
-
   // Origin and slashes.
   :global(.pub) {
     color: var(--theme-text-secondary);
   }
 
-  // One box per secret character: empty and of one width while hidden; the
-  // letter fades in once the ripple has turned its grains into it (--t).
+  // One box per secret character, all of one width. Hidden: a random
+  // character, dimmed and blurred. The blur clears as the reveal starts; each
+  // box lights up when it lands on its letter, with an RGB flash (--g).
   :global(.ch) {
     block-size: 1lh;
-    color: transparent;
     display: inline-block;
+    filter: blur(1.5px);
+    opacity: 0.4;
     text-align: center;
-    transition: color 180ms var(--motion-easing-standard) var(--t, 0ms);
+    transition: filter 250ms var(--motion-easing-out);
     vertical-align: top;
   }
 
   &[data-shown] :global(.ch) {
-    color: var(--theme-text-primary);
+    filter: none;
+  }
+
+  :global(.ch[data-lock]) {
+    animation: glitch-land 120ms linear;
+    opacity: 1;
+    text-shadow: 0 0 5px rgb(120 240 200 / 20%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.ch) {
+      transition: none;
+    }
+
+    :global(.ch[data-lock]) {
+      animation: none;
+    }
   }
 }
 
-.canvas {
-  block-size: 100%;
-  inline-size: 100%;
-  inset: 0;
-  pointer-events: none;
-  position: absolute;
+@keyframes glitch-land {
+  from {
+    text-shadow:
+      calc(var(--g, 0px) + 1px) 0 0 rgb(255 90 120 / 21%),
+      calc(var(--g, 0px) - 1px) 0 0 rgb(80 160 255 / 21%),
+      0 0 5px rgb(120 240 200 / 20%);
+  }
+
+  to {
+    text-shadow:
+      calc(var(--g, 0px) + 1px) 0 0 rgb(255 90 120 / 0%),
+      calc(var(--g, 0px) - 1px) 0 0 rgb(80 160 255 / 0%),
+      0 0 5px rgb(120 240 200 / 20%);
+  }
 }
 
 // Button / icon (40 px) under the 44 px copy button.

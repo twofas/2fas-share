@@ -6,13 +6,22 @@
 // See the LICENSE file for details.
 
 // Pure helpers of the hidden link (BEHAVIOR-SPEC 53): splitting the address,
-// curves, ripple arrival times and the made-up signs of the dust. Nothing here
-// touches the DOM, so it runs under `node --test`.
+// the box width and the timing of the glitch reveal. Nothing here touches the
+// DOM, so it runs under `node --test`.
 
 /** The URL-safe Base64 alphabet, the characters the secret parts are made of. */
 export const BASE64URL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 
-export const TAU = Math.PI * 2;
+/** Characters the hidden boxes cycle through (the glitch of the main branch). */
+export const GLITCH_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789/:?#.=-_~&%+@';
+
+// Timing of the glitch, in ms: a hidden box rolls a new character every
+// IDLE_MS; on reveal box n starts n × REVEAL_STAGGER after the click, rolls
+// REVEAL_CYCLES (or one more) times every REVEAL_MS, then lands on its letter.
+export const IDLE_MS = 90;
+export const REVEAL_STAGGER = 10;
+export const REVEAL_CYCLES = 5;
+export const REVEAL_MS = 24;
 
 /**
  * Split a share link into the visible origin and the secret parts.
@@ -55,160 +64,35 @@ export function averageWidth (measure) {
 }
 
 /**
- * Clamp to 0..1.
- * @param {number} x - Value.
- * @returns {number} Clamped value.
- */
-export const clamp01 = (x) => Math.min(1, Math.max(0, x));
-
-/**
- * Cubic ease-out (the `motion/easing/out` family).
- * @param {number} x - Progress 0..1.
- * @returns {number} Eased progress.
- */
-export const easeOut = (x) => 1 - Math.pow(1 - x, 3);
-
-/**
- * Cubic ease-in-out (the `motion/easing/in-out` family).
- * @param {number} x - Progress 0..1.
- * @returns {number} Eased progress.
- */
-export const easeInOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
-
-/**
- * A random number in a range.
- * @param {number} a - Lower bound.
- * @param {number} b - Upper bound.
+ * A random character of a set.
+ * @param {string} set - Character pool.
  * @param {() => number} [random] - Source of randomness.
- * @returns {number} A value in [a, b).
+ * @returns {string} One character.
  */
-export const rnd = (a, b, random = Math.random) => a + random() * (b - a);
-
-/**
- * Distance from a point to the farthest corner of a box, plus a margin: the
- * radius at which a ripple from that point has covered the whole field.
- * @param {{x: number, y: number}} o - Ripple origin.
- * @param {number} w - Field width.
- * @param {number} h - Field height.
- * @returns {number} Radius in px.
- */
-export function rippleReach (o, w, h) {
-  return Math.max(...[[0, 0], [w, 0], [0, h], [w, h]].map(([x, y]) => Math.hypot(x - o.x, y - o.y))) + 20;
+export function randomChar (set, random = Math.random) {
+  return set[Math.floor(random() * set.length)];
 }
 
 /**
- * When the ripple reaches each character box: the radius grows on the cubic
- * ease-out curve, so the arrival time is the inverse of that curve.
- * @param {Array<{x: number, w: number, top: number, h: number}>} boxes - Character boxes.
- * @param {{x: number, y: number}} o - Ripple origin, in field coordinates.
- * @param {number} w - Field width.
- * @param {number} h - Field height.
- * @param {number} duration - Ripple duration in ms.
- * @returns {number[]} Arrival time in ms per box.
- */
-export function arrivals (boxes, o, w, h, duration) {
-  const max = rippleReach(o, w, h);
-
-  return boxes.map((b) => {
-    const d = Math.min(1, Math.hypot(b.x + b.w / 2 - o.x, b.top + b.h / 2 - o.y) / max);
-
-    return duration * (1 - Math.cbrt(1 - d));
-  });
-}
-
-/**
- * A made-up sign for a character box: 1 to 3 strokes walked over a grid of 2
- * to 3 columns × 3 to 5 rows (x-height, middle, baseline, sometimes an
- * ascender or a descender), each segment bowed a little, sampled every 0.5 px.
- * The sign never depends on the real character.
- * @param {{x: number, w: number, base: number, xh: number, cap: number}} c - Box geometry.
+ * When each box of a reveal starts rolling and how many rolls it makes
+ * before it lands on its letter: left to right, one stagger apart.
+ * @param {number} count - Number of secret boxes.
+ * @param {number} now - Time of the click in ms.
  * @param {() => number} [random] - Source of randomness.
- * @returns {Array<Array<[number, number]>>} Strokes as point lists.
+ * @returns {Array<{lockAt: number, cycles: number}>} Schedule per box.
  */
-export function signStrokes (c, random = Math.random) {
-  const pad = Math.min(1.6, c.w * 0.16);
-  const slim = random() < 0.3;
-  const xs = slim ? [c.x + c.w * 0.3, c.x + c.w * 0.7] : [c.x + pad, c.x + c.w / 2, c.x + c.w - pad];
-  const up = random() < 0.3;
-  const down = !up && random() < 0.22;
-  const ys = [];
-
-  if (up) {
-    ys.push(c.base - c.cap);
-  }
-
-  ys.push(c.base - c.xh, c.base - c.xh / 2, c.base);
-
-  if (down) {
-    ys.push(c.base + c.xh * 0.42);
-  }
-
-  const grid = xs.map((x) => ys.map((y) => [x + rnd(-0.5, 0.5, random), y + rnd(-0.6, 0.6, random)]));
-  const walks = [];
-
-  /**
-   * Walk the grid to neighbouring points, never straight back.
-   * @param {number} steps - Number of segments.
-   */
-  const walk = (steps) => {
-    let ci = Math.floor(random() * xs.length);
-    let ri = Math.floor(random() * ys.length);
-    let prev = null;
-    const pts = [grid[ci][ri]];
-
-    for (let s = 0; s < steps; s++) {
-      const opts = [];
-
-      for (let dc = -1; dc <= 1; dc++) {
-        for (let dr = -1; dr <= 1; dr++) {
-          const nc = ci + dc;
-          const nr = ri + dr;
-
-          if ((dc || dr) && nc >= 0 && nc < xs.length && nr >= 0 && nr < ys.length && !(prev && prev[0] === nc && prev[1] === nr)) {
-            opts.push([nc, nr]);
-          }
-        }
-      }
-
-      const [nc, nr] = opts[Math.floor(random() * opts.length)];
-
-      prev = [ci, ri];
-      ci = nc;
-      ri = nr;
-      pts.push(grid[ci][ri]);
-    }
-
-    walks.push(pts);
-  };
-
-  walk(2 + Math.floor(random() * 3));
-
-  if (random() < 0.55) {
-    walk(1 + Math.floor(random() * 2));
-  }
-
-  return walks.map((s) => {
-    const bow = random() < 0.6 ? rnd(-0.32, 0.32, random) : 0;
-    const out = [];
-
-    for (let k = 0; k < s.length - 1; k++) {
-      const [ax, ay] = s[k];
-      const [bx, by] = s[k + 1];
-      const dx = bx - ax;
-      const dy = by - ay;
-      const mx = (ax + bx) / 2 - dy * bow;
-      const my = (ay + by) / 2 + dx * bow;
-      const n = Math.max(2, Math.ceil(Math.hypot(dx, dy) / 0.5));
-
-      for (let j = k ? 1 : 0; j <= n; j++) {
-        const t = j / n;
-        const u = 1 - t;
-
-        out.push([u * u * ax + 2 * u * t * mx + t * t * bx, u * u * ay + 2 * u * t * my + t * t * by]);
-      }
-    }
-
-    return out;
-  });
+export function revealSchedule (count, now, random = Math.random) {
+  return Array.from({ length: count }, (_, i) => ({
+    lockAt: now + i * REVEAL_STAGGER,
+    cycles: REVEAL_CYCLES + Math.floor(random() * 2)
+  }));
 }
 
+/**
+ * When the last box of a reveal lands on its letter.
+ * @param {number} count - Number of secret boxes.
+ * @returns {number} Time from the click in ms.
+ */
+export function revealDuration (count) {
+  return Math.max(0, count - 1) * REVEAL_STAGGER + (REVEAL_CYCLES + 1) * REVEAL_MS;
+}
