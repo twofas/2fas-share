@@ -453,7 +453,15 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
           >
             <legend className={S.groupLabel}>{t('v2.addForm.expirationTitle')}</legend>
             <p id={id('expiry-desc')} className='visually-hidden'>{t('addForm.expirationDesc')}</p>
-            <div className={`${ctl.segmented} ${S.track}`}>
+            <div className={`${ctl.segmented} ${ctl.segmentedSliding} ${S.track}`}>
+              <span
+                className={ctl.indicator}
+                aria-hidden='true'
+                style={{
+                  '--index': otherSelected ? PRESETS.length : PRESETS.findIndex(p => p.value === expiration),
+                  '--count': PRESETS.length + 1
+                }}
+              />
               {PRESETS.map((p) => renderOption(
                 'expiry', p.value, !otherSelected && expiration === p.value,
                 t(p.label), t(p.short), selectPreset
@@ -466,7 +474,12 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
             <div className={S.collapseInner}>
               <fieldset className={`${S.group} ${S.custom}`} disabled={isSubmitting}>
                 <legend className={S.groupLabel}>{t('generator.otherDuration')}</legend>
-                <div className={`${ctl.segmented} ${S.track} ${S.trackCustom}`}>
+                <div className={`${ctl.segmented} ${ctl.segmentedSliding} ${S.track} ${S.trackCustom}`}>
+                  <span
+                    className={ctl.indicator}
+                    aria-hidden='true'
+                    style={{ '--index': Math.max(0, CUSTOM.findIndex(c => c.value === expiration)), '--count': CUSTOM.length }}
+                  />
                   {CUSTOM.map((c) => renderOption(
                     'expiry-other', c.value, otherSelected && expiration === c.value,
                     t(c.label), c.short && t(c.short), setExpiration

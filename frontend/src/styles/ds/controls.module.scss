@@ -79,15 +79,15 @@
 // ── Segmented / expiry ──────────────────────────────────────
 // <fieldset class={ctl.segmented}><legend class="visually-hidden">…</legend>
 //   <input type="radio" class={ctl.radio} id … /><label class={ctl.option} for …>
-// One Tab stop, arrows move the selection. The selected fill and shadow
-// cross-fade from the old pill to the new one in 320 ms; nothing slides
-// (MOTION.md M-08).
+// One Tab stop, arrows move the selection, selection change 320 ms.
 .segmented {
+  --seg-gap: var(--space-2);
+
   background: var(--theme-control-track);
   border: 0;
   border-radius: var(--radius-lg);
   display: flex;
-  gap: var(--space-2);
+  gap: var(--seg-gap);
   min-inline-size: 0;
   padding: var(--space-1);
   transition: opacity var(--motion-duration-toggle) var(--motion-easing-standard);
@@ -99,6 +99,35 @@
 
 .radio {
   @include visually-hidden;
+}
+
+// Sliding selection: one raised pill moves between the options in 320 ms
+// instead of each option switching its own background. Add `segmentedSliding`
+// to the track and render `<span class={ctl.indicator} aria-hidden="true"
+// style={{ '--index': i, '--count': n }} />` as its first child. A track with
+// another gap sets it through `--seg-gap`.
+.segmentedSliding {
+  isolation: isolate;
+  position: relative;
+
+  .radio:checked + .option {
+    background: transparent;
+    box-shadow: none;
+  }
+}
+
+.indicator {
+  background: var(--theme-bg-raised);
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevation-sm);
+  inline-size: calc((100% - 2 * var(--space-1) - (var(--count) - 1) * var(--seg-gap)) / var(--count));
+  inset-block: var(--space-1);
+  inset-inline-start: var(--space-1);
+  pointer-events: none;
+  position: absolute;
+  transition: translate var(--motion-duration-toggle) var(--motion-easing-standard);
+  translate: calc(var(--index) * (100% + var(--seg-gap))) 0;
+  z-index: -1;
 }
 
 // ── Segmented / option ──────────────────────────────────────
@@ -224,6 +253,12 @@
 
   .segmented {
     border: var(--stroke-1) solid ButtonText;
+  }
+
+  .indicator {
+    background: Highlight;
+    box-shadow: none;
+    forced-color-adjust: none;
   }
 
   .option {
