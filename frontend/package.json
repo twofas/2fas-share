@@ -25,10 +25,10 @@
     "build": "yarn generate-license-info && vite build",
     "build-ci": "vite build",
     "preview": "vite preview",
-    "test": "node --test 'src/**/*.test.js'",
+    "test": "node --test 'src/**/*.test.js' 'scripts/**/*.test.mjs'",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "generate-license-info": "yarn node scripts/generate-licenses.mjs"
+    "generate-license-info": "yarn node scripts/generate-license-info.mjs format=json"
   },
   "dependencies": {
     "preact": "^11.0.1",

@@ -11,25 +11,10 @@ import D from '@/components/DocumentLayout/DocumentLayout.module.scss';
 import S from './OpenSourceLicenses.module.scss';
 import lnk from '@/styles/ds/link.module.scss';
 import { t } from '@/i18n';
-import frontendLicenses from '../../../open-source-licenses.json';
+import ArrowIcon from '@/assets/icons/arrow-down-s-line.svg?react';
+// Direct npm dependencies from open-source-licenses.json (vite.config.js).
+import frontendLicenses from 'virtual:open-source-licenses';
 import backendLicenses from '../../../../api/licenses.json';
-
-/**
- * Normalize a `repository.url`-style string into a browsable HTTPS URL.
- * Handles `git+https://...`, `git://...`, and trailing `.git`.
- * @param {string} url Raw link from package metadata.
- * @returns {string} Cleaned URL safe for an `href`.
- */
-function cleanLink (url) {
-  if (!url) {
-    return '';
-  }
-
-  return url
-    .replace(/^git\+/, '')
-    .replace(/^git:\/\//, 'https://')
-    .replace(/\.git$/, '');
-}
 
 /**
  * Strip semver range prefixes so the rendered version is plain.
@@ -72,7 +57,8 @@ function packagePath (pkg) {
 
 /**
  * Open Source Licenses page listing third-party dependencies for both
- * the Go backend and the frontend (npm).
+ * the Go backend and the frontend (npm). A frontend package that ships its
+ * license files gets their full texts, collapsed under the row.
  * @returns {import('preact').JSX.Element} The licenses page.
  */
 export default function OpenSourceLicenses () {
@@ -143,15 +129,19 @@ export default function OpenSourceLicenses () {
               <th scope='col' role='columnheader' className={S.colSource}>
                 {t('openSourceLicenses.colSource')}
               </th>
+              <th scope='col' role='columnheader' className='visually-hidden'>
+                {t('v2.openSourceLicenses.colLicense')}
+              </th>
             </tr>
           </thead>
           <tbody role='rowgroup'>
             {sortedFrontend.map((dep) => {
-              const url = cleanLink(dep.link);
+              const url = dep.link;
               const version = cleanVersion(dep.installedVersion || dep.definedVersion);
+              const licenseFiles = Object.entries(dep.licenseFiles);
 
               return (
-                <tr key={dep.name} className={S.row} role='row'>
+                <tr key={dep.name} className={`${S.row} ${licenseFiles.length > 0 ? S.rowWithLicense : ''}`} role='row'>
                   <th scope='row' role='rowheader' className={S.colPackage}>{packagePath(dep.name)}</th>
                   <td role='cell' className={S.colVersion}>{version || '—'}</td>
                   <td role='cell' className={S.colSource}>
@@ -169,11 +159,25 @@ export default function OpenSourceLicenses () {
                       )
                       : '—'}
                   </td>
+                  {licenseFiles.length > 0 && (
+                    <td role='cell' className={S.colLicense}>
+                      {licenseFiles.map(([file, text]) => (
+                        <details key={file} className={S.license}>
+                          <summary className={`${lnk.link} ${lnk.linkAccent} ${S.licenseSummary}`}>
+                            {t('v2.openSourceLicenses.licenseText', { file })}
+                            <ArrowIcon aria-hidden='true' />
+                          </summary>
+                          <pre className={S.licenseText}>{text}</pre>
+                        </details>
+                      ))}
+                    </td>
+                  )}
                 </tr>
               );
             })}
           </tbody>
         </table>
+
       </section>
     </DocumentLayout>
   );

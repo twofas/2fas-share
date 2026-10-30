@@ -443,7 +443,9 @@
     },
     "openSourceLicenses": {
       "intro": "2FAS Share opiera się na pracy społeczności open source. Dziękujemy autorom i opiekunom poniższych bibliotek.",
-      "frontendDesc": "Pakiety JavaScript używane w kliencie webowym (npm)."
+      "frontendDesc": "Pakiety JavaScript używane w kliencie webowym (npm).",
+      "colLicense": "Licencja",
+      "licenseText": "Tekst licencji ({file})"
     }
   },
   "meta": {
