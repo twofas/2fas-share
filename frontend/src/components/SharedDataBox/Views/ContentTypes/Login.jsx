@@ -19,7 +19,7 @@ import { t } from '@/i18n';
  * One address of a login: a link (new tab) or plain text, and its copy
  * button; when the clipboard refuses, the address is focused and selected
  * and the Copy failed message stands under it.
- * @param {Object} props - Component props.
+ * @param {object} props - Component props.
  * @param {string} props.text - The address as stored.
  * @returns {import('preact').JSX.Element} The list item.
  */
@@ -28,7 +28,7 @@ function UriItem ({ text }) {
   const textRef = useRef(null);
   const messageId = useId();
   const [copied, copy, failures] = useCopy(text, t('common.copied'));
-  let href = null;
+  let href;
 
   try {
     href = normalizeUrl(text);
@@ -86,8 +86,8 @@ function UriItem ({ text }) {
 
 /**
  * Login content type view - displays login credentials as field rows.
- * @param {Object} props - Component props.
- * @param {Object} props.content - Login data.
+ * @param {object} props - Component props.
+ * @param {object} props.content - Login data.
  * @param {string} [props.content.name] - Service name.
  * @param {string} [props.content.username] - Username or email.
  * @param {string} [props.content.password] - Password.

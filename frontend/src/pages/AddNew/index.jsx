@@ -21,7 +21,7 @@ import { consumeGeneratorFocus } from '@/utils/generatorFocus';
  * (Section / 01 Hero, generator, Window=Expanded).
  * @returns {import('preact').JSX.Element} The add new page.
  */
-export default function AddNew() {
+export default function AddNew () {
   // Arrived through a "create" CTA: start with focus in the content field.
   // "Create new link" is handled inside the generator window (M-28).
   const [focusFromCta] = useState(consumeGeneratorFocus);

@@ -46,10 +46,12 @@ export default function HiddenLink ({ link, apiRef, children, className }) {
 
     if (apiRef) {
       apiRef.current = {
+        /** Show the address at once. */
         reveal () {
           // At once: the address is selected right after.
           engine.toggle(true, true);
         },
+        /** Focus the field and select the address, for a manual copy. */
         select () {
           // The field takes focus only for this (Copy failed): tabindex -1
           // while focused, so a click on the text never moves focus.
@@ -76,7 +78,7 @@ export default function HiddenLink ({ link, apiRef, children, className }) {
         apiRef.current = null;
       }
     };
-  }, [link]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [link]);
 
   /** The eye: reveal or hide; focus stays on the button. */
   const onEye = () => {

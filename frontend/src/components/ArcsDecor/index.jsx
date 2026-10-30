@@ -99,6 +99,10 @@ export default function ArcsDecor ({ className }) {
     let running = null;
     let disposed = false;
 
+    /**
+     * Whether the animation may run: motion allowed, tab visible, decor on screen.
+     * @returns {boolean} True when the streaks can move.
+     */
     const canRun = () => !reducedMotion.matches && !document.hidden && inView;
 
     /**

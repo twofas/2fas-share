@@ -58,4 +58,4 @@ if (window.location.pathname !== '/') {
 /**
  * Mount the application into the DOM.
  */
-render(<App />, document.getElementById('app')); // eslint-disable-line jsdoc/require-jsdoc
+render(<App />, document.getElementById('app'));  

@@ -22,8 +22,8 @@ import { t } from '@/i18n';
  * fetches the data and the consent sentence under it. On a computer the
  * field header has "Show code", which swaps the slot for the code for a
  * phone (BEHAVIOR-SPEC 59.3).
- * @param {Object} props - Component props.
- * @param {function} props.onContinue - Called when the continue button is clicked.
+ * @param {object} props - Component props.
+ * @param {Function} props.onContinue - Called when the continue button is clicked.
  * @param {boolean} props.loading - Whether the API request is in progress.
  * @param {boolean} [props.offerCode] - Whether the code for a phone is offered (a computer, before the fetch).
  * @returns {import('preact').JSX.Element} The first view.

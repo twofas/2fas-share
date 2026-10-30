@@ -12,7 +12,7 @@ import S from '@/components/DocumentLayout/DocumentLayout.module.scss';
  * Terms of Use legal page with hardcoded content.
  * @returns {import('preact').JSX.Element} The terms of use page.
  */
-export default function TermsOfUse() {
+export default function TermsOfUse () {
   return (
     <DocumentLayout
       current='/terms-of-use'

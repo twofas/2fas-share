@@ -42,8 +42,8 @@ function maskCardNumber (formatted) {
 
 /**
  * Payment card content type view - displays card details as field rows.
- * @param {Object} props - Component props.
- * @param {Object} props.content - Payment card data.
+ * @param {object} props - Component props.
+ * @param {object} props.content - Payment card data.
  * @param {string} [props.content.name] - Card label / display name.
  * @param {string} [props.content.cardHolder] - Cardholder name.
  * @param {string} [props.content.cardNumber] - Card number.

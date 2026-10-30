@@ -74,7 +74,7 @@ export default function Features () {
   const bodyVisible = useInView(bodyRef);
 
   return (
-    <section className={S.features} aria-labelledby='features-title'>
+    <section id='features' className={S.features} aria-labelledby='features-title'>
       <div ref={headRef} className={`${S.head} ${headVisible ? S.visible : ''}`}>
         <div className={S.headInner}>
           <div className={S.headCopy}>

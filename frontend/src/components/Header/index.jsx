@@ -31,9 +31,18 @@ const SCROLL_THRESHOLD = 340;
 const LOCK_MS = 1600;
 const SECTIONS = [
   { id: 'how-it-works', label: 'nav.howItWorks' },
-  { id: 'security', label: 'nav.security' },
+  // The features section follows the encryption band and counts as part of it for the scrollspy.
+  { id: 'security', label: 'nav.security', spans: ['security', 'features'] },
   { id: 'faq', label: 'nav.faq' }
 ];
+
+/**
+ * Elements of the page that make a nav section current.
+ * @param {{ id: string, spans?: string[] }} section Entry of SECTIONS.
+ * @returns {HTMLElement[]} Elements present in the document.
+ */
+const sectionElements = ({ id, spans = [id] }) =>
+  spans.map(span => document.getElementById(span)).filter(Boolean);
 
 /**
  * Whether a click should stay with the browser: another button or a modifier
@@ -110,6 +119,10 @@ export default function Header () {
   scrolledRef.current = scrolled;
 
   useEffect(() => {
+    /**
+     * Collapse the bar once the page scrolls past SCROLL_THRESHOLD.
+     * @returns {void}
+     */
     const update = () => setScrolled(window.scrollY > SCROLL_THRESHOLD);
 
     update();
@@ -170,11 +183,13 @@ export default function Header () {
       const line = Math.max((barRef.current?.getBoundingClientRect().bottom ?? 0) + 8, padding + 1);
       let current = null;
 
-      for (const { id } of SECTIONS) {
-        const el = document.getElementById(id);
+      for (const section of SECTIONS) {
+        for (const el of sectionElements(section)) {
+          const rect = el.getBoundingClientRect();
 
-        if (el && el.getBoundingClientRect().top <= line && el.getBoundingClientRect().bottom > line) {
-          current = id;
+          if (rect.top <= line && rect.bottom > line) {
+            current = section.id;
+          }
         }
       }
 
@@ -182,11 +197,9 @@ export default function Header () {
       const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
 
       if (atBottom) {
-        for (const { id } of SECTIONS) {
-          const el = document.getElementById(id);
-
-          if (el && el.getBoundingClientRect().top < window.innerHeight) {
-            current = id;
+        for (const section of SECTIONS) {
+          if (sectionElements(section).some(el => el.getBoundingClientRect().top < window.innerHeight)) {
+            current = section.id;
           }
         }
       }
@@ -256,6 +269,10 @@ export default function Header () {
       }
     }
 
+    /**
+     * Escape closes the menu and returns focus to the menu button.
+     * @param {KeyboardEvent} e - Key event.
+     */
     const onKey = e => {
       if (e.key === 'Escape') {
         setMenuOpen(false);
@@ -288,8 +305,13 @@ export default function Header () {
     let lastFocus = null;
     let menuMode = button.getClientRects().length > 0;
 
+    /**
+     * Remember the last focused element.
+     * @param {FocusEvent} e - Focus event.
+     */
     const onFocusIn = e => { lastFocus = e.target; };
 
+    /** React to the menu button appearing or disappearing. */
     const sync = () => {
       const shown = button.getClientRects().length > 0;
 
@@ -304,6 +326,11 @@ export default function Header () {
       }
 
       const active = document.activeElement;
+      /**
+       * Whether an element is the menu button or sits in the panel.
+       * @param {Element|null} el - Element to test.
+       * @returns {boolean} True for the button or a panel descendant.
+       */
       const inMenu = el => !!el && (el === button || !!panelRef.current?.contains(el));
       const noFocus = !active || active === document.body;
       const moveFocus = inMenu(active) || (noFocus && (menuOpenRef.current || inMenu(lastFocus)));
@@ -367,6 +394,10 @@ export default function Header () {
     setActiveSection(id);
 
     let timer = 0;
+    /**
+     * Drop the pending lock release.
+     * @returns {void}
+     */
     const cancel = () => clearTimeout(timer);
 
     /** Release this click's lock, unless a newer click owns the lock. */

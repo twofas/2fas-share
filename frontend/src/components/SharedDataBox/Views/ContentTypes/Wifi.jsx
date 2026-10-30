@@ -12,8 +12,8 @@ import { t } from '@/i18n';
 
 /**
  * Wifi content type view - displays a QR code and network credentials as field rows.
- * @param {Object} props - Component props.
- * @param {Object} props.content - Wifi data.
+ * @param {object} props - Component props.
+ * @param {object} props.content - Wifi data.
  * @param {string} [props.content.name] - Network label.
  * @param {string} [props.content.ssid] - Network SSID.
  * @param {string} [props.content.password] - Network password.

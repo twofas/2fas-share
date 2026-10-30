@@ -58,14 +58,14 @@ const COUNTER_PAUSE_MS = 1000;
 /**
  * Form for creating a new secure share (custom/text content type).
  * Handles client-side encryption (AES-256-GCM) and API submission.
- * @param {Object} props
+ * @param {object} props - Component props.
  * @param {(result: {link: string, expiration: number, oneTimeAccess: boolean, password: string}) => void} props.onSuccess - Called with the share result on success.
  * @param {boolean} [props.focusOnMount] - Focus the content field after mounting.
  * @param {string} [props.labelledBy] - Id of the page heading that names the form.
  * @param {(text: string) => void} props.announce - Write to the window's role="status" region.
  * @returns {import('preact').JSX.Element} The add new form.
  */
-export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy, announce }) {
+export default function AddNewForm ({ onSuccess, focusOnMount = false, labelledBy, announce }) {
   const [text, setText] = useState('');
   const [expiration, setExpiration] = useState(3600);
   const [oneTimeAccess, setOneTimeAccess] = useState(true);
@@ -110,6 +110,7 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
     const start = performance.now();
     let timer;
 
+    /** Type the next character of the hint, or show it whole once the field is in use. */
     const tick = () => {
       if (!note || note.value || document.activeElement === note) {
         setHint(fullHint);
@@ -128,7 +129,7 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
     timer = setTimeout(tick, HINT_DELAY_MS);
 
     return () => clearTimeout(timer);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // Once on mount: the hint types itself a single time.
 
   // The content field keeps the height it has in the Empty state: a message,
   // the custom expiry block or the password field grow the window instead of
@@ -175,7 +176,7 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
     const timer = setTimeout(() => announce?.(counterText), COUNTER_PAUSE_MS);
 
     return () => clearTimeout(timer);
-  }, [counterText]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [counterText]);
 
   // Field / textarea grows with the content up to a ceiling, then scrolls
   // inside. CSS field-sizing does it where supported; elsewhere measure it.
@@ -245,6 +246,10 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
     // The Creating state lasts at least 400 ms (BEHAVIOR-SPEC), also when the
     // request fails, so a fast server does not make it flash.
     const started = performance.now();
+    /**
+     * Wait out the rest of the minimum Creating time.
+     * @returns {Promise<void>} Resolves once MIN_CREATING_MS have passed since the submit.
+     */
     const settle = () => new Promise(resolve => setTimeout(resolve, Math.max(0, MIN_CREATING_MS - (performance.now() - started))));
 
     try {
@@ -274,7 +279,7 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
       const link = `${FRONTEND_URL}/#/${result.id}/${type}/${toBase64Url(nonce)}/${urlSecret}`;
       await settle();
       onSuccess({ link, expiration, oneTimeAccess, password: password.trim() });
-    } catch (err) {
+    } catch {
       await settle();
       setErrors({ submit: t('addForm.errorSubmit') });
       // The CTA keeps focus: the message reaches the screen reader through role="status".
@@ -361,6 +366,16 @@ export default function AddNewForm({ onSuccess, focusOnMount = false, labelledBy
     target.click();
   };
 
+  /**
+   * One option of an expiry segmented control: a radio input and its label.
+   * @param {string} name - Radio group name.
+   * @param {string|number} value - Option value.
+   * @param {boolean} checked - Whether the option is selected.
+   * @param {string} label - Full label.
+   * @param {string} [short] - Short label for narrow layouts.
+   * @param {(value: string|number) => void} onSelect - Called with the value when the option is picked.
+   * @returns {import('preact').JSX.Element} The input and label pair.
+   */
   const renderOption = (name, value, checked, label, short, onSelect) => {
     const optionId = id(`${name}-${value}`);
 

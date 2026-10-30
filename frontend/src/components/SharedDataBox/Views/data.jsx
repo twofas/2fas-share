@@ -22,7 +22,7 @@ import link from '@/styles/ds/link.module.scss';
 import S from '../SharedDataBox.module.scss';
 import { t } from '@/i18n';
 
-/** @type {Object<string, string>} Content type translation keys. */
+/** @type {Record<string, string>} Content type translation keys. */
 const CONTENT_TITLE_KEYS = {
   custom: 'content.note',
   login: 'data.contentType.login',
@@ -31,7 +31,7 @@ const CONTENT_TITLE_KEYS = {
   wifi: 'data.contentType.wifi'
 };
 
-/** @type {Object<string, function>} Content type component map. */
+/** @type {Record<string, Function>} Content type component map. */
 const CONTENT_COMPONENTS = {
   custom: ContentCustom,
   login: ContentLogin,
@@ -64,9 +64,9 @@ function noteText (contentType, content) {
  * Footer CTA copying the whole note: "Copy content" → "Content copied" for
  * 2 s, text only (Figma: no checkmark). The name comes from the visible text (no aria-label);
  * the page status region announces the same text.
- * @param {Object} props - Component props.
+ * @param {object} props - Component props.
  * @param {boolean} props.copied - Whether the note was just copied.
- * @param {function} props.onCopy - Copy handler.
+ * @param {Function} props.onCopy - Copy handler.
  * @returns {import('preact').JSX.Element} Copy CTA.
  */
 function CopyContentButton ({ copied, onCopy }) {
@@ -81,12 +81,12 @@ function CopyContentButton ({ copied, onCopy }) {
  * SharedDataBox - data display view (Recipient / window, State=Revealed and
  * Revealed once). Routes to the content type component. Focus moves to the
  * page <h1> after the reveal (handled by the page).
- * @param {Object} props - Component props.
- * @param {Object} props.decryptedData - Decrypted payload with contentType, contentVersion, and content.
+ * @param {object} props - Component props.
+ * @param {object} props.decryptedData - Decrypted payload with contentType, contentVersion, and content.
  * @param {string} props.decryptedData.contentType - The content type identifier.
  * @param {number} props.decryptedData.contentVersion - The content version number.
  * @param {any} props.decryptedData.content - The content data (shape depends on contentType).
- * @param {Object} [props.secretMeta] - Secret metadata ({ singleUse, createdAt, validUntil }).
+ * @param {object} [props.secretMeta] - Secret metadata ({ singleUse, createdAt, validUntil }).
  * @returns {import('preact').JSX.Element} The data display view.
  */
 export default function SharedDataBoxData (props) {

@@ -33,7 +33,7 @@ function remainingTitle (remaining) {
  * "The link disappears in 56 minutes." and "Today at 12:15." with the date
  * in <time datetime>. No aria-live: the row updates silently; one message
  * goes to the page status region when the link enters its last 5 minutes.
- * @param {Object} props - Component props.
+ * @param {object} props - Component props.
  * @param {string} props.validUntil - ISO date string when the link expires.
  * @param {string} [props.className] - Additional CSS class for the root element.
  * @returns {import('preact').JSX.Element} The expiry row.

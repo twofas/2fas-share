@@ -29,11 +29,11 @@ const EXPIRATIONS = [300, 1800, 3600, 86400, 604800, 2592000];
 /**
  * The copy glyph and the checkmark that replaces it in Copied: both stay in
  * the button and cross-fade (opacity, scale 0.6 to 1, toggle; M-30).
- * @param {Object} props
+ * @param {object} props - Component props.
  * @param {boolean} props.copied - Show the checkmark.
  * @returns {import('preact').JSX.Element} The two icons.
  */
-function CopyIcons({ copied }) {
+function CopyIcons ({ copied }) {
   return (
     <span className={S.copyIcons} data-copied={copied ? '' : undefined} aria-hidden='true'>
       <CopyIcon />
@@ -45,7 +45,7 @@ function CopyIcons({ copied }) {
 /**
  * Generator window in the Ready and Copied states: success medallion, the
  * link in a read-only field, the rules as Chip / fact and the copy actions.
- * @param {Object} props
+ * @param {object} props - Component props.
  * @param {string} props.link - The generated share link.
  * @param {number} props.expiration - Expiration time in seconds.
  * @param {boolean} props.oneTimeAccess - Whether one-time access is enabled.
@@ -54,7 +54,7 @@ function CopyIcons({ copied }) {
  * @param {(text: string) => void} props.announce - Write to the window's role="status" region.
  * @returns {import('preact').JSX.Element} The share link result view.
  */
-export default function ShareLinkResult({ link, expiration, oneTimeAccess, password, onReset, announce }) {
+export default function ShareLinkResult ({ link, expiration, oneTimeAccess, password, onReset, announce }) {
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedPassword, setCopiedPassword] = useState(false);
   // Copy failed (BEHAVIOR-SPEC 57): the clipboard refused the link.

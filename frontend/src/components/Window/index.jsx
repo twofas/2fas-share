@@ -8,6 +8,11 @@
 import S from './Window.module.scss';
 import Star from '@/assets/star.svg?react';
 
+/**
+ * Join the truthy class names with spaces.
+ * @param {...(string|false|null|undefined)} names - Class names; falsy entries are skipped.
+ * @returns {string} The class attribute value.
+ */
 const cx = (...names) => names.filter(Boolean).join(' ');
 
 /**

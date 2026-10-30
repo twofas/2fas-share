@@ -13,8 +13,8 @@ import { t } from '@/i18n';
 
 /**
  * Secure note content type view - the name and the note body with copy.
- * @param {Object} props - Component props.
- * @param {Object} props.content - Secure note data.
+ * @param {object} props - Component props.
+ * @param {object} props.content - Secure note data.
  * @param {string} [props.content.name] - Note title.
  * @param {string} [props.content.text] - Note text body.
  * @returns {import('preact').JSX.Element} The secure note content view.

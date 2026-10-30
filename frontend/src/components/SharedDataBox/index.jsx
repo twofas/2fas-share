@@ -41,7 +41,7 @@ const VIEW_COMPONENTS = {
  * Recipient state of the window for the page heading.
  * @param {string} view - Current view.
  * @param {string} decryptError - Error of the last decryption attempt.
- * @param {Object} [secretMeta] - Secret metadata once fetched.
+ * @param {object} [secretMeta] - Secret metadata once fetched.
  * @returns {'intro'|'password'|'passwordError'|'revealed'|'revealedOnce'|'unavailable'} State.
  */
 function recipientState (view, decryptError, secretMeta) {
@@ -61,16 +61,16 @@ function recipientState (view, decryptError, secretMeta) {
  * Shared data box that renders the correct view based on state. A link
  * without a password (v1k) starts in Intro; a link with a password (v1p)
  * starts in Password and the first sending of the password fetches the data.
- * @param {Object} props - Component props.
+ * @param {object} props - Component props.
  * @param {string} props.id - Secret identifier for API fetch.
  * @param {string} props.type - Share type (v1p or v1k).
  * @param {string} props.nonce - Base64URL-encoded nonce from URL.
  * @param {string} props.urlSecret - Base64URL-encoded key (v1k) or salt (v1p) from URL.
- * @param {function} [props.onSecretMeta] - Called with secret metadata ({ singleUse, expiresAt, createdAt }) after API fetch.
- * @param {function} [props.onError] - Called when an unrecoverable error occurs (API failure, non-password decryption error).
- * @param {function} [props.onReveal] - Called when decrypted data is successfully revealed.
- * @param {Object} [props.secretMeta] - Secret metadata ({ singleUse, createdAt, validUntil }) once fetched.
- * @param {function} [props.onStateChange] - Called with the recipient state (and the content type once revealed) when it changes.
+ * @param {Function} [props.onSecretMeta] - Called with secret metadata ({ singleUse, expiresAt, createdAt }) after API fetch.
+ * @param {Function} [props.onError] - Called when an unrecoverable error occurs (API failure, non-password decryption error).
+ * @param {Function} [props.onReveal] - Called when decrypted data is successfully revealed.
+ * @param {object} [props.secretMeta] - Secret metadata ({ singleUse, createdAt, validUntil }) once fetched.
+ * @param {Function} [props.onStateChange] - Called with the recipient state (and the content type once revealed) when it changes.
  * @returns {import('preact').JSX.Element} The shared data box.
  */
 export default function SharedDataBox (props) {

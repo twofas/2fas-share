@@ -15,7 +15,7 @@ import { t } from '@/i18n';
 /**
  * Maps WiFi security type values to the WIFI: URI protocol type parameter.
  * Matches iOS PaymentCardUtilityInteractor and 2fas-pass-browser-extension.
- * @type {Object<string, string>}
+ * @type {Record<string, string>}
  */
 const WIFI_URI_TYPE_MAP = {
   none: 'nopass',
@@ -43,7 +43,7 @@ function escapeWifiString (str) {
 /**
  * Builds a WIFI: URI string for QR code generation.
  * Format: WIFI:T:{type};S:{ssid};P:{password};H:{hidden};;
- * @param {Object} content - WiFi content data.
+ * @param {object} content - WiFi content data.
  * @param {string} content.ssid - Network SSID.
  * @param {string} [content.password] - Network password.
  * @param {string} [content.securityType] - Security type (none, wep, wpa, wpa2, wpa3).
@@ -70,8 +70,8 @@ function buildWifiUri (content) {
 /**
  * Renders a QR code for a WiFi network, allowing users to scan and connect.
  * Only renders when SSID is present.
- * @param {Object} props - Component props.
- * @param {Object} props.content - WiFi content data.
+ * @param {object} props - Component props.
+ * @param {object} props.content - WiFi content data.
  * @param {string} props.content.ssid - Network SSID.
  * @param {string} [props.content.password] - Network password.
  * @param {string} [props.content.securityType] - Security type.
