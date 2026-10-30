@@ -18,7 +18,8 @@ AGENTS.md
 .mcp.json
 .playwright-mcp
 scripts/*
-!scripts/generate-licenses.mjs
+!scripts/generate-license-info.mjs
+!scripts/licenseInfo/
 .superpowers/
 docs/
 testFiles/

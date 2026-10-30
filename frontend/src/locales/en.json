@@ -439,7 +439,9 @@
     },
     "openSourceLicenses": {
       "intro": "2FAS Share is built on the work of the open source community. We thank the authors and maintainers of the libraries below.",
-      "frontendDesc": "JavaScript packages used in the web client (npm)."
+      "frontendDesc": "JavaScript packages used in the web client (npm).",
+      "colLicense": "License",
+      "licenseText": "License text ({file})"
     }
   },
   "meta": {

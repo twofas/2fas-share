@@ -12,6 +12,7 @@ import { compression } from 'vite-plugin-compression2';
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'path';
+import { sourceLink } from './src/utils/sourceLink.js';
 
 /**
  * Add Subresource Integrity (sha384) attributes to the JS and CSS tags of the
@@ -57,6 +58,54 @@ function sri () {
   };
 }
 
+const LICENSES_ID = 'virtual:open-source-licenses';
+const LICENSES_FILE = path.resolve(import.meta.dirname, 'open-source-licenses.json');
+
+/**
+ * Serve the direct npm dependencies of open-source-licenses.json to the Open
+ * Source Licenses page (its copy names npm packages, so the font entries stay
+ * out), with the license texts the package itself ships (not those fetched
+ * from its repository). The file also holds every transitive package with its
+ * license texts (over 1 MB), which must not reach the bundle.
+ * @returns {import('vite').Plugin} Vite plugin.
+ */
+function openSourceLicenses () {
+  return {
+    name: 'open-source-licenses',
+    /**
+     * Claim the virtual module id.
+     * @param {string} id Imported id.
+     * @returns {string|undefined} Resolved id of the virtual module.
+     */
+    resolveId (id) {
+      return id === LICENSES_ID ? `\0${LICENSES_ID}` : undefined;
+    },
+    /**
+     * Build the module from the generated JSON.
+     * @param {string} id Resolved id.
+     * @returns {string|undefined} Module source.
+     */
+    load (id) {
+      if (id !== `\0${LICENSES_ID}`) {
+        return undefined;
+      }
+
+      this.addWatchFile(LICENSES_FILE);
+
+      const list = JSON.parse(readFileSync(LICENSES_FILE, 'utf-8'))
+        .filter(entry => entry.direct && entry.dependencyType !== 'font')
+        .map(({ name, installedVersion, link, licenseFiles, licenseFilesSource }) => ({
+          name,
+          installedVersion,
+          link: sourceLink(link),
+          licenseFiles: licenseFilesSource === 'package' ? licenseFiles : {}
+        }));
+
+      return `export default ${JSON.stringify(list)};`;
+    }
+  };
+}
+
 /**
  * Vite configuration for Preact with SCSS support.
  * @see https://vitejs.dev/config/
@@ -82,6 +131,7 @@ export default defineConfig({
   plugins: [
     preact(),
     svgr(),
+    openSourceLicenses(),
     sri(),
     compression({ algorithm: 'gzip' }),
     compression({ algorithm: 'brotliCompress' })
