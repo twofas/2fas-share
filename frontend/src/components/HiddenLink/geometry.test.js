@@ -7,7 +7,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { BASE64URL, arrivals, averageWidth, easeInOut, easeOut, rippleReach, signStrokes, splitLink } from './geometry.js';
+import { BASE64URL, GLITCH_CHARS, REVEAL_CYCLES, REVEAL_MS, REVEAL_STAGGER, averageWidth, randomChar, revealDuration, revealSchedule, splitLink } from './geometry.js';
 
 const LINK = 'https://share.2fas.com/#/jtuhrIaoVVmLpi7Ptpu84G-bePYs9ipzimlOJ5KxtrQ/v1k/edSvqkglVIuwgro3/voY0HSkb0ORUGYN0hYH2xZI3b2cFrSGwbOPFBe_oCO8';
 
@@ -53,43 +53,28 @@ test('every hidden box has the average width of the Base64url alphabet', () => {
   assert.ok(Math.abs(averageWidth(c => (c === '-' || c === '_' ? 0 : 64 / 62)) - 1) < 1e-9);
 });
 
-test('the curves start at 0 and end at 1', () => {
-  for (const f of [easeOut, easeInOut]) {
-    assert.equal(f(0), 0);
-    assert.equal(f(1), 1);
-  }
+test('a hidden box rolls only characters of the glitch set', () => {
+  const random = seeded(3);
 
-  assert.ok(easeOut(0.5) > 0.5);
-  assert.equal(easeInOut(0.5), 0.5);
+  for (let i = 0; i < 500; i++) {
+    assert.ok(GLITCH_CHARS.includes(randomChar(GLITCH_CHARS, random)));
+  }
 });
 
-test('the ripple reaches nearer boxes first and the farthest within its duration', () => {
-  const boxes = [0, 100, 200, 300].map(x => ({ x, w: 10, top: 0, h: 24 }));
-  const t = arrivals(boxes, { x: 0, y: 12 }, 400, 100, 450);
+test('the reveal runs left to right, one stagger apart, 5 or 6 rolls per box', () => {
+  const plan = revealSchedule(84, 1000, seeded(7));
 
-  assert.ok(t[0] < t[1] && t[1] < t[2] && t[2] < t[3]);
-  assert.ok(t[3] <= 450);
-  assert.ok(rippleReach({ x: 0, y: 0 }, 300, 400) === 520);
+  assert.equal(plan.length, 84);
+  plan.forEach((p, i) => {
+    assert.equal(p.lockAt, 1000 + i * REVEAL_STAGGER);
+    assert.ok(p.cycles === REVEAL_CYCLES || p.cycles === REVEAL_CYCLES + 1);
+  });
 });
 
-test('a sign has 1 or 2 walks, stays near its box and does not use the character', () => {
-  const random = seeded(7);
-  const box = { x: 10, w: 9.63, base: 20, xh: 8.8, cap: 11.6 };
+test('the last box lands within the reveal duration', () => {
+  const plan = revealSchedule(105, 0, () => 0.999);
+  const last = plan[plan.length - 1];
 
-  for (let n = 0; n < 200; n++) {
-    const strokes = signStrokes(box, random);
-
-    assert.ok(strokes.length >= 1 && strokes.length <= 2);
-
-    for (const s of strokes) {
-      assert.ok(s.length >= 3);
-
-      for (const [x, y] of s) {
-        assert.ok(x > box.x - 4 && x < box.x + box.w + 4);
-        assert.ok(y > box.base - box.cap - 4 && y < box.base + box.xh);
-      }
-    }
-  }
-
-  assert.equal(signStrokes.length, 1);
+  assert.ok(last.lockAt + last.cycles * REVEAL_MS <= revealDuration(105));
+  assert.equal(revealDuration(0), (REVEAL_CYCLES + 1) * REVEAL_MS);
 });

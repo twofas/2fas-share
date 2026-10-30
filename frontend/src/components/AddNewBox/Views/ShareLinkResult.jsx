@@ -99,7 +99,7 @@ export default function ShareLinkResult({ link, expiration, oneTimeAccess, passw
 
   /**
    * Copy the link (CTA and the button in the field). When the clipboard
-   * refuses, the label stays, the link is revealed (the dust removed, as
+   * refuses, the label stays, the link is revealed at once (as
    * with the eye), the field takes focus and the address is selected, and
    * the instruction opens under the field and is announced.
    * @returns {Promise<void>} Resolves after copying.
