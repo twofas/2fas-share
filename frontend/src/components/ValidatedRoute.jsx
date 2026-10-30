@@ -20,7 +20,7 @@ import NotFound from '../pages/NotFound';
  * @param {object} props.params - Route parameters from wouter.
  * @returns {import('preact').JSX.Element} SharedData or the broken link page.
  */
-export default function ValidatedRoute({ params }) {
+export default function ValidatedRoute ({ params }) {
   if (!validateShareParams(params)) {
     return params.key || isShareType(params.type) ? <SharedDataBroken /> : <NotFound />;
   }

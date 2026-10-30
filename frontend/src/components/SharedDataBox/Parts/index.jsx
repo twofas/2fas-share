@@ -18,6 +18,11 @@ import fb from '@/styles/ds/feedback.module.scss';
 import S from './Parts.module.scss';
 import { t } from '@/i18n';
 
+/**
+ * Join the truthy class names with spaces.
+ * @param {...(string|false|null|undefined)} names - Class names; falsy entries are skipped.
+ * @returns {string} The class attribute value.
+ */
 const cx = (...names) => names.filter(Boolean).join(' ');
 
 /**

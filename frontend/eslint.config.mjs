@@ -12,6 +12,8 @@ import globals from 'globals';
 export default [
   js.configs.recommended,
   {
+    // Flat config matches only .js/.mjs/.cjs by default; components are .jsx.
+    files: ['**/*.{js,jsx,mjs}'],
     plugins: {
       jsdoc
     },
@@ -31,7 +33,7 @@ export default [
       'space-before-function-paren': ['error', 'always'],
       quotes: ['error', 'single', { avoidEscape: true }],
       'jsx-quotes': ['error', 'prefer-single'],
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', ignoreRestSiblings: true }],
       'jsdoc/require-jsdoc': ['error', {
         require: {
           FunctionDeclaration: true,
@@ -44,7 +46,8 @@ export default [
       'jsdoc/require-param-description': 'warn',
       'jsdoc/require-returns': 'error',
       'jsdoc/require-returns-description': 'warn',
-      'jsdoc/check-param-names': 'error',
+      // Nested props of a destructured object (props.content.name) are documentation, not parameters.
+      'jsdoc/check-param-names': ['error', { disableExtraPropertyReporting: true }],
       'jsdoc/check-types': 'error',
       'jsdoc/valid-types': 'error',
       'comma-dangle': ['error', 'never']

@@ -18,7 +18,7 @@ import usePresence from './usePresence';
  * aria-describedby. It opens in `expand` and, with `open`, closes the same way
  * in reverse (MOTION.md M-06). A repeated failed attempt does not re-enter the
  * message, only bumps the icon.
- * @param {Object} props
+ * @param {object} props - Component props.
  * @param {string} props.id - Id referenced by aria-describedby.
  * @param {import('preact').ComponentChildren} props.children - Message title.
  * @param {import('preact').ComponentChildren} [props.body] - Secondary line under the title.
@@ -27,7 +27,7 @@ import usePresence from './usePresence';
  * @param {string} [props.className] - Extra class.
  * @returns {import('preact').JSX.Element|null} The message.
  */
-export default function FieldMessage({ id, children, body, attempt = 1, open = true, className }) {
+export default function FieldMessage ({ id, children, body, attempt = 1, open = true, className }) {
   const { present, closing, content } = usePresence(open, { children, body });
 
   if (!present) {

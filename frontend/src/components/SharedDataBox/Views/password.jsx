@@ -29,14 +29,14 @@ const ALERT_ID = 'shared-password-alert';
  * SharedDataBox - password entry view (Recipient / window, State=Password
  * and Password error). A link with a password starts here: the first sending
  * of the password fetches the data, every sending decrypts it.
- * @param {Object} props - Component props.
- * @param {function} props.onPasswordSubmit - Callback to submit password for decryption.
+ * @param {object} props - Component props.
+ * @param {Function} props.onPasswordSubmit - Callback to submit password for decryption.
  * @param {string} props.decryptError - Error message from failed decryption attempt.
  * @param {number} [props.decryptAttempt] - Counter of failed decryption attempts.
  * @param {boolean} props.loading - Whether the request or decryption is in progress.
  * @param {boolean} [props.fetched] - Whether the data was already fetched (the consent was given).
- * @param {Object} [props.secretMeta] - Secret metadata; a one-time link shows the warning after the fetch.
- * @param {function} [props.onClearError] - Clears the wrong-password error of the last attempt (typing).
+ * @param {object} [props.secretMeta] - Secret metadata; a one-time link shows the warning after the fetch.
+ * @param {Function} [props.onClearError] - Clears the wrong-password error of the last attempt (typing).
  * @param {boolean} [props.offerCode] - Whether the code for a phone is offered (a computer, before the fetch).
  * @returns {import('preact').JSX.Element} The password entry view.
  */

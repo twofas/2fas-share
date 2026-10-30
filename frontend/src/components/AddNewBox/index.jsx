@@ -28,13 +28,13 @@ const RISE = '0 0.5rem';
 /**
  * Generator window (Generator / dialog): the form (Empty, Creating, Error,
  * Custom) and the result (Ready, Copied) inside one glass window.
- * @param {Object} props
+ * @param {object} props - Component props.
  * @param {'hero'|'full'} [props.variant='hero'] - Home hero or the full generator view (/add).
  * @param {boolean} [props.focusOnMount] - Focus the content field on mount.
  * @param {string} [props.className] - Extra class on the window.
  * @returns {import('preact').JSX.Element} The add new box component.
  */
-export default function AddNewBox({ variant = 'hero', focusOnMount = false, className }) {
+export default function AddNewBox ({ variant = 'hero', focusOnMount = false, className }) {
   const [view, setView] = useState(VIEWS.FORM);
   const [shareResult, setShareResult] = useState(null);
   // A new Empty form after "Create new link"; it starts with focus in the field.
@@ -104,7 +104,7 @@ export default function AddNewBox({ variant = 'hero', focusOnMount = false, clas
 
   /**
    * Handle successful form submission.
-   * @param {Object} result - The share result data.
+   * @param {object} result - The share result data.
    * @param {string} result.link - The generated share link.
    * @param {number} result.expiration - Expiration time in seconds.
    * @param {boolean} result.oneTimeAccess - Whether one-time access is enabled.

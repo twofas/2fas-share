@@ -45,7 +45,7 @@ function PageTitle () {
  * hidden during chunk loads (no Footer flashing under Header).
  * @returns {import('preact').JSX.Element} The routed application.
  */
-export default function App() {
+export default function App () {
   return (
     <Router hook={useHashLocation}>
       <ScrollToTop />

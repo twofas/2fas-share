@@ -13,7 +13,7 @@ import S from '@/components/DocumentLayout/DocumentLayout.module.scss';
  * Privacy Policy legal page with hardcoded content.
  * @returns {import('preact').JSX.Element} The privacy policy page.
  */
-export default function PrivacyPolicy() {
+export default function PrivacyPolicy () {
   return (
     <DocumentLayout
       current='/privacy-policy'

@@ -23,7 +23,7 @@ const DEFAULT_MASK = '●●●';
  * the field. When the clipboard refuses, the box gets focus, the value is
  * shown and selected, and the Copy failed message stands under the box
  * until a successful copy or until the value is hidden again.
- * @param {Object} props - Component props.
+ * @param {object} props - Component props.
  * @param {string} props.label - Field label text.
  * @param {string} props.value - Field value to display.
  * @param {boolean} [props.sensitive=false] - Whether to mask the value by default.

@@ -17,7 +17,7 @@ import { t } from '@/i18n';
  * "Show code" is on, so it looks like the "Encrypted note" field: a 104 px
  * code with black modules on a white tile in both themes, and a caption that
  * warns about screen sharing.
- * @param {Object} props - Component props.
+ * @param {object} props - Component props.
  * @param {string} props.id - Id, for the aria-controls of the "Show code" button.
  * @param {string} [props.className] - Extra class.
  * @returns {import('preact').JSX.Element} The code panel.

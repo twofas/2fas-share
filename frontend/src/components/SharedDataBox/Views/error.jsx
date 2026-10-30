@@ -51,7 +51,7 @@ const VARIANTS = {
  * Interior of the error window (Recipient / window, State=Unavailable or
  * Broken): a dashed slot with a medallion, two hint rows and the secondary
  * action to create your own link.
- * @param {Object} props - Component props.
+ * @param {object} props - Component props.
  * @param {'unavailable'|'broken'|'notFound'} [props.variant='unavailable'] - Which error state.
  * @returns {import('preact').JSX.Element} Card and footer.
  */
@@ -98,7 +98,7 @@ export function ErrorContent ({ variant = 'unavailable' }) {
 /**
  * SharedDataBox - standalone error window (the Broken page, where no
  * SharedDataBox is mounted).
- * @param {Object} props - Component props.
+ * @param {object} props - Component props.
  * @param {'unavailable'|'broken'|'notFound'} [props.variant='unavailable'] - Which error state.
  * @returns {import('preact').JSX.Element} The error window.
  */

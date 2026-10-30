@@ -148,9 +148,9 @@ export function useCodeSwap (offered) {
 /**
  * "Show code" / "Hide code": Button / secondary Size=Small with the
  * qr-code-line icon after the label, in the field header next to the star.
- * @param {Object} props - Component props.
+ * @param {object} props - Component props.
  * @param {boolean} props.shown - Whether the code is shown.
- * @param {function} props.onClick - Toggle handler.
+ * @param {Function} props.onClick - Toggle handler.
  * @returns {import('preact').JSX.Element} The button.
  */
 export function ShowCodeButton ({ shown, onClick }) {
@@ -170,7 +170,7 @@ export function ShowCodeButton ({ shown, onClick }) {
 
 /**
  * The box where the field and the code panel take turns.
- * @param {Object} props - Component props.
+ * @param {object} props - Component props.
  * @param {ReturnType<typeof useCodeSwap>} props.swap - State from useCodeSwap.
  * @param {boolean} props.offered - Whether the code is offered at all.
  * @param {import('preact').ComponentChildren} props.children - The field (note slot or password field).

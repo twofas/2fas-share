@@ -19,8 +19,8 @@ const ANNOUNCE_GAP_MS = 100;
  * Shared data page (Section / 10 Recipient). One <h1> above the window in
  * every state; the states change only the heading and the window interior.
  * A page-level role="status" region announces the copy and the last 5 minutes.
- * @param {Object} props - Component props.
- * @param {Object} props.params - Route parameters (id, type, nonce, key).
+ * @param {object} props - Component props.
+ * @param {object} props.params - Route parameters (id, type, nonce, key).
  * @returns {import('preact').JSX.Element} The shared data page.
  */
 export default function SharedData (props) {
@@ -82,7 +82,7 @@ export default function SharedData (props) {
 
   /**
    * Handle secret metadata received from SharedDataBox after the API fetch.
-   * @param {Object} meta - Secret metadata.
+   * @param {object} meta - Secret metadata.
    * @param {boolean} meta.singleUse - Whether the secret is single-use.
    * @param {string} [meta.createdAt] - ISO date when the link was created.
    * @param {string} [meta.validUntil] - ISO date when the link expires.
