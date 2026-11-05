@@ -27,8 +27,7 @@ export default function WelcomeSection () {
           <Benefits className={S.benefits} />
           <h1 id='hero-title' className={S.title}>
             {t('welcome.titleStart')}{' '}
-            <span className={S.titleEnd}>{t('welcome.titleEnd')}</span>{' '}
-            <span className={S.titleTail}>{t('welcome.titleTail')}</span>
+            <span className={S.titleEnd}>{t('welcome.titleEnd')}</span>
           </h1>
           <p className={S.lead}>{t('v2.welcome.subtitle')}</p>
         </div>

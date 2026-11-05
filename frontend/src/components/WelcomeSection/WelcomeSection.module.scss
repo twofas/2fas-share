@@ -102,11 +102,6 @@
   white-space: nowrap;
 }
 
-// Figma: "Then the link disappears." always starts a new line.
-.titleTail {
-  display: block;
-}
-
 .lead {
   @include typ('body-lg');
   @include enter-lead(0.46s, $on: null);

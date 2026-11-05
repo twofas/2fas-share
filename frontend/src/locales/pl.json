@@ -141,7 +141,7 @@
     "noAccounts": "Bez kont",
     "freeToUse": "Darmowe i proste w użyciu",
     "private": "Prywatne",
-    "benefit1": "Za darmo",
+    "benefit1": "Za darmo dla wszystkich",
     "benefit2": "Bez konta",
     "benefit3": "Otwarty kod",
     "titleEnd": "Bezpiecznie.",
@@ -230,22 +230,22 @@
     "title": "Szyfrowane jeszcze na twoim urządzeniu"
   },
   "faq": {
-    "a1": "Treść jest szyfrowana w przeglądarce, zanim opuści twoje urządzenie. Klucz zostaje w samym linku (po znaku #), a przeglądarki nie wysyłają tej części na nasz serwer. Treść trafia do nas tylko w postaci zaszyfrowanej, a my nie mamy klucza, żeby ją odczytać.\n\nDo otwarcia potrzebny jest pełny link, a dla dodatkowej ochrony możesz dodać hasło.",
-    "a2": "Nie. Nie trzeba się rejestrować ani niczego instalować. Wpisz treść, ustaw zasady i utwórz link.",
-    "a3": "Tak. 2FAS Share jest darmowy i nie wymaga konta. Kod jest otwarty, więc każdy może sprawdzić, jak działa.",
-    "a4": "Ty decydujesz, kto dostanie link. Do otwarcia potrzebny jest pełny link oraz hasło, jeśli je ustawisz. Przy włączonym jednorazowym dostępie link przestaje działać po pierwszym otwarciu.",
-    "a5": "Link przestaje działać, a zaszyfrowana treść jest usuwana z naszego serwera. Kto otworzy link później, zobaczy tylko, że już nie działa.",
-    "a6": "E-mail czy SMS mogą zostać latami w skrzynkach, kopiach zapasowych i historii czatów. Link 2FAS Share przestaje działać po pierwszym otwarciu albo po wybranym czasie, a treść jest szyfrowana end-to-end.",
+    "a1": "Treść jest szyfrowana w przeglądarce, zanim opuści twoje urządzenie. Klucz zostaje w samym linku (po znaku #), a przeglądarki nie wysyłają tej części na nasz serwer. Treść trafia do nas tylko w postaci zaszyfrowanej, a my nie mamy klucza, żeby ją odczytać.\n\nDla dodatkowej ochrony możesz też dodać hasło.",
+    "a2": "Ty decydujesz, kto dostanie link. Do otwarcia potrzebny jest pełny link oraz hasło, jeśli je ustawisz. Przy włączonym jednorazowym dostępie link przestaje działać po pierwszym otwarciu.",
+    "a3": "E-mail czy SMS mogą zostać latami w skrzynkach, kopiach zapasowych i historii czatów. Link 2FAS Share przestaje działać po pierwszym otwarciu albo po wybranym czasie, a treść jest szyfrowana end-to-end.",
+    "a4": "Tak. 2FAS Share jest darmowy dla wszystkich. Kod jest otwarty, więc każdy może sprawdzić, jak działa.",
+    "a5": "Nie. Ani ty, ani odbiorca nie potrzebujecie konta i nie trzeba niczego instalować. Wpisz wiadomość, ustaw zasady i utwórz link.",
+    "a6": "Link przestaje działać, a zaszyfrowana treść jest usuwana z naszego serwera. Kto otworzy link później, zobaczy tylko, że już nie działa.",
     "a7": "Link został już otwarty albo minął jego czas. W ten sposób 2FAS Share chroni twoją treść. Utwórz nowy link i wyślij go jeszcze raz.",
     "eyebrow": "Najczęstsze pytania",
     "q1": "Jak chroniona jest moja treść?",
-    "q2": "Czy potrzebuję konta?",
-    "q3": "Czy to naprawdę jest darmowe?",
-    "q4": "Kto może otworzyć link?",
-    "q5": "Co się dzieje, gdy link wygaśnie?",
-    "q6": "Czym to się różni od e-maila albo SMS-a?",
+    "q2": "Kto może otworzyć link?",
+    "q3": "Czym to się różni od e-maila albo SMS-a?",
+    "q4": "Czy to naprawdę jest darmowe?",
+    "q5": "Czy potrzebuję konta?",
+    "q6": "Co się dzieje, gdy link wygaśnie?",
     "q7": "Co zrobić, gdy odbiorca widzi błąd „Ten link już nie działa”?",
-    "title": "Krótkie odpowiedzi\no 2FAS Share"
+    "title": "Dobrze wiedzieć"
   },
   "features": {
     "expiryDesc": "Wybierz godzinę, dzień lub tydzień, po których link automatycznie wygaśnie.",
@@ -368,7 +368,7 @@
     "wrongPasswordTitle": "Nieprawidłowe hasło."
   },
   "stepPreview": {
-    "noteCaption": "Wpisz dane, które chcesz wysłać.",
+    "noteCaption": "Wpisz lub wklej to, co chcesz wysłać.",
     "optionalSuffix": "(opcjonalnie)",
     "typedLine1": "Wi-Fi „Biuro-Goście”",
     "typedLine2": "Hasło: Coffee{year}Buzz!"
@@ -390,7 +390,7 @@
       },
       "expirationTitle": "Link wygasa po",
       "notePlaceholder": "Hasło, kod lub krótki tekst",
-      "oneTimeAccessDesc": "Link wygaśnie po pierwszym otwarciu danych.",
+      "oneTimeAccessDesc": "Link przestaje działać po pierwszym otwarciu.",
       "oneTimeAccessTitle": "Jednorazowy dostęp",
       "passwordDesc": "Wyślij hasło osobno.",
       "passwordTitle": "Dodaj hasło",
@@ -450,14 +450,14 @@
       "title": "Link jest gotowy do użycia"
     },
     "welcome": {
-      "subtitle": "2FAS Share szyfruje treść na twoim urządzeniu i daje ci link do wysłania. \nBez konta, bez instalacji."
+      "subtitle": "Szyfrowane na twoim urządzeniu, udostępniane linkiem. Bez instalacji."
     }
   },
   "seo": {
     "description": "2FAS Share szyfruje treść na twoim urządzeniu i daje ci link do wysłania. Ty decydujesz, kiedy wygaśnie. Bez konta, bez instalacji.",
     "encryptionBody": "Treść jest szyfrowana w przeglądarce, a klucz zostaje w samym linku, nigdy na naszym serwerze. Bez pełnego linku nikt nie odczyta wiadomości, nawet my.",
     "expiry": "Wygasanie linku: wybierz od 5 minut do 30 dni.",
-    "heading": "Wyślij hasło lub wiadomość. Bezpiecznie. Ty decydujesz, kiedy link wygaśnie.",
+    "heading": "Wyślij hasło lub wiadomość. Bezpiecznie.",
     "jsRequiredBody": "Aby utworzyć lub otworzyć link, włącz JavaScript w przeglądarce.",
     "jsRequiredTitle": "2FAS Share wymaga JavaScriptu.",
     "learnMore": "Dowiedz się więcej na {site} albo zobacz kod źródłowy na {github}.",

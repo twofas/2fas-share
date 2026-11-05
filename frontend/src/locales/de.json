@@ -141,7 +141,7 @@
     "noAccounts": "Keine Konten",
     "freeToUse": "Kostenlos und einfach",
     "private": "Privat",
-    "benefit1": "Kostenlos",
+    "benefit1": "Kostenlos für alle",
     "benefit2": "Kein Konto",
     "benefit3": "Open Source",
     "titleEnd": "Sicher.",
@@ -230,22 +230,22 @@
     "title": "Verschlüsselt, bevor es dein Gerät verlässt"
   },
   "faq": {
-    "a1": "Der Inhalt wird in deinem Browser verschlüsselt, bevor er dein Gerät verlässt. Der Schlüssel bleibt im Link selbst (nach dem #-Zeichen), und Browser senden diesen Teil nicht an unseren Server. Dein Inhalt erreicht uns nur verschlüsselt, und wir haben nicht den Schlüssel, um ihn zu lesen.\n\nZum Öffnen braucht man den vollständigen Link, und für zusätzlichen Schutz kannst du ein Passwort hinzufügen.",
-    "a2": "Nein. Es gibt keine Registrierung und nichts zu installieren. Gib den Inhalt ein, lege die Regeln fest und erstelle den Link.",
-    "a3": "Ja. 2FAS Share ist kostenlos und du brauchst kein Konto. Der Code ist Open Source, sodass jeder prüfen kann, wie es funktioniert.",
-    "a4": "Du entscheidest, wer den Link bekommt. Zum Öffnen braucht man den vollständigen Link und das Passwort, falls du eines festlegst. Mit einmaligem Zugriff funktioniert der Link nach dem ersten Öffnen nicht mehr.",
-    "a5": "Der Link funktioniert nicht mehr, und der verschlüsselte Inhalt wird von unserem Server entfernt. Wer den Link später öffnet, sieht nur noch, dass er nicht mehr funktioniert.",
-    "a6": "Eine E-Mail oder SMS kann jahrelang in Postfächern, Backups und Chatverläufen bleiben. Ein 2FAS-Share-Link funktioniert nach dem ersten Öffnen oder nach der gewählten Zeit nicht mehr, und der Inhalt ist Ende-zu-Ende-verschlüsselt.",
+    "a1": "Der Inhalt wird in deinem Browser verschlüsselt, bevor er dein Gerät verlässt. Der Schlüssel bleibt im Link selbst (nach dem #-Zeichen), und Browser senden diesen Teil nicht an unseren Server. Dein Inhalt erreicht uns nur verschlüsselt, und wir haben nicht den Schlüssel, um ihn zu lesen.\n\nFür zusätzlichen Schutz kannst du auch ein Passwort hinzufügen.",
+    "a2": "Du entscheidest, wer den Link bekommt. Zum Öffnen braucht man den vollständigen Link und das Passwort, falls du eines festlegst. Mit einmaligem Zugriff funktioniert der Link nach dem ersten Öffnen nicht mehr.",
+    "a3": "Eine E-Mail oder SMS kann jahrelang in Postfächern, Backups und Chatverläufen bleiben. Ein 2FAS-Share-Link funktioniert nach dem ersten Öffnen oder nach der gewählten Zeit nicht mehr, und der Inhalt ist Ende-zu-Ende-verschlüsselt.",
+    "a4": "Ja. 2FAS Share ist für alle kostenlos. Der Code ist Open Source, sodass jeder prüfen kann, wie es funktioniert.",
+    "a5": "Nein. Weder du noch der Empfänger braucht ein Konto, und es gibt nichts zu installieren. Gib deine Nachricht ein, lege die Regeln fest und erstelle den Link.",
+    "a6": "Der Link funktioniert nicht mehr, und der verschlüsselte Inhalt wird von unserem Server entfernt. Wer den Link später öffnet, sieht nur noch, dass er nicht mehr funktioniert.",
     "a7": "Der Link wurde bereits geöffnet oder seine Zeit ist abgelaufen. So schützt 2FAS Share deinen Inhalt. Erstelle einfach einen neuen Link und sende ihn erneut.",
     "eyebrow": "Häufige Fragen",
     "q1": "Wie wird mein Inhalt geschützt?",
-    "q2": "Brauche ich ein Konto?",
-    "q3": "Ist es wirklich kostenlos?",
-    "q4": "Wer kann den Link öffnen?",
-    "q5": "Was passiert, wenn der Link abläuft?",
-    "q6": "Was ist der Unterschied zu einer E-Mail oder SMS?",
+    "q2": "Wer kann den Link öffnen?",
+    "q3": "Was ist der Unterschied zu einer E-Mail oder SMS?",
+    "q4": "Ist es wirklich kostenlos?",
+    "q5": "Brauche ich ein Konto?",
+    "q6": "Was passiert, wenn der Link abläuft?",
     "q7": "Was, wenn der Empfänger den Fehler „Dieser Link funktioniert nicht mehr“ sieht?",
-    "title": "Kurze Antworten\nzu 2FAS Share"
+    "title": "Gut zu wissen"
   },
   "features": {
     "expiryDesc": "Wähle eine Stunde, einen Tag oder eine Woche, danach läuft der Link automatisch ab.",
@@ -368,7 +368,7 @@
     "wrongPasswordTitle": "Falsches Passwort."
   },
   "stepPreview": {
-    "noteCaption": "Gib die Daten ein, die du senden möchtest.",
+    "noteCaption": "Tippe oder füge ein, was du senden möchtest.",
     "optionalSuffix": "(optional)",
     "typedLine1": "WLAN „Office-Guest“",
     "typedLine2": "Passwort: Coffee{year}Buzz!"
@@ -390,7 +390,7 @@
       },
       "expirationTitle": "Link läuft ab nach",
       "notePlaceholder": "Passwort, Code oder kurzer Text",
-      "oneTimeAccessDesc": "Der Link läuft nach dem ersten Zugriff auf die Daten ab.",
+      "oneTimeAccessDesc": "Der Link funktioniert nach dem ersten Öffnen nicht mehr.",
       "oneTimeAccessTitle": "Einmaliger Zugriff",
       "passwordDesc": "Sende das Passwort separat.",
       "passwordTitle": "Passwort hinzufügen",
@@ -450,14 +450,14 @@
       "title": "Der Link ist bereit"
     },
     "welcome": {
-      "subtitle": "2FAS Share verschlüsselt deinen Inhalt auf deinem Gerät und gibt dir einen Link zum Senden. \nKein Konto, keine Installation."
+      "subtitle": "Auf deinem Gerät verschlüsselt, per Link geteilt. Nichts zu installieren."
     }
   },
   "seo": {
     "description": "2FAS Share verschlüsselt deinen Inhalt auf deinem Gerät und gibt dir einen Link zum Senden. Du entscheidest, wann er abläuft. Kein Konto, keine Installation.",
     "encryptionBody": "Der Inhalt wird in deinem Browser verschlüsselt, und der Schlüssel bleibt im Link selbst, nie auf unserem Server. Ohne den vollständigen Link kann niemand die Nachricht lesen, nicht einmal wir.",
     "expiry": "Ablauf des Links: Wähle zwischen 5 Minuten und 30 Tagen.",
-    "heading": "Sende ein Passwort oder eine Nachricht. Sicher. Du entscheidest, wann der Link abläuft.",
+    "heading": "Sende ein Passwort oder eine Nachricht. Sicher.",
     "jsRequiredBody": "Um einen Link zu erstellen oder zu öffnen, aktiviere JavaScript in deinem Browser.",
     "jsRequiredTitle": "2FAS Share benötigt JavaScript.",
     "learnMore": "Mehr erfährst du auf {site}, den Quellcode findest du auf {github}.",

@@ -34,6 +34,8 @@
   color: var(--theme-text-primary);
   display: inline-flex;
   gap: var(--space-2);
+  // One line per label ("Free for everyone"); the row wraps between items.
+  white-space: nowrap;
 }
 
 .star {

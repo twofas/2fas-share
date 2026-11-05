@@ -141,9 +141,9 @@
     "noAccounts": "No accounts",
     "freeToUse": "Free and easy to use",
     "private": "Private",
-    "benefit1": "Free",
-    "benefit2": "No accounts",
-    "benefit3": "Open-source",
+    "benefit1": "Free for everyone",
+    "benefit2": "No account",
+    "benefit3": "Open source",
     "titleEnd": "Securely.",
     "titleStart": "Send a password or a message.",
     "titleTail": "You decide when and how the link expires."
@@ -230,22 +230,22 @@
     "title": "Encrypted before it leaves your device"
   },
   "faq": {
-    "a1": "Content is encrypted in your browser before it leaves your device. The key stays in the link itself (after the # sign), and browsers don't send that part to our server. Your content reaches us only in encrypted form, and we don't have the key to read it.\n\nOpening it takes the full link, and you can add a password for extra protection.",
-    "a2": "No. There is no sign-up and nothing to install. Enter the content, set the rules and create the link.",
-    "a3": "Yes. 2FAS Share is free to use, and you don't need an account. The code is open source, so anyone can check how it works.",
-    "a4": "You decide who gets the link. Opening it takes the full link, and the password if you set one. With one-time access on, the link stops working after the first open.",
-    "a5": "The link stops working and the encrypted content is removed from our server. Anyone who opens the link later will only see that it no longer works.",
-    "a6": "An email or a text message can stay in inboxes, backups and chat histories for years. A 2FAS Share link stops working after the first open or after the time you choose, and the content is end-to-end encrypted.",
+    "a1": "Content is encrypted in your browser before it leaves your device. The key stays in the link itself (after the # sign), and browsers don't send that part to our server. Your content reaches us only in encrypted form, and we don't have the key to read it.\n\nFor extra protection, you can also add a password.",
+    "a2": "You decide who gets the link. Opening it takes the full link, and the password if you set one. With one-time access on, the link stops working after the first open.",
+    "a3": "An email or a text message can stay in inboxes, backups and chat histories for years. A 2FAS Share link stops working after the first open or after the time you choose, and the content is end-to-end encrypted.",
+    "a4": "Yes. 2FAS Share is free for everyone. The code is open source, so anyone can check how it works.",
+    "a5": "No. Neither you nor the recipient needs an account, and there's nothing to install. Type your message, set the rules and create the link.",
+    "a6": "The link stops working and the encrypted content is removed from our server. Anyone who opens the link later will only see that it no longer works.",
     "a7": "The link has already been opened or its time has run out. That's how 2FAS Share keeps your content protected. Just create a new link and send it again.",
     "eyebrow": "Frequently asked questions",
     "q1": "How is my content protected?",
-    "q2": "Do I need an account?",
-    "q3": "Is it really free?",
-    "q4": "Who can open the link?",
-    "q5": "What happens after the link expires?",
-    "q6": "How is this different from email or a text message?",
+    "q2": "Who can open the link?",
+    "q3": "How is this different from email or a text message?",
+    "q4": "Is it really free?",
+    "q5": "Do I need an account?",
+    "q6": "What happens after the link expires?",
     "q7": "What if the recipient gets the error “This link no longer works”?",
-    "title": "Quick answers on\n2FAS Share"
+    "title": "Good to know"
   },
   "features": {
     "expiryDesc": "Choose an hour, day, or week after which the link expires automatically.",
@@ -368,7 +368,7 @@
     "wrongPasswordTitle": "Wrong password."
   },
   "stepPreview": {
-    "noteCaption": "Enter the data you want to send.",
+    "noteCaption": "Type or paste what you want to send.",
     "optionalSuffix": "(optional)",
     "typedLine1": "Wi-Fi “Office-Guest”",
     "typedLine2": "Password: Coffee{year}Buzz!"
@@ -390,7 +390,7 @@
       },
       "expirationTitle": "Link expires after",
       "notePlaceholder": "Password, code, or short text",
-      "oneTimeAccessDesc": "The link will expire after the first data access.",
+      "oneTimeAccessDesc": "The link stops working after the first open.",
       "oneTimeAccessTitle": "One-time access",
       "passwordDesc": "Send the password separately.",
       "passwordTitle": "Add password",
@@ -450,14 +450,14 @@
       "title": "Link is ready to use"
     },
     "welcome": {
-      "subtitle": "2FAS Share encrypts your content on your device and gives you a link to send. \nNo account, no installation."
+      "subtitle": "Encrypted on your device, shared with a link. Nothing to install."
     }
   },
   "seo": {
     "description": "2FAS Share encrypts your content on your device and gives you a link to send. You decide when it expires. No account, no installation.",
     "encryptionBody": "Content is encrypted in your browser, and the key stays in the link itself, never on our server. Without the full link, no one can read the message, not even us.",
     "expiry": "Link expiration: choose from 5 minutes to 30 days.",
-    "heading": "Send a password or a message. Securely. You decide when the link expires.",
+    "heading": "Send a password or a message. Securely.",
     "jsRequiredBody": "To create or open a link, turn on JavaScript in your browser.",
     "jsRequiredTitle": "2FAS Share needs JavaScript.",
     "learnMore": "Learn more at {site} or view the source code on {github}.",
