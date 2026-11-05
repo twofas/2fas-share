@@ -8,7 +8,6 @@
 import { useEffect, useRef } from 'preact/hooks';
 import S from './AboutDialog.module.scss';
 import btn from '@/styles/ds/button.module.scss';
-import lnk from '@/styles/ds/link.module.scss';
 import fb from '@/styles/ds/feedback.module.scss';
 import { t } from '@/i18n';
 import CloseIcon from '@/assets/icons/close-line.svg?react';
@@ -126,15 +125,6 @@ export default function AboutDialog () {
         <button type='button' className={`${btn.cta} ${btn.ctaBig} ${S.back}`} onClick={close}>
           {t('about.back')}
         </button>
-        <a
-          className={`${lnk.link} ${lnk.linkAccent} ${S.github}`}
-          href='https://github.com/twofas/2fas-share'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          {t('v2.footer.githubRepository')}
-          <span className='visually-hidden'>{t('nav.newTab')}</span>
-        </a>
       </div>
     </dialog>
   );

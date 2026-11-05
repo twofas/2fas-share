@@ -6,8 +6,6 @@
 // See the LICENSE file for details.
 
 import { forwardRef } from 'preact/compat';
-import { openAboutDialog } from '@/components/AboutDialog';
-import link from '@/styles/ds/link.module.scss';
 import S from './SharedData.module.scss';
 import { t } from '@/i18n';
 
@@ -54,18 +52,13 @@ function RecipientHeadingInner ({ state, contentType }, ref) {
 export const RecipientHeading = forwardRef(RecipientHeadingInner);
 
 /**
- * Recipient / trust note under the window: one sentence and a link-styled
- * button that opens Dialog / about without leaving the page.
+ * Recipient / trust note under the window: one sentence (Dialog / about
+ * opens from the button in the header).
  * @returns {import('preact').JSX.Element} Trust note.
  */
 export function TrustNote () {
   return (
-    <p className={S.trust}>
-      <span>{t('recipient.trustNote')}</span>{' '}
-      <button type='button' className={`${link.link} ${link.linkAccent} ${S.trustLink}`} onClick={openAboutDialog}>
-        {t('about.title')}
-      </button>
-    </p>
+    <p className={S.trust}>{t('recipient.trustNote')}</p>
   );
 }
 

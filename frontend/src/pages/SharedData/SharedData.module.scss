@@ -66,8 +66,7 @@
   display: block;
 }
 
-// Recipient / trust note: Body/sm text/secondary, the link on the axis; at
-// 390 the link moves to its own line.
+// Recipient / trust note: Body/sm text/secondary, on the axis.
 .trust {
   @include typ('body-sm');
 
@@ -81,17 +80,6 @@
   @include below(tablet) {
     flex-direction: column;
     align-items: center;
-  }
-}
-
-.trust-link {
-  position: relative;
-
-  // 44 px touch target without changing the line height.
-  &::after {
-    content: '';
-    inset: -0.75rem -0.25rem;
-    position: absolute;
   }
 }
 
