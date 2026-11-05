@@ -145,8 +145,7 @@
     "benefit2": "Bez konta",
     "benefit3": "Otwarty kod",
     "titleEnd": "Bezpiecznie.",
-    "titleStart": "Wyślij hasło lub wiadomość.",
-    "titleTail": "Ty decydujesz, kiedy i jak link wygasa."
+    "titleStart": "Wyślij hasło lub wiadomość."
   },
   "howToUse": {
     "pill": "Prosty proces",
@@ -201,13 +200,13 @@
   "about": {
     "back": "Wróć do wiadomości",
     "close": "Zamknij",
-    "lead": "To jest 2FAS Share. Pozwala udostępniać hasła i wiadomości przez zaszyfrowany link, bez konta i instalacji. Zamknięcie tego okna nie zużywa linku.",
+    "lead": "2FAS Share pozwala każdemu wysłać hasło lub wiadomość przez zaszyfrowany link. Do otwarcia nie potrzebujesz konta ani aplikacji.",
     "step1": "Nadawca wpisuje treść, która jest szyfrowana w jego przeglądarce.",
     "step2": "Klucz do odszyfrowania zostaje w samym linku, po znaku #. Przeglądarka nigdy nie wysyła tej części linku na serwer.",
     "step3": "Na nasz serwer trafia tylko zaszyfrowana treść, a my nie mamy klucza, żeby ją odczytać.",
     "step4": "Otwierasz link, a klucz odszyfrowuje treść na twoim urządzeniu. Link wygasa po czasie wybranym przez nadawcę albo po pierwszym otwarciu, jeśli tak go ustawił.",
     "title": "Jak to działa",
-    "warningBody": "Każdy, kto ma pełny link, może otworzyć wiadomość, więc nieoczekiwany link potwierdź u nadawcy innym kanałem.",
+    "warningBody": "Link zawiera klucz do odszyfrowania wiadomości, więc jeśli nie ustawiono hasła, sam link wystarczy, żeby ją otworzyć. Upewnij się, że jest przesyłany tylko bezpiecznym kanałem szyfrowanym end-to-end.",
     "warningTitle": "Link działa jak klucz."
   },
   "documents": {
@@ -245,7 +244,7 @@
     "q5": "Czy potrzebuję konta?",
     "q6": "Co się dzieje, gdy link wygaśnie?",
     "q7": "Co zrobić, gdy odbiorca widzi błąd „Ten link już nie działa”?",
-    "title": "Dobrze wiedzieć"
+    "title": "Odpowiedzi na twoje pytania"
   },
   "features": {
     "expiryDesc": "Wybierz godzinę, dzień lub tydzień, po których link automatycznie wygaśnie.",
