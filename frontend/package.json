@@ -2,7 +2,7 @@
   "name": "2fas-share-frontend",
   "private": true,
   "type": "module",
-  "packageManager": "yarn@4.11.0",
+  "packageManager": "yarn@4.18.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/twofas/2fas-share.git"
@@ -36,11 +36,11 @@
     "wouter-preact": "^3.13.0"
   },
   "devDependencies": {
-    "@babel/core": "^8.0.10",
+    "@babel/core": "^8.1.0",
     "@eslint/js": "^10.0.1",
     "@preact/preset-vite": "^2.10.6",
     "eslint": "^10.14.0",
-    "eslint-plugin-jsdoc": "^65.4.2",
+    "eslint-plugin-jsdoc": "^65.4.3",
     "globals": "^17.14.0",
     "sass-embedded": "^1.107.1",
     "vite": "^8.3.5",
@@ -50,6 +50,7 @@
   "resolutions": {
     "picomatch@^2.2.2": "^2.3.2",
     "flatted": "^3.4.4",
-    "tar": "^7.5.22"
+    "tar": "^7.5.22",
+    "minimatch": "^11.0.4"
   }
 }
