@@ -149,10 +149,12 @@ $row-start: calc(0.05s + var(--i, 0) * 0.24s);
 }
 
 // Underlined at rest like Link / inline on the band; the arrow stays
-// without the underline (inline-block).
+// without the underline (inline-block). nowrap keeps the arrow on the line
+// of the label: a line may break before an inline-block.
 .link {
   @include interactive(text-decoration-color);
 
+  white-space: nowrap;
   border-radius: var(--radius-xs);
   color: inherit;
   text-decoration-color: currentColor;
