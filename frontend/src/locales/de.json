@@ -455,15 +455,15 @@
   },
   "seo": {
     "description": "2FAS Share verschlüsselt deinen Inhalt auf deinem Gerät und gibt dir einen Link zum Senden. Du entscheidest, wann er abläuft. Kein Konto, keine Installation.",
-    "heading": "Sende ein Passwort oder eine Nachricht. Sicher. Du entscheidest, wann der Link abläuft.",
-    "jsRequiredTitle": "2FAS Share benötigt JavaScript.",
-    "jsRequiredBody": "Um einen Link zu erstellen oder zu öffnen, aktiviere JavaScript in deinem Browser.",
     "encryptionBody": "Der Inhalt wird in deinem Browser verschlüsselt, und der Schlüssel bleibt im Link selbst, nie auf unserem Server. Ohne den vollständigen Link kann niemand die Nachricht lesen, nicht einmal wir.",
-    "oneTime": "Einmaliger Zugriff: Der Link funktioniert nach dem ersten Öffnen nicht mehr.",
     "expiry": "Ablauf des Links: Wähle zwischen 5 Minuten und 30 Tagen.",
-    "password": "Passwortschutz: Das Passwort teilst du separat.",
-    "openSource": "Open-Source-Code: Jeder kann die Sicherheit und Verschlüsselung der geteilten Daten prüfen.",
+    "heading": "Sende ein Passwort oder eine Nachricht. Sicher. Du entscheidest, wann der Link abläuft.",
+    "jsRequiredBody": "Um einen Link zu erstellen oder zu öffnen, aktiviere JavaScript in deinem Browser.",
+    "jsRequiredTitle": "2FAS Share benötigt JavaScript.",
+    "learnMore": "Mehr erfährst du auf {site}, den Quellcode findest du auf {github}.",
     "legalNote": "Datenschutzerklärung, Nutzungsbedingungen und Open-Source-Lizenzen findest du in der Anwendung. Aktiviere JavaScript, um sie zu sehen.",
-    "learnMore": "Mehr erfährst du auf {site}, den Quellcode findest du auf {github}."
+    "oneTime": "Einmaliger Zugriff: Der Link funktioniert nach dem ersten Öffnen nicht mehr.",
+    "openSource": "Open-Source-Code: Jeder kann die Sicherheit und Verschlüsselung der geteilten Daten prüfen.",
+    "password": "Passwortschutz: Das Passwort teilst du separat."
   }
 }

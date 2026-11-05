@@ -455,15 +455,15 @@
   },
   "seo": {
     "description": "2FAS Share encrypts your content on your device and gives you a link to send. You decide when it expires. No account, no installation.",
-    "heading": "Send a password or a message. Securely. You decide when the link expires.",
-    "jsRequiredTitle": "2FAS Share needs JavaScript.",
-    "jsRequiredBody": "To create or open a link, turn on JavaScript in your browser.",
     "encryptionBody": "Content is encrypted in your browser, and the key stays in the link itself, never on our server. Without the full link, no one can read the message, not even us.",
-    "oneTime": "One-time access: the link stops working after the first open.",
     "expiry": "Link expiration: choose from 5 minutes to 30 days.",
-    "password": "Password protection: you share the password separately.",
-    "openSource": "Open-source code: anyone can verify the security and encryption of the shared data.",
+    "heading": "Send a password or a message. Securely. You decide when the link expires.",
+    "jsRequiredBody": "To create or open a link, turn on JavaScript in your browser.",
+    "jsRequiredTitle": "2FAS Share needs JavaScript.",
+    "learnMore": "Learn more at {site} or view the source code on {github}.",
     "legalNote": "Privacy Policy, Terms of Use and Open Source Licenses are available inside the application; turn on JavaScript to view them.",
-    "learnMore": "Learn more at {site} or view the source code on {github}."
+    "oneTime": "One-time access: the link stops working after the first open.",
+    "openSource": "Open-source code: anyone can verify the security and encryption of the shared data.",
+    "password": "Password protection: you share the password separately."
   }
 }
