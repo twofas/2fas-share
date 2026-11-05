@@ -8,6 +8,7 @@
 package middleware
 
 import (
+	"context"
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
@@ -37,7 +38,7 @@ func TestLogging_CapturesStatusCode(t *testing.T) {
 				w.WriteHeader(tt.handlerStatus)
 			})
 
-			req := httptest.NewRequest(http.MethodGet, "/test", nil)
+			req := httptest.NewRequestWithContext(context.Background(), http.MethodGet, "/test", nil)
 			w := httptest.NewRecorder()
 
 			Logging(testLogger())(handler).ServeHTTP(w, req)
@@ -54,7 +55,7 @@ func TestLogging_DefaultStatusOK(t *testing.T) {
 		_, _ = w.Write([]byte("OK"))
 	})
 
-	req := httptest.NewRequest(http.MethodGet, "/test", nil)
+	req := httptest.NewRequestWithContext(context.Background(), http.MethodGet, "/test", nil)
 	w := httptest.NewRecorder()
 
 	Logging(testLogger())(handler).ServeHTTP(w, req)
@@ -76,7 +77,7 @@ func TestLogging_PassesRequestThrough(t *testing.T) {
 		}
 	})
 
-	req := httptest.NewRequest(http.MethodPost, "/secret", nil)
+	req := httptest.NewRequestWithContext(context.Background(), http.MethodPost, "/secret", nil)
 	w := httptest.NewRecorder()
 
 	Logging(testLogger())(handler).ServeHTTP(w, req)

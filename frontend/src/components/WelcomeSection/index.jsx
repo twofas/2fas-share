@@ -5,7 +5,7 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import { Link } from 'wouter-preact';
+import PrefetchLink from '@/components/PrefetchLink';
 import { t } from '@/i18n';
 import S from './WelcomeSection.module.scss';
 import bS from '@/styles/buttons.module.scss';
@@ -32,12 +32,12 @@ export default function WelcomeSection () {
         <p className={S.welcomeSubtitle}>
           {t('welcome.subtitle')}
         </p>
-        <Link
+        <PrefetchLink
           href='/add'
           className={`${bS.btnHero} ${S.welcomeCta}`}
         >
           {t('header.shareSecurely')}
-        </Link>
+        </PrefetchLink>
       </div>
 
       <div className={S.welcomePills} aria-hidden='true'>

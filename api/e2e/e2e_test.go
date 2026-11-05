@@ -51,7 +51,7 @@ func waitForServer(timeout, interval time.Duration) error {
 			return fmt.Errorf("creating health check request: %w", err)
 		}
 
-		resp, err := http.DefaultClient.Do(req) //nolint:gosec // This is tests, and we are making request to tested server.
+		resp, err := http.DefaultClient.Do(req)
 		if err == nil {
 			resp.Body.Close()
 			if resp.StatusCode == http.StatusOK {
@@ -90,7 +90,7 @@ func post(path string, reqBody any, resp any) (int, error) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
-	httpResp, err := http.DefaultClient.Do(req) //nolint:gosec // URL from test config
+	httpResp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return 0, fmt.Errorf("sending POST request to %s: %w", path, err)
 	}
@@ -122,7 +122,7 @@ func get(path string, resp any) (int, error) {
 		return 0, fmt.Errorf("creating request: %w", err)
 	}
 
-	httpResp, err := http.DefaultClient.Do(req) //nolint:gosec // URL from test config
+	httpResp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return 0, fmt.Errorf("sending GET request to %s: %w", path, err)
 	}
@@ -291,7 +291,7 @@ func TestE2E_CreateSecret_InvalidJSON(t *testing.T) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := http.DefaultClient.Do(req) //nolint:gosec // URL from test config
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		t.Fatalf("Failed to send POST request to %s: %v", path, err)
 	}
@@ -594,7 +594,7 @@ func TestE2E_CORS_Headers(t *testing.T) {
 		t.Fatalf("Failed to create request: %v", err)
 	}
 
-	resp, err := http.DefaultClient.Do(req) //nolint:gosec // URL from test config
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		t.Fatalf("Failed to send request: %v", err)
 	}
@@ -612,7 +612,7 @@ func TestE2E_CORS_PreflightRequest(t *testing.T) {
 	req.Header.Set("Origin", "https://example.com")
 	req.Header.Set("Access-Control-Request-Method", "POST")
 
-	resp, err := http.DefaultClient.Do(req) //nolint:gosec // URL from test config
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		t.Fatalf("Failed to send request: %v", err)
 	}
@@ -635,7 +635,7 @@ func TestE2E_CORS_CreateSecret(t *testing.T) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := http.DefaultClient.Do(req) //nolint:gosec // URL from test config
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		t.Fatalf("Failed to send request: %v", err)
 	}
@@ -660,7 +660,7 @@ func TestE2E_CORS_GetSecret(t *testing.T) {
 		t.Fatalf("Failed to create request: %v", err)
 	}
 
-	resp, err := http.DefaultClient.Do(req) //nolint:gosec // URL from test config
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		t.Fatalf("Failed to send request: %v", err)
 	}

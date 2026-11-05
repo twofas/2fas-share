@@ -8,6 +8,7 @@
 package handler
 
 import (
+	"context"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -52,7 +53,7 @@ func TestHandler_CreateSecret_Success(t *testing.T) {
 	fixedTime := time.Date(2026, 2, 25, 12, 0, 0, 0, time.UTC)
 	h.SetNowFunc(func() time.Time { return fixedTime })
 
-	req := httptest.NewRequest(http.MethodPost, "/api/secret", strings.NewReader(reqBody))
+	req := httptest.NewRequestWithContext(context.Background(), http.MethodPost, "/api/secret", strings.NewReader(reqBody))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 
@@ -161,7 +162,8 @@ func TestHandler_CreateSecret_Validation(t *testing.T) {
 			defer store.Close()
 			h := NewHandler(store, defaultServerConfig, fstest.MapFS{}, testLogger())
 
-			req := httptest.NewRequest(http.MethodPost, "/api/secret", strings.NewReader(tt.body))
+			req := httptest.NewRequestWithContext(context.Background(), http.MethodPost,
+				"/api/secret", strings.NewReader(tt.body))
 			req.Header.Set("Content-Type", "application/json")
 			w := httptest.NewRecorder()
 
@@ -189,7 +191,7 @@ func TestHandler_GetSecret_Success(t *testing.T) {
 	}
 	_ = store.Create(t.Context(), secret)
 
-	req := httptest.NewRequest(http.MethodGet, "/api/secret/test-uuid", nil)
+	req := httptest.NewRequestWithContext(context.Background(), http.MethodGet, "/api/secret/test-uuid", nil)
 	w := httptest.NewRecorder()
 
 	srv := h.Handler()
@@ -214,7 +216,7 @@ func TestHandler_GetSecret_NotFound(t *testing.T) {
 	defer store.Close()
 	h := NewHandler(store, defaultServerConfig, fstest.MapFS{}, testLogger())
 
-	req := httptest.NewRequest(http.MethodGet, "/api/secret/nonexistent", nil)
+	req := httptest.NewRequestWithContext(context.Background(), http.MethodGet, "/api/secret/nonexistent", nil)
 	w := httptest.NewRecorder()
 
 	srv := h.Handler()
@@ -234,28 +236,28 @@ func TestHandler_ErrorResponseIsJSON(t *testing.T) {
 		{
 			name: "invalid JSON on create",
 			setup: func() *http.Request {
-				return httptest.NewRequest(http.MethodPost, "/api/secret",
-					strings.NewReader("not json"))
+				return httptest.NewRequestWithContext(context.Background(), http.MethodPost,
+					"/api/secret", strings.NewReader("not json"))
 			},
 		},
 		{
 			name: "empty data on create",
 			setup: func() *http.Request {
-				return httptest.NewRequest(http.MethodPost, "/api/secret",
+				return httptest.NewRequestWithContext(context.Background(), http.MethodPost, "/api/secret",
 					strings.NewReader(`{"data":"","validForSeconds":1}`))
 			},
 		},
 		{
 			name: "invalid base64 on create",
 			setup: func() *http.Request {
-				return httptest.NewRequest(http.MethodPost, "/api/secret",
+				return httptest.NewRequestWithContext(context.Background(), http.MethodPost, "/api/secret",
 					strings.NewReader(`{"data":"!!!","validForSeconds":1}`))
 			},
 		},
 		{
 			name: "not found on get",
 			setup: func() *http.Request {
-				return httptest.NewRequest(http.MethodGet, "/api/secret/no-such-id", nil)
+				return httptest.NewRequestWithContext(context.Background(), http.MethodGet, "/api/secret/no-such-id", nil)
 			},
 		},
 	}
@@ -335,7 +337,7 @@ func TestHandler_GetSecret_SingleUseVsReusable(t *testing.T) {
 			srv := h.Handler()
 
 			// First request should succeed
-			req1 := httptest.NewRequest(http.MethodGet, "/api/secret/"+tt.id, nil)
+			req1 := httptest.NewRequestWithContext(context.Background(), http.MethodGet, "/api/secret/"+tt.id, nil)
 			w1 := httptest.NewRecorder()
 			srv.ServeHTTP(w1, req1)
 
@@ -344,7 +346,7 @@ func TestHandler_GetSecret_SingleUseVsReusable(t *testing.T) {
 			}
 
 			// Second request depends on singleUse
-			req2 := httptest.NewRequest(http.MethodGet, "/api/secret/"+tt.id, nil)
+			req2 := httptest.NewRequestWithContext(context.Background(), http.MethodGet, "/api/secret/"+tt.id, nil)
 			w2 := httptest.NewRecorder()
 			srv.ServeHTTP(w2, req2)
 
@@ -374,7 +376,8 @@ func TestHandler_ConcurrentCreateSecrets(t *testing.T) {
 
 			data := base64.StdEncoding.EncodeToString(fmt.Appendf(nil, "data%d", idx))
 			reqBody := fmt.Sprintf(`{"data":"%s","validForSeconds":3600,"singleUse":false}`, data)
-			req := httptest.NewRequest(http.MethodPost, "/api/secret", strings.NewReader(reqBody))
+			req := httptest.NewRequestWithContext(context.Background(), http.MethodPost, "/api/secret",
+				strings.NewReader(reqBody))
 			req.Header.Set("Content-Type", "application/json")
 			w := httptest.NewRecorder()
 
@@ -424,7 +427,8 @@ func TestHandler_ConcurrentGetSameSecret(t *testing.T) {
 		go func() {
 			defer wg.Done()
 
-			req := httptest.NewRequest(http.MethodGet, "/api/secret/concurrent-get-test", nil)
+			req := httptest.NewRequestWithContext(context.Background(),
+				http.MethodGet, "/api/secret/concurrent-get-test", nil)
 			w := httptest.NewRecorder()
 
 			srv.ServeHTTP(w, req)
@@ -473,7 +477,8 @@ func TestHandler_ConcurrentSingleUseSecret_OnlyOneSucceeds(t *testing.T) {
 		go func() {
 			defer wg.Done()
 
-			req := httptest.NewRequest(http.MethodGet, "/api/secret/single-use-concurrent", nil)
+			req := httptest.NewRequestWithContext(context.Background(),
+				http.MethodGet, "/api/secret/single-use-concurrent", nil)
 			w := httptest.NewRecorder()
 
 			srv.ServeHTTP(w, req)
@@ -529,7 +534,8 @@ func createSecretsForTest(t *testing.T, srv http.Handler, numCreates int) []stri
 
 			data := base64.StdEncoding.EncodeToString(fmt.Appendf(nil, "data%d", idx))
 			reqBody := fmt.Sprintf(`{"data":"%s","validForSeconds":3600,"singleUse":false}`, data)
-			req := httptest.NewRequest(http.MethodPost, "/api/secret", strings.NewReader(reqBody))
+			req := httptest.NewRequestWithContext(context.Background(),
+				http.MethodPost, "/api/secret", strings.NewReader(reqBody))
 			req.Header.Set("Content-Type", "application/json")
 			w := httptest.NewRecorder()
 
@@ -566,7 +572,8 @@ func verifySecretsReadable(t *testing.T, srv http.Handler, ids []string) {
 	for _, id := range ids {
 		go func(id string) {
 			defer wg.Done()
-			req := httptest.NewRequest(http.MethodGet, "/api/secret/"+id, nil)
+			req := httptest.NewRequestWithContext(context.Background(),
+				http.MethodGet, "/api/secret/"+id, nil)
 			w := httptest.NewRecorder()
 			srv.ServeHTTP(w, req)
 			results <- w.Code

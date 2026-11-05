@@ -8,6 +8,7 @@
 package middleware
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -18,7 +19,7 @@ func TestCORS_SetsHeaders(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	}))
 
-	req := httptest.NewRequest(http.MethodGet, "/test", nil)
+	req := httptest.NewRequestWithContext(context.Background(), http.MethodGet, "/test", nil)
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -37,7 +38,7 @@ func TestCORS_PreflightRequest(t *testing.T) {
 		nextCalled = true
 	}))
 
-	req := httptest.NewRequest(http.MethodOptions, "/test", nil)
+	req := httptest.NewRequestWithContext(context.Background(), http.MethodOptions, "/test", nil)
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)

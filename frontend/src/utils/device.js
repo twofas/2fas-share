@@ -6,28 +6,28 @@
 // See the LICENSE file for details.
 
 import { UAParser } from 'ua-parser-js';
+import { isIPadOSLike, computeDeviceFlags } from './deviceDetection';
 
 const parser = new UAParser();
-const device = parser.getDevice();
-const os = parser.getOS();
+const nav = typeof navigator !== 'undefined' ? navigator : undefined;
 
-const isMobileOS = os.name === 'iOS' || os.name === 'Android';
-const isMobileDevice = device.type === 'mobile' || device.type === 'tablet';
+const flags = computeDeviceFlags(parser.getOS(), parser.getDevice(), isIPadOSLike(nav));
 
 /**
- * Whether the current device is an iOS or Android phone/tablet.
+ * Whether the current device is an iOS/Android phone or tablet. Includes iPadOS
+ * Safari, which reports a desktop Mac user-agent and is detected via touch support.
  * @type {boolean}
  */
-export const isMobileOrTablet = isMobileOS && isMobileDevice;
+export const isMobileOrTablet = flags.isMobileOrTablet;
 
 /**
- * Whether the current device runs iOS.
+ * Whether the current device runs iOS or iPadOS.
  * @type {boolean}
  */
-export const isIOS = os.name === 'iOS';
+export const isIOS = flags.isIOS;
 
 /**
  * Whether the current device runs Android.
  * @type {boolean}
  */
-export const isAndroid = os.name === 'Android';
+export const isAndroid = flags.isAndroid;

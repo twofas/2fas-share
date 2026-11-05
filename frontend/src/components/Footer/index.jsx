@@ -5,7 +5,7 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import { Link } from 'wouter-preact';
+import PrefetchLink from '@/components/PrefetchLink';
 import S from './Footer.module.scss';
 import { t } from '@/i18n';
 import GithubIcon from '@/assets/github.svg?react';
@@ -23,26 +23,26 @@ export default function Footer () {
             <p className={S.footerHeading}>{t('footer.termsTitle')}</p>
 
             <nav className={S.footerLinks}>
-              <Link
+              <PrefetchLink
                 className={S.footerLink}
                 href='/privacy-policy'
               >
                 {t('footer.privacyPolicy')}
-              </Link>
+              </PrefetchLink>
 
-              <Link
+              <PrefetchLink
                 className={S.footerLink}
                 href='/terms-of-use'
               >
                 {t('footer.termsOfUse')}
-              </Link>
+              </PrefetchLink>
 
-              <Link
+              <PrefetchLink
                 className={S.footerLink}
                 href='/open-source-licenses'
               >
                 {t('footer.openSourceLicenses')}
-              </Link>
+              </PrefetchLink>
             </nav>
           </div>
 

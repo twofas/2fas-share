@@ -8,6 +8,7 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -37,7 +38,7 @@ func TestHandler_CORS_Headers(t *testing.T) {
 	h := NewHandler(store, defaultServerConfig, fstest.MapFS{}, testLogger())
 	srv := h.Handler()
 
-	req := httptest.NewRequest(http.MethodGet, "/api/health", nil)
+	req := httptest.NewRequestWithContext(context.Background(), http.MethodGet, "/api/health", nil)
 	w := httptest.NewRecorder()
 	srv.ServeHTTP(w, req)
 
@@ -50,7 +51,7 @@ func TestHandler_CORS_PreflightRequest(t *testing.T) {
 	h := NewHandler(store, defaultServerConfig, fstest.MapFS{}, testLogger())
 	srv := h.Handler()
 
-	req := httptest.NewRequest(http.MethodOptions, "/api/secret", nil)
+	req := httptest.NewRequestWithContext(context.Background(), http.MethodOptions, "/api/secret", nil)
 	req.Header.Set("Origin", "https://example.com")
 	req.Header.Set("Access-Control-Request-Method", "POST")
 	w := httptest.NewRecorder()
@@ -68,7 +69,7 @@ func TestHandler_CORS_CreateSecret(t *testing.T) {
 	h := NewHandler(store, defaultServerConfig, fstest.MapFS{}, testLogger())
 	srv := h.Handler()
 
-	req := httptest.NewRequest(http.MethodPost, "/api/secret", strings.NewReader(reqBody))
+	req := httptest.NewRequestWithContext(context.Background(), http.MethodPost, "/api/secret", strings.NewReader(reqBody))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 	srv.ServeHTTP(w, req)
@@ -93,7 +94,7 @@ func TestHandler_CORS_GetSecret(t *testing.T) {
 	_ = store.Create(t.Context(), secret)
 
 	srv := h.Handler()
-	req := httptest.NewRequest(http.MethodGet, "/api/secret/cors-test-id", nil)
+	req := httptest.NewRequestWithContext(context.Background(), http.MethodGet, "/api/secret/cors-test-id", nil)
 	w := httptest.NewRecorder()
 	srv.ServeHTTP(w, req)
 

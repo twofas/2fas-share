@@ -46,7 +46,7 @@ type Storage struct {
 	db              *bolt.DB
 	stopCh          chan struct{}
 	cleanupWG       sync.WaitGroup
-	numberOfEvicted uint64
+	numberOfEvicted atomic.Uint64
 	log             *slog.Logger
 }
 
@@ -241,7 +241,7 @@ func (s *Storage) deleteExpired() error {
 				if err := b.Delete(k); err != nil {
 					return fmt.Errorf("failed to delete key %q: %w", string(k), err)
 				}
-				atomic.AddUint64(&s.numberOfEvicted, 1)
+				s.numberOfEvicted.Add(1)
 			}
 			return nil
 		})
