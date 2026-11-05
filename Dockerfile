@@ -4,7 +4,7 @@
 # Licensed under the Business Source License 1.1
 # See LICENSE file for full terms
 
-FROM node:22-alpine AS frontendbuilder
+FROM node:26-alpine AS frontendbuilder
 
 WORKDIR /frontend
 
