@@ -33,6 +33,9 @@
 .text {
   @include typ('body-base');
 
+  // Monospaced, so the equal-width character boxes of the glitch match the
+  // letters they land on (a proportional font leaves gaps and overlaps).
+  font-family: var(--type-family-mono);
   color: var(--theme-text-primary);
   word-break: break-all;
 
