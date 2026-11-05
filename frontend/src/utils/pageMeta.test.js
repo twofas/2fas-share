@@ -10,9 +10,9 @@ import assert from 'node:assert/strict';
 import { pageTitle, plainText } from './pageMeta.js';
 
 const STRINGS = {
-  'meta.homeTitle': '2FAS Share – Send a password or a note. Only once.',
+  'meta.homeTitle': '2FAS Share – Send a password or a message. Securely.',
   'meta.pageTitle': '{page} – 2FAS Share',
-  'meta.note': 'Private note',
+  'meta.note': 'Private message',
   'v2.addNew.title': 'Create link',
   'legal.termsOfUse': 'Terms of Use',
   'legal.privacyPolicy': 'Privacy Policy',
@@ -29,7 +29,7 @@ const STRINGS = {
 const t = (key, params = {}) => Object.entries(params).reduce((s, [k, v]) => s.replace(`{${k}}`, v), STRINGS[key]);
 
 test('home and named pages', () => {
-  assert.equal(pageTitle('/', t), '2FAS Share – Send a password or a note. Only once.');
+  assert.equal(pageTitle('/', t), '2FAS Share – Send a password or a message. Securely.');
   assert.equal(pageTitle('/add', t), 'Create link – 2FAS Share');
   assert.equal(pageTitle('/terms-of-use', t), 'Terms of Use – 2FAS Share');
   assert.equal(pageTitle('/privacy-policy', t), 'Privacy Policy – 2FAS Share');
@@ -37,12 +37,12 @@ test('home and named pages', () => {
 });
 
 test('share links, also cut short, and unknown paths', () => {
-  assert.equal(pageTitle('/abc/v1k/nonce/key', t), 'Private note – 2FAS Share');
-  assert.equal(pageTitle('/abc/v1p', t), 'Private note – 2FAS Share');
+  assert.equal(pageTitle('/abc/v1k/nonce/key', t), 'Private message – 2FAS Share');
+  assert.equal(pageTitle('/abc/v1p', t), 'Private message – 2FAS Share');
   assert.equal(pageTitle('/abc/foo', t), 'Page not found – 2FAS Share');
   assert.equal(pageTitle('/nope', t), 'Page not found – 2FAS Share');
 });
 
 test('plainText flattens line breaks and no-break spaces', () => {
-  assert.equal(plainText('a note\nOnly  once '), 'a note Only once');
+  assert.equal(plainText('a message\nSecurely  now '), 'a message Securely now');
 });

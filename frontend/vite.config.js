@@ -13,6 +13,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'path';
 import { sourceLink } from './src/utils/sourceLink.js';
+import { fillHtmlTexts } from './src/utils/htmlTexts.js';
 
 /**
  * Add Subresource Integrity (sha384) attributes to the JS and CSS tags of the
@@ -53,6 +54,36 @@ function sri () {
         }
 
         writeFileSync(htmlPath, html);
+      }
+    }
+  };
+}
+
+const EN_LOCALE_FILE = path.resolve(import.meta.dirname, 'src/locales/en.json');
+
+/**
+ * Fill the {{key}} placeholders of index.html from en.json (titles, link
+ * previews and the no-JavaScript version). The file is English only, as
+ * crawlers and link previews see it before the app picks a language. A key
+ * missing from en.json fails the build.
+ * @returns {import('vite').Plugin} Vite plugin.
+ */
+function htmlTexts () {
+  return {
+    name: 'html-texts',
+    transformIndexHtml: {
+      order: 'pre',
+      /**
+       * Put the texts into the HTML.
+       * @param {string} html HTML source.
+       * @returns {string} HTML with the texts in place.
+       */
+      handler (html) {
+        return fillHtmlTexts(html, JSON.parse(readFileSync(EN_LOCALE_FILE, 'utf-8')), {
+          year: String(new Date().getFullYear()),
+          site: '<a href="https://2fas.com/share/" rel="noopener noreferrer">2fas.com/share</a>',
+          github: '<a href="https://github.com/twofas/2fas-share" rel="noopener noreferrer">GitHub</a>'
+        });
       }
     }
   };
@@ -131,6 +162,7 @@ export default defineConfig({
   plugins: [
     preact(),
     svgr(),
+    htmlTexts(),
     openSourceLicenses(),
     sri(),
     compression({ algorithm: 'gzip' }),
