@@ -4,7 +4,7 @@
 # Licensed under the Business Source License 1.1
 # See LICENSE file for full terms
 
-FROM node:22-alpine AS frontendbuilder
+FROM node:22.23.4-alpine@sha256:fe4f6d74e20370acb04ad889077d14d0f64a9c8ea6a42bc60cddf1e844699914 AS frontendbuilder
 
 WORKDIR /frontend
 
@@ -21,7 +21,7 @@ ARG VITE_UNIVERSAL_LINK_PROTOCOL="twofaspass"
 COPY api/licenses.json ../api/licenses.json
 RUN yarn build-ci
 
-FROM golang:1.27.3-alpine AS gobuilder
+FROM golang:1.27.3-alpine@sha256:d200d2dd76b03a99b52651fd1325aff7dcd35422c35c01bac56571b0507f3deb AS gobuilder
 
 WORKDIR /go/src/2fas-share
 
@@ -43,7 +43,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     -o /go/bin/healthcheck
 
 # Use distroless nonroot image for minimal attack surface
-FROM gcr.io/distroless/static-debian12:nonroot
+FROM gcr.io/distroless/static-debian12:nonroot@sha256:afa5c872c891853ca7fcf1f12c3edb23f7eeef36189728842dd51042ff57f7ab
 
 COPY --from=gobuilder /go/bin/2fas-share-server /
 COPY --from=gobuilder /go/bin/healthcheck /
