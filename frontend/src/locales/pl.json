@@ -455,15 +455,15 @@
   },
   "seo": {
     "description": "2FAS Share szyfruje treść na twoim urządzeniu i daje ci link do wysłania. Ty decydujesz, kiedy wygaśnie. Bez konta, bez instalacji.",
-    "heading": "Wyślij hasło lub wiadomość. Bezpiecznie. Ty decydujesz, kiedy link wygaśnie.",
-    "jsRequiredTitle": "2FAS Share wymaga JavaScriptu.",
-    "jsRequiredBody": "Aby utworzyć lub otworzyć link, włącz JavaScript w przeglądarce.",
     "encryptionBody": "Treść jest szyfrowana w przeglądarce, a klucz zostaje w samym linku, nigdy na naszym serwerze. Bez pełnego linku nikt nie odczyta wiadomości, nawet my.",
-    "oneTime": "Jednorazowy dostęp: link przestaje działać po pierwszym otwarciu.",
     "expiry": "Wygasanie linku: wybierz od 5 minut do 30 dni.",
-    "password": "Ochrona hasłem: hasło przekazujesz osobno.",
-    "openSource": "Otwarty kod źródłowy: każdy może sprawdzić bezpieczeństwo i szyfrowanie udostępnianych danych.",
+    "heading": "Wyślij hasło lub wiadomość. Bezpiecznie. Ty decydujesz, kiedy link wygaśnie.",
+    "jsRequiredBody": "Aby utworzyć lub otworzyć link, włącz JavaScript w przeglądarce.",
+    "jsRequiredTitle": "2FAS Share wymaga JavaScriptu.",
+    "learnMore": "Dowiedz się więcej na {site} albo zobacz kod źródłowy na {github}.",
     "legalNote": "Polityka prywatności, Warunki korzystania i licencje open source są dostępne w aplikacji. Włącz JavaScript, aby je zobaczyć.",
-    "learnMore": "Dowiedz się więcej na {site} albo zobacz kod źródłowy na {github}."
+    "oneTime": "Jednorazowy dostęp: link przestaje działać po pierwszym otwarciu.",
+    "openSource": "Otwarty kod źródłowy: każdy może sprawdzić bezpieczeństwo i szyfrowanie udostępnianych danych.",
+    "password": "Ochrona hasłem: hasło przekazujesz osobno."
   }
 }
