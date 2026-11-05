@@ -19,11 +19,11 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192x192.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/images/favicon-512x512.png" />
     <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
-    <title>2FAS Share – Send a password or a note. Only once.</title>
-    <meta name="description" content="2FAS Share creates a link that disappears after use. No account, no installation. You decide when and for whom." />
+    <title>{{meta.homeTitle}}</title>
+    <meta name="description" content="{{seo.description}}" />
     <link rel="canonical" href="https://share.2fas.com/" />
-    <meta property="og:title" content="2FAS Share – Send a password or a note. Only once." />
-    <meta property="og:description" content="2FAS Share creates a link that disappears after use. No account, no installation. You decide when and for whom." />
+    <meta property="og:title" content="{{meta.homeTitle}}" />
+    <meta property="og:description" content="{{seo.description}}" />
     <meta property="og:image" content="https://share.2fas.com/images/og.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -31,8 +31,8 @@
     <meta property="og:url" content="https://share.2fas.com/" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="2FAS Share – Send a password or a note. Only once." />
-    <meta name="twitter:description" content="2FAS Share creates a link that disappears after use. No account, no installation. You decide when and for whom." />
+    <meta name="twitter:title" content="{{meta.homeTitle}}" />
+    <meta name="twitter:description" content="{{seo.description}}" />
     <meta name="twitter:image" content="https://share.2fas.com/images/og.png" />
     <link rel="preload" href="/fonts/inter-v20-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/inter-v20-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
@@ -47,49 +47,49 @@
         <img src="/images/logo-light.svg" alt="2FAS Share" width="120" height="32" />
       </header>
       <main>
-        <h1>Send a password or a note. Only once. Then the link disappears.</h1>
-        <p>2FAS Share creates a link that disappears after use. No account, no installation. You decide when and for whom.</p>
-        <p><strong>2FAS Share needs JavaScript.</strong> To create or open a link, turn on JavaScript in your browser.</p>
+        <h1>{{seo.heading}}</h1>
+        <p>{{v2.welcome.subtitle}}</p>
+        <p><strong>{{seo.jsRequiredTitle}}</strong> {{seo.jsRequiredBody}}</p>
 
         <ul>
-          <li>Free, no limits</li>
-          <li>No account</li>
-          <li>Open source</li>
+          <li>{{welcome.benefit1}}</li>
+          <li>{{welcome.benefit2}}</li>
+          <li>{{welcome.benefit3}}</li>
         </ul>
 
-        <h2>Four steps, one text field</h2>
+        <h2>{{v2.howToUse.title}}</h2>
         <ol>
           <li>
-            <h3>Enter content</h3>
-            <p>A note, a password, or short text, whatever you want.</p>
+            <h3>{{v2.howToUse.step1Title}}</h3>
+            <p>{{v2.howToUse.step1Desc}}</p>
           </li>
           <li>
-            <h3>Set rules</h3>
-            <p>Choose when it disappears and whether it works once.</p>
+            <h3>{{v2.howToUse.step2Title}}</h3>
+            <p>{{v2.howToUse.step2Desc}}</p>
           </li>
           <li>
-            <h3>Add password (optional)</h3>
-            <p>Only someone you give the password to separately can open the note.</p>
+            <h3>{{v2.howToUse.step3Title}} {{stepPreview.optionalSuffix}}</h3>
+            <p>{{v2.howToUse.step3Desc}}</p>
           </li>
           <li>
-            <h3>Send link</h3>
-            <p>Copy and paste it into a text, email, or chat.</p>
+            <h3>{{v2.howToUse.step4Title}}</h3>
+            <p>{{v2.howToUse.step4Desc}}</p>
           </li>
         </ol>
 
-        <h2>Not even we can read your content</h2>
-        <p>Content is encrypted in your browser, and the key stays in the link itself, never on our server. Without the full link, no one can read the note, not even us.</p>
+        <h2>{{encryption.title}}</h2>
+        <p>{{seo.encryptionBody}}</p>
         <ul>
-          <li>One-time access: the link disappears after the first open.</li>
-          <li>Disappearing link: choose an hour, a day, a week, or your own time.</li>
-          <li>Password protection: you share the password separately.</li>
-          <li>Open source code: anyone can check how we work.</li>
+          <li>{{seo.oneTime}}</li>
+          <li>{{seo.expiry}}</li>
+          <li>{{seo.password}}</li>
+          <li>{{seo.openSource}}</li>
         </ul>
       </main>
       <footer>
-        <p>Privacy Policy, Terms of Use and Open Source Licenses are available inside the application; turn on JavaScript to view them.</p>
-        <p>Learn more at <a href="https://2fas.com/share/" rel="noopener noreferrer">2fas.com/share</a> or view the source code on <a href="https://github.com/twofas/2fas-share" rel="noopener noreferrer">GitHub</a>.</p>
-        <p>© 2026 Two Factor Authentication Service, Inc. All rights reserved.</p>
+        <p>{{seo.legalNote}}</p>
+        <p>{{seo.learnMore}}</p>
+        <p>{{footer.copyright}}</p>
       </footer>
      </div>
     </div>
