@@ -25,18 +25,14 @@
     "build": "yarn generate-license-info && vite build",
     "build-ci": "vite build",
     "preview": "vite preview",
-    "test": "node --test 'src/**/*.test.js'",
+    "test": "node --test 'src/**/*.test.js' 'scripts/**/*.test.mjs'",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "generate-license-info-html": "npx -y license-report --output=html >> open-source-licenses.html",
-    "generate-license-info-json": "npx -y license-report --output=json >> open-source-licenses.json",
-    "generate-license-info": "yarn generate-license-info-html && yarn generate-license-info-json"
+    "generate-license-info": "yarn node scripts/generate-license-info.mjs format=json"
   },
   "dependencies": {
-    "canvas-confetti": "^1.9.4",
     "preact": "^11.1.1",
     "qrcode": "^1.5.4",
-    "ua-parser-js": "^2.0.10",
     "wouter-preact": "^3.13.0"
   },
   "devDependencies": {

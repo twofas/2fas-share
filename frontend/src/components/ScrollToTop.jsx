@@ -12,7 +12,7 @@ import { useHashLocation } from 'wouter-preact/use-hash-location';
  * Scrolls the window to the top whenever the hash location changes.
  * @returns {null} Renders nothing.
  */
-export default function ScrollToTop() {
+export default function ScrollToTop () {
   const [location] = useHashLocation();
 
   useEffect(() => {

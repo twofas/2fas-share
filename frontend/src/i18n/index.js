@@ -8,6 +8,7 @@
 import en from '../locales/en.json';
 import pl from '../locales/pl.json';
 import de from '../locales/de.json';
+import { bindShortWords } from './typography.js';
 
 /** @type {Record<string, object>} */
 const translations = { en, pl, de };
@@ -61,14 +62,15 @@ function resolve (obj, key) {
 }
 
 /**
- * Translate a key with optional interpolation.
+ * Translate a key with optional interpolation. One-letter words are glued
+ * to the next word (no orphan "a", "w", "z" at a line end).
  * Missing keys return the key itself so untranslated strings are visible in the UI.
  * @param {string} key - Dot-namespaced translation key (e.g. 'home.title').
  * @param {Record<string, string|number>} [params] - Interpolation values for {placeholder} tokens.
  * @returns {string} Translated string.
  */
 export function t (key, params) {
-  let str = resolve(dict, key) ?? key;
+  let str = bindShortWords(resolve(dict, key) ?? key);
 
   if (params) {
     for (const [k, v] of Object.entries(params)) {
@@ -77,4 +79,21 @@ export function t (key, params) {
   }
 
   return str;
+}
+
+const pluralRules = new Intl.PluralRules(currentLang);
+const numberFormat = new Intl.NumberFormat(currentLang);
+
+/**
+ * Translate a key with a count: picks the plural form (`key.one`, `key.few`,
+ * `key.many`, falling back to `key.other`) and fills {count} with the
+ * number formatted for the language.
+ * @param {string} key - Key of the object with the plural forms.
+ * @param {number} count - The number.
+ * @returns {string} Translated string.
+ */
+export function tCount (key, count) {
+  const form = resolve(dict, `${key}.${pluralRules.select(count)}`) ? pluralRules.select(count) : 'other';
+
+  return t(`${key}.${form}`, { count: numberFormat.format(count) });
 }

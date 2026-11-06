@@ -5,101 +5,61 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-@use '@/styles/animations';
+// Recipient / phone code (2205:39156): the look of the note slot, a white
+// tile with the code and the caption beside it.
 
-.shared-data-qr {
+@use '@/styles/variables' as *;
+
+// The same surface as the note slot: theme/bg/surface, 1 px border/subtle,
+// radius/sm; padding space/3 and space/6, so the window grows by at most
+// 80 px and Open note stays on the first screen at 1440 × 900.
+.panel {
   align-items: center;
-  animation: fadeInRight 0.5s ease-out 0.7s both;
-  background: rgba(136, 0, 255, .24);
-  bottom: 10%;
-  border-top-left-radius: 16px;
-  border-bottom-left-radius: 16px;
-  box-shadow: 4px 4px 13px 0 rgba(0, 0, 0, .25);
+  background: var(--theme-bg-surface);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-sm);
   display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  padding: var(--space-3) var(--space-6);
+}
+
+// color/base/white with a space/3 quiet zone, radius/md: the modules stay
+// black on white in both themes, as scanners need.
+.tile {
+  background: var(--color-base-white);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  line-height: 0;
+  padding: var(--space-3);
+
+  img {
+    block-size: 6.5rem;
+    display: block;
+    inline-size: 6.5rem;
+  }
+}
+
+// Label/strong text/primary and Body/xs text/secondary, space/2 apart; in a
+// narrow window the caption wraps under the tile.
+.caption {
+  display: flex;
+  flex: 1 1 12rem;
   flex-direction: column;
-  max-width: 227px;
-  padding: 1.25rem 1.25rem 1.625rem;
-  position: fixed;
-  right: 0;
-  z-index: 9999;
+  gap: var(--space-2);
+  min-inline-size: 0;
+}
 
-  @media (max-width: 1050px) {
-    animation: none;
-    border-radius: 16px;
-    bottom: auto;
-    margin: 1.5rem auto 0;
-    position: static;
-    right: auto;
-    width: fit-content;
-  }
+.title {
+  @include typ('label-strong');
 
-  &.hidden {
-    animation: fadeOutRight 0.25s ease-in forwards;
+  color: var(--theme-text-primary);
+}
 
-    @media (max-width: 1050px) {
-      animation: none;
-      display: none;
-    }
-  }
+.body {
+  @include typ('body-xs');
 
-  &-title {
-    color: var(--2fas-text-color);
-    font-size: 0.9375rem;
-    font-weight: 700;
-    line-height: 1.2rem;
-    margin: 0 0 0.75rem;
-    padding: 0;
-    text-align: center;
-  }
-
-  &-area {
-    position: relative;
-    padding: 7px;
-
-    &-corner {
-      height: 35px;
-      position: absolute;
-      width: 35px;
-
-      &.t-l {
-        left: 0;
-        top: 0;
-      }
-
-      &.t-r {
-        right: 0;
-        top: 0;
-        transform: scaleX(-1);
-      }
-
-      &.b-l {
-        bottom: 0;
-        left: 0;
-        transform: scaleY(-1);
-      }
-
-      &.b-r {
-        bottom: 0;
-        right: 0;
-        transform: scale(-1);
-      }
-    }
-
-    canvas {
-      border-radius: 6px;
-      display: block;
-      image-rendering: pixelated;
-    }
-  }
-
-  &-description {
-    color: var(--2fas-text-color);
-    font-size: 0.625rem;
-    font-weight: 700;
-    line-height: 1rem;
-    margin: 0.75rem 0 0;
-    max-width: 11.875rem;
-    padding: 0;
-    text-align: center;
-  }
+  color: var(--theme-text-secondary);
+  text-wrap: pretty;
 }

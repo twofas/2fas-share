@@ -1,0 +1,188 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Dialog / about: a double frame like the generator window, but the ring sits
+// on bg/raised (glass turns gray over the scrim). MOTION M-36: opening, the
+// scrim by opacity in 320 ms (toggle) and the window by opacity and scale
+// 0.98 → 1 in 400 ms (expand), both standard; closing, both in 320 ms
+// (toggle) on the in curve.
+
+@use '@/styles/variables' as *;
+
+.dialog {
+  // The outer layer of the double frame on bg/raised (COMPONENT-MAP,
+  // Dialog / about; review of 2026-10-29, item 3).
+  background: var(--theme-bg-raised);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--elevation-dialog);
+  color: var(--theme-text-primary);
+  inline-size: min(var(--size-column-narrow), calc(100vw - 2 * var(--space-page-margin)));
+  margin: auto;
+  max-block-size: calc(100dvh - 2 * var(--space-6));
+  max-inline-size: none;
+  opacity: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  // Figma draws the stroke inside the box: the border takes its width from the padding.
+  padding: calc(var(--space-4) - var(--stroke-1));
+  scale: 0.98;
+  transition:
+    opacity var(--motion-duration-toggle) var(--motion-easing-in),
+    scale var(--motion-duration-toggle) var(--motion-easing-in),
+    overlay var(--motion-duration-toggle) allow-discrete,
+    display var(--motion-duration-toggle) allow-discrete;
+
+  // The CTA ends the window, so below 1280 px the outer radius is concentric
+  // with it: half of the CTA height plus the space/4 padding. The card and the
+  // warning follow, each minus its own padding.
+  // Layout=Mobile, also wider (1 rem from the screen edges): CTA 48 px,
+  // 24 + 12 = 36 px; card 36 - 12 = 24 px; warning 24 - 16 = 8 px.
+  @include below(tablet) {
+    --radius-nested-dialog: 1.5rem;
+    --radius-nested-dialog-inner: 0.5rem;
+
+    border-radius: 2.25rem;
+    inline-size: min(39rem, calc(100vw - 2 * var(--space-6)));
+  }
+
+  // Tablet: CTA 56 px, 28 + 16 = 44 px; card 44 - 16 = 28 px; warning 28 - 20 = 8 px.
+  @media (min-width: 768px) and (max-width: 1279px) {
+    --radius-nested-dialog: 1.75rem;
+    --radius-nested-dialog-inner: 0.5rem;
+
+    border-radius: 2.75rem;
+  }
+
+  &[open] {
+    opacity: 1;
+    scale: 1;
+    transition-duration: var(--motion-duration-expand);
+    transition-timing-function: var(--motion-easing-standard);
+
+    @starting-style {
+      opacity: 0;
+      scale: 0.98;
+    }
+  }
+
+  // theme/overlay/scrim also blurs the page behind (12 px).
+  &::backdrop {
+    backdrop-filter: blur(var(--blur-overlay-scrim));
+    background: var(--theme-overlay-scrim);
+    opacity: 0;
+    transition:
+      opacity var(--motion-duration-toggle) var(--motion-easing-in),
+      overlay var(--motion-duration-toggle) allow-discrete,
+      display var(--motion-duration-toggle) allow-discrete;
+  }
+
+  &[open]::backdrop {
+    opacity: 1;
+    transition-timing-function: var(--motion-easing-standard);
+
+    @starting-style {
+      opacity: 0;
+    }
+  }
+}
+
+.card {
+  background: var(--theme-bg-raised);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  // Concentric with the dialog (radius/2xl minus its space/4 padding) at
+  // every width; the warning inside takes radius/nested/dialog-inner
+  // (IMPLEMENTATION-PATTERNS 12).
+  --alert-radius: var(--radius-nested-dialog-inner);
+
+  border-radius: var(--radius-nested-dialog);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+}
+
+.header {
+  align-items: center;
+  display: flex;
+  gap: var(--space-4);
+  justify-content: space-between;
+}
+
+.title {
+  @include typ('heading-h3');
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.close {
+  background: var(--theme-bg-muted);
+
+  // 44 px touch target in Layout=Mobile (doubled class: wins over Button / icon).
+  &.close {
+    @include below(tablet) {
+      block-size: 2.75rem;
+      inline-size: 2.75rem;
+    }
+  }
+}
+
+.lead {
+  @include typ('body-base');
+
+  color: var(--theme-text-secondary);
+}
+
+// Numbered steps: the number in a 24 px muted disc.
+.steps {
+  @include typ('body-sm');
+
+  counter-reset: step;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  list-style: none;
+
+  li {
+    counter-increment: step;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 1.5rem 1fr;
+
+    &::before {
+      @include typ('caption');
+
+      align-items: center;
+      background: var(--theme-bg-muted);
+      block-size: 1.5rem;
+      border: var(--stroke-1) solid var(--theme-border-subtle);
+      border-radius: var(--radius-full);
+      color: var(--theme-text-primary);
+      content: counter(step);
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
+
+// The CTA sits on the bottom edge: below it only the dialog padding, as at the sides.
+.footer {
+  padding-block-start: var(--space-4);
+}
+
+.back {
+  width: 100%;
+
+  // CTA Big is 48 px high in Layout=Mobile.
+  &.back {
+    @include below(tablet) {
+      min-block-size: 3rem;
+    }
+  }
+}
