@@ -37,6 +37,27 @@
     overlay var(--motion-duration-toggle) allow-discrete,
     display var(--motion-duration-toggle) allow-discrete;
 
+  // The CTA ends the window, so below 1280 px the outer radius is concentric
+  // with it: half of the CTA height plus the space/4 padding. The card and the
+  // warning follow, each minus its own padding.
+  // Layout=Mobile, also wider (1 rem from the screen edges): CTA 48 px,
+  // 24 + 12 = 36 px; card 36 - 12 = 24 px; warning 24 - 16 = 8 px.
+  @include below(tablet) {
+    --radius-nested-dialog: 1.5rem;
+    --radius-nested-dialog-inner: 0.5rem;
+
+    border-radius: 2.25rem;
+    inline-size: min(39rem, calc(100vw - 2 * var(--space-6)));
+  }
+
+  // Tablet: CTA 56 px, 28 + 16 = 44 px; card 44 - 16 = 28 px; warning 28 - 20 = 8 px.
+  @media (min-width: 768px) and (max-width: 1279px) {
+    --radius-nested-dialog: 1.75rem;
+    --radius-nested-dialog-inner: 0.5rem;
+
+    border-radius: 2.75rem;
+  }
+
   &[open] {
     opacity: 1;
     scale: 1;
@@ -150,12 +171,9 @@
   }
 }
 
+// The CTA sits on the bottom edge: below it only the dialog padding, as at the sides.
 .footer {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  padding-block: var(--space-4) var(--space-6);
+  padding-block-start: var(--space-4);
 }
 
 .back {

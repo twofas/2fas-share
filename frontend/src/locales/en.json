@@ -142,10 +142,11 @@
     "freeToUse": "Free and easy to use",
     "private": "Private",
     "benefit1": "Free for everyone",
-    "benefit2": "No account",
+    "benefit2": "No accounts",
     "benefit3": "Open source",
     "titleEnd": "Securely.",
-    "titleStart": "Send a password or a message."
+    "titleStart": "Send a password or a message.",
+    "titleTail": "You decide when and how the link expires."
   },
   "howToUse": {
     "pill": "Simple Process",
@@ -200,13 +201,13 @@
   "about": {
     "back": "Back to message",
     "close": "Close",
-    "lead": "2FAS Share lets anyone send a password or a message through an encrypted link. You don't need an account or an app to open it.",
-    "step1": "The sender enters the content, and it is encrypted in their browser.",
-    "step2": "The decryption key stays in the link itself, after the # sign. The browser never sends this part of the link to the server.",
-    "step3": "Only encrypted content reaches our server, and we don't have the key to read it.",
-    "step4": "You open the link, and the key decrypts the content on your device. The link expires after the time the sender chose, or after the first open if they set it that way.",
+    "lead": "2FAS Share lets you share passwords and messages through an encrypted link, with no account or installation. Closing this window does not use up the link.",
+    "step1": "The sender enters the content, which is encrypted in their browser.",
+    "step2": "The decryption key stays in the link itself, after the # sign. This part of the link is never sent to the server.",
+    "step3": "Only encrypted content reaches our server, where it cannot be decrypted.",
+    "step4": "When you open the link, the content is decrypted on your device. The link expires after the sender's chosen time limit or after the first data access, if that option is enabled.",
     "title": "How it works",
-    "warningBody": "It contains the key to decrypt the message, so without a password the link alone is enough to open it. Make sure it's sent only through a secure, end-to-end encrypted channel.",
+    "warningBody": "Anyone with the full link can open the message, so only send it to people you trust.",
     "warningTitle": "The link works like a key."
   },
   "documents": {
@@ -214,9 +215,9 @@
   },
   "encryption": {
     "eyebrow": "From you to the recipient",
-    "lead": "The key used to encrypt it stays in the link itself, in the part after the # sign. That is the part browsers never send to the server.",
+    "lead": "The key used to encrypt it stays in the link itself, in after the # sign. Browsers never send this part to the server.",
     "leadNote": "Without the full link, no one can read it, not even us.",
-    "note": "Keep in mind that anyone who gets the full link can open the message, so send it only to people you trust.",
+    "note": "Keep in mind that anyone who has access the full link can open the message, so only send it to the people you trust.",
     "step1Desc": "You enter the content. It is encrypted right away in your browser.",
     "step1Title": "Your side",
     "step2Desc": "The decryption key stays in the link itself, after the # sign.",
@@ -230,7 +231,7 @@
   },
   "faq": {
     "a1": "Content is encrypted in your browser before it leaves your device. The key stays in the link itself (after the # sign), and browsers don't send that part to our server. Your content reaches us only in encrypted form, and we don't have the key to read it.\n\nFor extra protection, you can also add a password.",
-    "a2": "You decide who gets the link. Opening it takes the full link, and the password if you set one. With one-time access on, the link stops working after the first open.",
+    "a2": "You decide who gets the link. Opening it takes the full link, and the password if you set one. With one-time access on, the link stops working after it is opened for the first time.",
     "a3": "An email or a text message can stay in inboxes, backups and chat histories for years. A 2FAS Share link stops working after the first open or after the time you choose, and the content is end-to-end encrypted.",
     "a4": "Yes. 2FAS Share is free for everyone. The code is open source, so anyone can check how it works.",
     "a5": "No. Neither you nor the recipient needs an account, and there's nothing to install. Type your message, set the rules and create the link.",
@@ -244,7 +245,7 @@
     "q5": "Do I need an account?",
     "q6": "What happens after the link expires?",
     "q7": "What if the recipient gets the error “This link no longer works”?",
-    "title": "Your questions, answered"
+    "title": "Good to know"
   },
   "features": {
     "expiryDesc": "Choose an hour, day, or week after which the link expires automatically.",
@@ -254,7 +255,7 @@
     "oneTimeTitle": "One-time access",
     "openSourceDesc": "Anyone can verify the security and encryption of the shared data.",
     "openSourceLink": "View on GitHub",
-    "openSourceTitle": "Open-source code",
+    "openSourceTitle": "Open source code",
     "passwordDesc": "You share the password separately. The link alone is not enough to open the message.",
     "passwordTitle": "Password protection",
     "title": "Core features\nand options"
@@ -302,7 +303,7 @@
     "askSenderTitle": "Ask the sender for a new link.",
     "brokenBody": "It may have been cut off when copied, for example in a text message.",
     "brokenTitle": "Part of the link is missing.",
-    "consentOpenNote": "By clicking Open message, you agree to our Terms of Use and Privacy Policy.",
+    "consentOpenNote": "By clicking \"Open message\", you agree to our Terms of Use and Privacy Policy.",
     "contentCopied": "Content copied",
     "copy": "Copy",
     "copyAgainBody": "It's best to open it straight from where you received it.",
@@ -350,10 +351,10 @@
     "passwordHint": "The password never leaves your browser.",
     "passwordLabel": "Password from the sender",
     "phoneCodeAlt": "QR code with the link to this message",
-    "phoneCodeBody": "Anyone who sees this code can open the message, so keep it off shared screens.",
+    "phoneCodeBody": "Anyone who scans this code can open the message, so keep it off shared screens.",
     "phoneCodeTitle": "Scan the QR code with your phone.",
     "privacyBody": "The key is only in your link, not on our server.",
-    "privacyTitle": "Protected with end-to-end encryption.",
+    "privacyTitle": "This link is end-to-end encrypted.",
     "revealedCaption": "Copy the content and save it somewhere safe, for example in a password manager.",
     "showCode": "Show QR code",
     "showPassword": "Show password",
@@ -367,7 +368,7 @@
     "wrongPasswordTitle": "Wrong password."
   },
   "stepPreview": {
-    "noteCaption": "Type or paste what you want to send.",
+    "noteCaption": "Enter the data you want to send.",
     "optionalSuffix": "(optional)",
     "typedLine1": "Wi-Fi “Office-Guest”",
     "typedLine2": "Password: Coffee{year}Buzz!"
@@ -389,7 +390,7 @@
       },
       "expirationTitle": "Link expires after",
       "notePlaceholder": "Password, code, or short text",
-      "oneTimeAccessDesc": "The link stops working after the first open.",
+      "oneTimeAccessDesc": "The link will expire after the first data access.",
       "oneTimeAccessTitle": "One-time access",
       "passwordDesc": "Send the password separately.",
       "passwordTitle": "Add password",
@@ -419,7 +420,7 @@
       "step1Desc": "A password, a code, or a short text.",
       "step1Title": "Create the message",
       "step2Desc": "Choose when it expires and whether it works once.",
-      "step2Title": "Set rules",
+      "step2Title": "Set the rules",
       "step3Desc": "The recipient also needs the password, which you share separately.",
       "step3Title": "Add password",
       "step4Desc": "Copy and paste it into a text, email, or chat.",
@@ -428,7 +429,7 @@
       "title": "How does\nit work?"
     },
     "legal": {
-      "share": "By clicking Create link, you agree to our Terms of Use and Privacy Policy."
+      "share": "By clicking \"Create link\", you agree to our Terms of Use and Privacy Policy."
     },
     "openSourceLicenses": {
       "colLicense": "License",
@@ -461,7 +462,7 @@
     "jsRequiredTitle": "2FAS Share needs JavaScript.",
     "learnMore": "Learn more at {site} or view the source code on {github}.",
     "legalNote": "Privacy Policy, Terms of Use and Open Source Licenses are available inside the application; turn on JavaScript to view them.",
-    "oneTime": "One-time access: the link stops working after the first open.",
+    "oneTime": "One-time access: the link stops working after it is opened for the first time.",
     "openSource": "Open-source code: anyone can verify the security and encryption of the shared data.",
     "password": "Password protection: you share the password separately."
   }
