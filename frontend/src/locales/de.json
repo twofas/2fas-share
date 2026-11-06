@@ -145,7 +145,8 @@
     "benefit2": "Kein Konto",
     "benefit3": "Open Source",
     "titleEnd": "Sicher.",
-    "titleStart": "Sende ein Passwort oder eine Nachricht."
+    "titleStart": "Sende ein Passwort oder eine Nachricht.",
+    "titleTail": "Du entscheidest, wann und wie der Link abläuft."
   },
   "howToUse": {
     "pill": "Einfacher Ablauf",
@@ -200,13 +201,13 @@
   "about": {
     "back": "Zurück zur Nachricht",
     "close": "Schließen",
-    "lead": "Mit 2FAS Share kann jeder ein Passwort oder eine Nachricht über einen verschlüsselten Link senden. Zum Öffnen brauchst du kein Konto und keine App.",
+    "lead": "Das ist 2FAS Share. Damit teilst du Passwörter und Nachrichten über einen verschlüsselten Link, ohne Konto und ohne Installation. Das Schließen dieses Fensters verbraucht den Link nicht.",
     "step1": "Der Absender gibt den Inhalt ein, und er wird in seinem Browser verschlüsselt.",
     "step2": "Der Entschlüsselungsschlüssel bleibt im Link selbst, nach dem #-Zeichen. Der Browser sendet diesen Teil des Links nie an den Server.",
     "step3": "Nur verschlüsselte Inhalte erreichen unseren Server, und wir haben nicht den Schlüssel, um sie zu lesen.",
     "step4": "Du öffnest den Link, und der Schlüssel entschlüsselt den Inhalt auf deinem Gerät. Der Link läuft nach der vom Absender gewählten Zeit ab oder nach dem ersten Öffnen, wenn er es so eingestellt hat.",
     "title": "So funktioniert es",
-    "warningBody": "Er enthält den Schlüssel zum Entschlüsseln der Nachricht. Ohne Passwort reicht also der Link allein, um sie zu öffnen. Achte darauf, dass er nur über einen sicheren, Ende-zu-Ende-verschlüsselten Kanal gesendet wird.",
+    "warningBody": "Jeder mit dem vollständigen Link kann die Nachricht öffnen. Prüfe einen unerwarteten Link daher über einen anderen Kanal beim Absender.",
     "warningTitle": "Der Link funktioniert wie ein Schlüssel."
   },
   "documents": {
@@ -244,7 +245,7 @@
     "q5": "Brauche ich ein Konto?",
     "q6": "Was passiert, wenn der Link abläuft?",
     "q7": "Was, wenn der Empfänger den Fehler „Dieser Link funktioniert nicht mehr“ sieht?",
-    "title": "Antworten auf deine Fragen"
+    "title": "Gut zu wissen"
   },
   "features": {
     "expiryDesc": "Wähle eine Stunde, einen Tag oder eine Woche, danach läuft der Link automatisch ab.",
