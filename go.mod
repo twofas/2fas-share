@@ -1,6 +1,6 @@
 module github.com/twofas/2fas-share-server/tools
 
-go 1.27.0
+go 1.27.3
 
 tool (
 	github.com/golangci/golangci-lint/v2/cmd/golangci-lint
@@ -219,7 +219,7 @@ require (
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20260811152304-ee035b5b010f // indirect
 	golang.org/x/mod v0.42.0 // indirect
-	golang.org/x/net v0.61.0 // indirect
+	golang.org/x/net v0.62.0 // indirect
 	golang.org/x/sync v0.24.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect
 	golang.org/x/text v0.43.0 // indirect

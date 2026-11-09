@@ -13,11 +13,11 @@ jobs:
       run:
         working-directory: ./api
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          go-version: '1.27'
+          go-version-file: api/go.mod
           cache-dependency-path: |
             go.sum
             api/go.sum
@@ -37,11 +37,12 @@ jobs:
       - name: Run linters
         run: make go-lint
       - name: Set up uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
+          version: "0.13.7"
           enable-cache: true
       - name: Install moto-server
-        run: uv tool install 'moto[server]==5.1.4'
+        run: uv tool install 'moto[server]==5.2.5'
       - name: Start moto
         run: |
           moto_server -p 5555 &

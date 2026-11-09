@@ -35,3 +35,13 @@ updates:
     target-branch: "develop"
     schedule:
       interval: "weekly"
+    ignore:
+      # Keep Node on the 22 release line.
+      - dependency-name: "node"
+        versions: [">=23"]
+
+  - package-ecosystem: "docker-compose"
+    directory: "/api"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
