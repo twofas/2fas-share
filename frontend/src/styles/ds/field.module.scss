@@ -1,0 +1,429 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Field / textarea, Field / password and Field / message.
+//
+// Focus (MOTION.md M-05, BEHAVIOR-SPEC 59.7): a quiet 1 px border in
+// field/border-hover, no glow, and the light arc on the wrapper of the field
+// (`.arc`). Error: aria-invalid="true" on the control, a 1 px error border,
+// with focus 2 px (Error focus), no arc; the message is linked by
+// aria-describedby. Readonly: the readonly attribute, no arc.
+
+@use '../variables' as *;
+@use '../animations';
+
+// The angle of the light arc; a registered property, so it can rotate.
+@property --field-arc-angle {
+  inherits: false;
+  initial-value: 0deg;
+  syntax: '<angle>';
+}
+
+@keyframes fieldArc {
+  to {
+    --field-arc-angle: 360deg;
+  }
+}
+
+@mixin field-surface {
+  @include interactive(border-color, background-color, color);
+
+  background: var(--theme-bg-surface);
+  border: var(--stroke-1) solid var(--theme-field-border);
+  border-radius: var(--radius-sm);
+  color: var(--theme-text-primary);
+
+  // Hover skips a focused field (the focus border wins under the cursor) and
+  // a field with an error (Error wins over Hover).
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:focus-within, #{$disabled}, [aria-invalid='true'], :has([aria-invalid='true'])) {
+      border-color: var(--theme-field-border-hover);
+    }
+  }
+}
+
+// Focus: a quiet 1 px border, no glow; the light arc lies on the wrapper.
+@mixin field-focus {
+  border-color: var(--theme-field-border-hover);
+  box-shadow: none;
+  outline: none;
+}
+
+@mixin field-error {
+  border-color: var(--theme-feedback-error);
+}
+
+// Error focus: 2 px without a layout shift, the 1 px border plus a 1 px inset
+// line, both in the error color; no violet, no glow.
+@mixin field-error-focus {
+  border-color: var(--theme-feedback-error);
+  box-shadow: inset 0 0 0 var(--stroke-1) var(--theme-feedback-error);
+}
+
+@mixin field-disabled {
+  background: var(--theme-control-track);
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+}
+
+// ── Light arc on focus ──────────────────────────────────────
+// <div class={field.arc}><textarea class={field.textarea} /></div>, or
+// <div class={field.arc}><div class={field.control}>…</div></div>. The wrapper
+// has no padding and the control is a block of full width, so the box of the
+// wrapper is the box of the control and the 2 px ring lies on its border.
+//
+// MOTION.md M-05 (v2.1): the arc (`::before`) circles once per 1.6 s (no
+// token, as the CTA arc) only while the field has focus and is empty, at most
+// 3 turns (4.8 s). After the third turn, or from the first character, it
+// cross-fades into the still ring (`::after`), the reduced-motion ring. The
+// animation is set only on focus of an empty field, so every new focus and
+// every clearing of the field starts the 3 turns again. "Empty" is
+// :placeholder-shown: all three fields carry a placeholder. Error focus,
+// read-only and disabled have neither the arc nor the ring.
+$arc-turn: 1.6s;
+$arc-turns: 3;
+
+.arc {
+  border-radius: var(--radius-sm);
+  position: relative;
+
+  &::before,
+  &::after {
+    border-radius: inherit;
+    content: '';
+    inset: 0;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    opacity: 0;
+    padding: var(--stroke-2);
+    pointer-events: none;
+    position: absolute;
+    transition: opacity var(--motion-duration-hover) var(--motion-easing-standard);
+    z-index: 1;
+  }
+
+  &::before {
+    background: conic-gradient(
+      from var(--field-arc-angle, 0deg),
+      transparent 0turn 0.62turn,
+      var(--theme-accent-default) 0.78turn,
+      transparent 0.94turn 1turn
+    );
+  }
+
+  &::after {
+    background: var(--theme-accent-default);
+  }
+
+  // Empty and focused: 3 turns, then the arc fades out and the ring in.
+  &:focus-within:has(:placeholder-shown) {
+    &::before {
+      animation:
+        fieldArc $arc-turn linear $arc-turns,
+        fieldArcOut var(--motion-duration-hover) var(--motion-easing-standard) ($arc-turn * $arc-turns) forwards;
+      opacity: 1;
+    }
+
+    &::after {
+      animation: fieldRingIn var(--motion-duration-hover) var(--motion-easing-standard) ($arc-turn * $arc-turns) forwards;
+    }
+  }
+
+  // With text: the still ring at once (the arc fades out, if it ran).
+  &:focus-within:not(:has(:placeholder-shown))::after {
+    opacity: 1;
+  }
+
+  // Reduced motion: the whole ring lit, not circling.
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      display: none;
+    }
+
+    &:focus-within:has(:placeholder-shown)::after {
+      animation: none;
+      opacity: 1;
+    }
+  }
+
+  // Last and with a doubled class, so it wins over every focus rule above.
+  &.arc:has([aria-invalid='true'], [readonly], :disabled) {
+    &::before,
+    &::after {
+      animation: none;
+      opacity: 0;
+    }
+  }
+
+  // Without mask-composite the ring would fill the whole field.
+  @supports not (mask-composite: exclude) {
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+}
+
+@keyframes fieldArcOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fieldRingIn {
+  to {
+    opacity: 1;
+  }
+}
+
+// ── Field / textarea ────────────────────────────────────────
+// <textarea class={field.textarea}>; min-height instead of height.
+.textarea {
+  @include field-surface;
+  @include typ('body-base');
+
+  box-sizing: border-box;
+  display: block;
+  min-block-size: 8.8125rem;
+  // Figma draws the stroke inside the box: the border takes its width from the padding.
+  padding: calc(var(--space-4) - var(--stroke-1));
+  resize: vertical;
+  width: 100%;
+
+  &::placeholder {
+    color: var(--theme-text-subtle);
+    opacity: 1;
+  }
+
+  &:focus-visible,
+  &:focus {
+    @include field-focus;
+  }
+
+  // Error wins over Hover; Error focus over Focus.
+  &[aria-invalid='true'] {
+    @include field-error;
+
+    &:focus {
+      @include field-error-focus;
+    }
+  }
+
+  &:disabled {
+    @include field-disabled;
+  }
+
+  // Readonly: selectable text, quiet border, no hover, no resize handle.
+  &[readonly] {
+    border-color: var(--theme-border-subtle);
+    resize: none;
+
+    @include hover {
+      border-color: var(--theme-border-subtle);
+    }
+
+    &:focus,
+    &:focus-visible {
+      border-color: var(--theme-border-subtle);
+      outline: var(--stroke-2) solid var(--theme-border-focus);
+      outline-offset: 2px;
+    }
+  }
+}
+
+// ── Field / password (and any single-line field with adornments) ──
+// <div class={field.arc}><div class={field.control}><input class={field.input} />
+// <button class={field.adornment} aria-pressed aria-label="Show password" /></div></div>
+.control {
+  @include field-surface;
+
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  gap: var(--space-2);
+  // Field / password is 48 px at every width (the 24 px line centred).
+  min-block-size: 3rem;
+  padding-block: 0;
+  padding-inline: calc(var(--space-4) - var(--stroke-1)) calc(var(--space-3) - var(--stroke-1));
+  position: relative;
+  width: 100%;
+
+  &:focus-within {
+    @include field-focus;
+  }
+
+  &:has([aria-invalid='true']) {
+    @include field-error;
+
+    &:focus-within {
+      @include field-error-focus;
+    }
+  }
+
+  // Only a disabled field dims the control; a disabled eye (Creating) does not.
+  &:has(.input:disabled) {
+    @include field-disabled;
+  }
+}
+
+.input {
+  @include typ('body-base');
+
+  background: transparent;
+  color: inherit;
+  flex: 1;
+  min-inline-size: 0;
+
+  &::placeholder {
+    color: var(--theme-text-subtle);
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+// Eye button: 24 px glyph, 44 × 44 px click area inside the 48 px field.
+.adornment {
+  @include interactive(color, opacity);
+
+  align-items: center;
+  block-size: 1.5rem;
+  border-radius: var(--radius-full);
+  color: var(--theme-text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  inline-size: 1.5rem;
+  justify-content: center;
+  position: relative;
+
+  &::after {
+    content: '';
+    inset: -0.625rem;
+    position: absolute;
+  }
+
+  @include hover {
+    color: var(--theme-text-primary);
+  }
+
+  @include focus-ring;
+  @include disabled;
+
+  svg {
+    block-size: 1.5rem;
+    inline-size: 1.5rem;
+  }
+}
+
+// ── Field / message ─────────────────────────────────────────
+// <p id class={field.message}> under the field; the field keeps its height,
+// the container grows. Opens in 400 ms (expand) and closes the same way in
+// reverse (data-closing, MOTION.md M-06); reduced motion makes both a jump.
+// `.collapsible` gives the same motion to other blocks under a field (the
+// character counter).
+.message,
+.collapsible {
+  animation: expandIn var(--motion-duration-expand) var(--motion-easing-standard);
+  display: grid;
+  grid-template-rows: 1fr;
+  transition:
+    grid-template-rows var(--motion-duration-expand) var(--motion-easing-standard),
+    opacity var(--motion-duration-expand) var(--motion-easing-standard),
+    margin-block-start var(--motion-duration-expand) var(--motion-easing-standard);
+
+  // Clipped for the expand animation, with 2 px of room so the icon pulse
+  // (scale 1.08) is not cut to a square; the negative margin keeps the
+  // layout unchanged.
+  > * {
+    margin: -0.125rem;
+    min-block-size: 0;
+    overflow: hidden;
+    padding: 0.125rem;
+  }
+
+  &[data-closing] {
+    grid-template-rows: 0fr;
+    margin-block-start: 0;
+    opacity: 0;
+  }
+}
+
+.message {
+  margin-block-start: var(--space-2);
+}
+
+.messageRow {
+  align-items: flex-start;
+  display: flex;
+  gap: var(--space-2);
+}
+
+// error-warning-line, 20 px, beside the first line of the title.
+.messageIcon {
+  color: var(--theme-feedback-error-text);
+  display: inline-flex;
+  flex-shrink: 0;
+
+  svg {
+    block-size: 1.25rem;
+    inline-size: 1.25rem;
+  }
+}
+
+// The title line (20 px) starts 2 px lower than the icon (Figma: text frame
+// padding 2, 2 px between title and body).
+.messageText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-inline-size: 0;
+  padding-block-start: 0.125rem;
+}
+
+.messageTitle {
+  @include typ('label-strong');
+
+  color: var(--theme-feedback-error-text);
+}
+
+.messageBody,
+.hint {
+  @include typ('body-xs');
+
+  color: var(--theme-text-secondary);
+}
+
+// ── Forced colors (Windows high contrast) ───────────────────
+// The arc is a gradient and disappears there: the focus is a system outline.
+@media (forced-colors: active) {
+  .textarea,
+  .control {
+    background: Canvas;
+    border-color: ButtonBorder;
+    color: CanvasText;
+  }
+
+  .arc::before,
+  .arc::after {
+    display: none;
+  }
+
+  .arc:focus-within,
+  .textarea:not(.arc > *):focus,
+  .control:not(.arc > *):focus-within {
+    outline: var(--stroke-2) solid Highlight;
+    outline-offset: 2px;
+  }
+
+  .messageIcon {
+    color: CanvasText;
+  }
+}

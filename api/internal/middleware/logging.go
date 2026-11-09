@@ -53,6 +53,11 @@ func Logging(log *slog.Logger) func(http.Handler) http.Handler {
 
 			start := time.Now()
 
+			route := r.Pattern
+			if route == "" {
+				route = "unmatched"
+			}
+
 			logLevel := slog.LevelInfo
 			if r.URL.Path == "/api/health" {
 				logLevel = slog.LevelDebug
@@ -61,8 +66,7 @@ func Logging(log *slog.Logger) func(http.Handler) http.Handler {
 			log.Log(ctx, logLevel, "Request started",
 				"trace_id", traceID,
 				"method", r.Method,
-				"path", r.URL.Path,
-				"remote_addr", r.RemoteAddr,
+				"route", route,
 			)
 
 			rw := &responseWriter{ResponseWriter: w, status: http.StatusOK}
@@ -71,7 +75,7 @@ func Logging(log *slog.Logger) func(http.Handler) http.Handler {
 			log.Log(ctx, logLevel, "Request finished",
 				"trace_id", traceID,
 				"method", r.Method,
-				"path", r.URL.Path,
+				"route", route,
 				"status", rw.status,
 				"duration_ms", time.Since(start).Milliseconds(),
 			)

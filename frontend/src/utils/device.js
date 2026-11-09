@@ -5,13 +5,11 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-import { UAParser } from 'ua-parser-js';
-import { isIPadOSLike, computeDeviceFlags } from './deviceDetection';
+import { computeDeviceFlags } from './deviceDetection';
 
-const parser = new UAParser();
 const nav = typeof navigator !== 'undefined' ? navigator : undefined;
 
-const flags = computeDeviceFlags(parser.getOS(), parser.getDevice(), isIPadOSLike(nav));
+const flags = computeDeviceFlags(nav);
 
 /**
  * Whether the current device is an iOS/Android phone or tablet. Includes iPadOS
