@@ -5,6 +5,7 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
+<<<<<<< HEAD
 import S from './OpenSourceLicenses.module.scss';
 import Decors from '../../components/Decors';
 import { t } from '@/i18n';
@@ -29,6 +30,20 @@ function cleanLink (url) {
 }
 
 /**
+=======
+import { Fragment } from 'preact';
+import DocumentLayout from '@/components/DocumentLayout';
+import D from '@/components/DocumentLayout/DocumentLayout.module.scss';
+import S from './OpenSourceLicenses.module.scss';
+import lnk from '@/styles/ds/link.module.scss';
+import { t } from '@/i18n';
+import ArrowIcon from '@/assets/icons/arrow-down-s-line.svg?react';
+// Direct npm dependencies from open-source-licenses.json (vite.config.js).
+import frontendLicenses from 'virtual:open-source-licenses';
+import backendLicenses from '../../../../api/licenses.json';
+
+/**
+>>>>>>> origin/develop
  * Strip semver range prefixes so the rendered version is plain.
  * @param {string} version Defined version (e.g. `^1.2.3`).
  * @returns {string} Bare version, or empty string when unknown.
@@ -51,8 +66,31 @@ function backendUrl (pkg) {
 }
 
 /**
+<<<<<<< HEAD
  * Open Source Licenses page listing third-party dependencies for both
  * the Go backend and the frontend (npm).
+=======
+ * Render a package path so it wraps only after a slash (Figma: the path
+ * breaks at its segments, never inside one).
+ * @param {string} pkg Package name or Go import path.
+ * @returns {import('preact').JSX.Element[]} Segments with break opportunities.
+ */
+function packagePath (pkg) {
+  const parts = pkg.split('/');
+
+  return parts.map((part, i) => (
+    <Fragment key={i}>
+      <span className={S.segment}>{part}{i < parts.length - 1 && '/'}</span>
+      {i < parts.length - 1 && <wbr />}
+    </Fragment>
+  ));
+}
+
+/**
+ * Open Source Licenses page listing third-party dependencies for both
+ * the Go backend and the frontend (npm). A frontend package that ships its
+ * license files gets their full texts, collapsed under the row.
+>>>>>>> origin/develop
  * @returns {import('preact').JSX.Element} The licenses page.
  */
 export default function OpenSourceLicenses () {
@@ -64,6 +102,7 @@ export default function OpenSourceLicenses () {
     a.package.localeCompare(b.package)
   );
 
+<<<<<<< HEAD
   return (
     <main className={S.licenses}>
       <Decors />
@@ -166,5 +205,117 @@ export default function OpenSourceLicenses () {
         </section>
       </article>
     </main>
+=======
+
+  return (
+    <DocumentLayout
+      current='/open-source-licenses'
+      title={t('openSourceLicenses.title')}
+      meta={<p className={D.lead}>{t('v2.openSourceLicenses.intro')}</p>}
+    >
+      <section className={S.section}>
+        <h2>{t('openSourceLicenses.backendSection')}</h2>
+        <p className={S.sectionDesc}>{t('openSourceLicenses.backendDesc')}</p>
+
+        <table className={S.table} role='table'>
+          <thead role='rowgroup'>
+            <tr className={S.row} role='row'>
+              <th scope='col' role='columnheader' className={S.colPackage}>
+                {t('openSourceLicenses.colPackage')}
+              </th>
+              <th scope='col' role='columnheader' className={S.colSource}>
+                {t('openSourceLicenses.colSource')}
+              </th>
+            </tr>
+          </thead>
+          <tbody role='rowgroup'>
+            {sortedBackend.map((dep) => (
+              <tr key={dep.package} className={S.row} role='row'>
+                <th scope='row' role='rowheader' className={S.colPackage}>{packagePath(dep.package)}</th>
+                <td role='cell' className={S.colSource}>
+                  <a
+                    className={`${lnk.link} ${lnk.linkAccent} ${S.sourceLink}`}
+                    href={backendUrl(dep.package)}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    {t('openSourceLicenses.viewSource')}
+                    <span className='visually-hidden'> {t('nav.newTab')}</span>
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <section className={S.section}>
+        <h2>{t('openSourceLicenses.frontendSection')}</h2>
+        <p className={S.sectionDesc}>{t('v2.openSourceLicenses.frontendDesc')}</p>
+
+        <table className={S.table} role='table'>
+          <thead role='rowgroup'>
+            <tr className={S.row} role='row'>
+              <th scope='col' role='columnheader' className={S.colPackage}>
+                {t('openSourceLicenses.colPackage')}
+              </th>
+              <th scope='col' role='columnheader' className={S.colVersion}>
+                {t('openSourceLicenses.colVersion')}
+              </th>
+              <th scope='col' role='columnheader' className={S.colSource}>
+                {t('openSourceLicenses.colSource')}
+              </th>
+              <th scope='col' role='columnheader' className='visually-hidden'>
+                {t('v2.openSourceLicenses.colLicense')}
+              </th>
+            </tr>
+          </thead>
+          <tbody role='rowgroup'>
+            {sortedFrontend.map((dep) => {
+              const url = dep.link;
+              const version = cleanVersion(dep.installedVersion || dep.definedVersion);
+              const licenseFiles = Object.entries(dep.licenseFiles);
+
+              return (
+                <tr key={dep.name} className={`${S.row} ${licenseFiles.length > 0 ? S.rowWithLicense : ''}`} role='row'>
+                  <th scope='row' role='rowheader' className={S.colPackage}>{packagePath(dep.name)}</th>
+                  <td role='cell' className={S.colVersion}>{version || '—'}</td>
+                  <td role='cell' className={S.colSource}>
+                    {url
+                      ? (
+                        <a
+                          className={`${lnk.link} ${lnk.linkAccent} ${S.sourceLink}`}
+                          href={url}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                        >
+                          {t('openSourceLicenses.viewSource')}
+                          <span className='visually-hidden'> {t('nav.newTab')}</span>
+                        </a>
+                      )
+                      : '—'}
+                  </td>
+                  {licenseFiles.length > 0 && (
+                    <td role='cell' className={S.colLicense}>
+                      {licenseFiles.map(([file, text]) => (
+                        <details key={file} className={S.license}>
+                          <summary className={`${lnk.link} ${lnk.linkAccent} ${S.licenseSummary}`}>
+                            {t('v2.openSourceLicenses.licenseText', { file })}
+                            <ArrowIcon aria-hidden='true' />
+                          </summary>
+                          <pre className={S.licenseText}>{text}</pre>
+                        </details>
+                      ))}
+                    </td>
+                  )}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+
+      </section>
+    </DocumentLayout>
+>>>>>>> origin/develop
   );
 }

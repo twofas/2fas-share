@@ -1,0 +1,107 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Decor / arcs. Circles enter from the center (opacity 450 ms, scale 0.78 → 1
+// in 650 ms, 120 ms stagger). The light is a conic streak masked to the circle
+// line on a 0 × 0 rotor at the circle center; only the rotor rotates, once
+// per run, never in a loop (background-arcs-light.html).
+
+@use '@/styles/variables' as *;
+
+.arcs {
+  // A constant 1388 × 696 frame at every width (BEHAVIOR-SPEC 52, arcs axis;
+  // IMPLEMENTATION-PATTERNS 9.1); narrower windows clip it.
+  aspect-ratio: 1388 / 696;
+  inline-size: 86.75rem;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  translate: -50% 0;
+  z-index: 0;
+
+  svg {
+    block-size: 100%;
+    color: var(--theme-border-subtle);
+    inline-size: 100%;
+    max-width: none;
+    overflow: visible;
+  }
+
+  @media (forced-colors: active) {
+    display: none;
+  }
+}
+
+.arc {
+  animation:
+    arcFade var(--motion-duration-reveal) var(--motion-easing-out) both,
+    arcScale var(--motion-duration-entrance) var(--motion-easing-out) both;
+  animation-delay: calc(0.1s + var(--i) * var(--motion-duration-stagger));
+  stroke: currentColor;
+  transform-box: view-box;
+  transform-origin: 694px 0;
+}
+
+.rotor {
+  block-size: 0;
+  inline-size: 0;
+  inset-block-start: 0;
+  position: absolute;
+  transform: rotate(0deg);
+  will-change: transform;
+}
+
+// The streak: a small box whose gradient and mask center lies outside it, at
+// the circle center (index.jsx sets the box and the masks for the radius).
+.streak {
+  background: conic-gradient(
+    from 0deg at var(--cx) var(--cy),
+    transparent 0deg,
+    transparent calc(180deg - var(--arc)),
+    var(--theme-decor-arc-light) 179.2deg,
+    transparent 180deg
+  );
+  mask: var(--mask);
+  opacity: 0;
+  position: absolute;
+  will-change: opacity;
+}
+
+// Glow: the same arc in a ±7 px band with soft edges, quieter. No blur.
+.glow {
+  background: inherit;
+  inset: 0;
+  mask: var(--glow-mask);
+  opacity: 0.35;
+  position: absolute;
+}
+
+@keyframes arcFade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes arcScale {
+  from {
+    scale: 0.78;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arc {
+    animation: none;
+  }
+
+  // Also when the setting changes during the visit; the script does not
+  // start a run either (IMPLEMENTATION-PATTERNS 9.1).
+  .rotor {
+    display: none;
+  }
+}

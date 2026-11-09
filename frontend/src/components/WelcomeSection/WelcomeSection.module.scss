@@ -5,110 +5,44 @@
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file for details.
 
-@use '@/styles/animations';
-@use '@/styles/variables' as *;
-@use '@/styles/pills' as *;
+// Section / 01 Hero, generator.
+// Mobile (< 768): window on top, text column under it, left aligned.
+// From 768: the text column beside the window, both centered vertically, as
+// in the prototype (owner's decision of 2026-10-28 for the open "hero at
+// 1024" item): the window is 6 of the 12 grid columns (336 px at 768, 464 at
+// 1024, 648 at 1440, 784 at 1920, 920 at 2560), the text column takes the
+// rest after a 24 px gap (792 and 936 px from 1920, BEHAVIOR-SPEC 59.7).
+// From 1280 the section is at least one screen high and its space above and
+// below follows the window height (BEHAVIOR-SPEC 55, low window).
 
-.welcome {
-  align-items: center;
-  display: flex;
-  height: 75vh;
-  justify-content: center;
-  margin-top: -100px;
-  min-height: 500px;
+@use '@/styles/variables' as *;
+@use '@/pages/Home/sections' as *;
+
+// Page-load entrance (Figma E · Motion, 01 hero): badges at 0.14 / 0.26 /
+// 0.38 s, H1 at 0.10 s, lead at 0.46 s, the generator window from 0.40 s.
+@include motion-keyframes;
+
+.hero {
+  overflow-x: clip;
+  padding-block: var(--space-page-top) var(--space-20);
   position: relative;
 
-  @media (max-width: 1250px) {
-    height: 66vh;
+  // Bottom padding: 32 px on a phone, 40 px at 1024, 64 px at 1440.
+  @include from(tablet) {
+    padding-block-end: var(--space-16);
   }
 
-  @media (max-width: 1050px) {
-    height: 50vh;
-    min-height: 420px;
-  }
+  // Low window (BEHAVIOR-SPEC 55, board 2218:81915): above, the bottom of the
+  // bar plus clamp(24px, 6svh, 64px); below, clamp(24px, 8svh, 64px). The
+  // generator window reads both (AddNewBox .hero) to give up height in a
+  // low window: at 1440 × 768 118 px above, 61 px below, the window 589 px.
+  @include from(desktop) {
+    --hero-space-top: calc(var(--nav-bottom) + clamp(1.5rem, 6svh, 4rem));
+    --hero-space-bottom: clamp(1.5rem, 8svh, 4rem);
 
-  @include tablet {
-    margin-top: -60px;
-    padding-bottom: 2rem;
-  }
-
-  @media (max-width: 919px) {
-    min-height: 360px;
-    padding-bottom: 1rem;
-    padding-top: 1rem;
-  }
-
-  @include mobile {
-    height: auto;
-    margin-top: -40px;
-    min-height: 0;
-    padding: 4rem 0 2rem;
-  }
-
-  @media (max-width: 500px) {
-    padding-bottom: 1.5rem;
-  }
-
-  &-circles {
-    height: 100%;
-    left: 50%;
-    mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
-    overflow: hidden;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    transform: translateX(-50%);
-    width: 100%;
-
-    @media (max-width: 500px) {
-      width: 125%;
-    }
-  }
-
-  &-circle {
-    animation: fadeToOpacity 1s ease-out both;
-    bottom: 0;
-    height: auto;
-    left: 50%;
-    max-width: 100%;
-    position: absolute;
-    transform: translateX(-50%);
-
-    &.outer {
-      --target-opacity: 0.2;
-      animation-delay: 0.7s;
-      width: min(100%, 82rem);
-
-      @include tablet {
-        width: 90%;
-      }
-    }
-
-    &.middle {
-      --target-opacity: 0.4;
-      animation-delay: 0.5s;
-      width: min(82%, 67.5rem);
-
-      @include tablet {
-        width: 74%;
-      }
-    }
-
-    &.inner {
-      --target-opacity: 0.8;
-      animation-delay: 0.25s;
-      width: min(63%, 51.5rem);
-
-      @include tablet {
-        width: 56%;
-      }
-    }
-  }
-
-  &-content {
     align-items: center;
-    animation: fadeInUpShort 0.6s ease-out 0.65s both;
     display: flex;
+<<<<<<< HEAD
     flex-direction: column;
     margin-top: 9%;
     position: relative;
@@ -234,5 +168,101 @@
     &-text {
       @include pill-text;
     }
+=======
+    // Very tall windows: at most 1320 px (ACCESSIBILITY 8, decided 2026-09-19).
+    min-block-size: min(100svh, 82.5rem);
+    padding-block: var(--hero-space-top) var(--hero-space-bottom);
+  }
+}
+
+.inner {
+  @include container;
+  @include grid;
+
+  position: relative;
+  // Window to the text column: 48 px on a phone (8 px gap + 40 px padding of
+  // copy-column).
+  row-gap: calc(var(--space-32) + var(--space-2));
+  z-index: 1;
+
+  // Text column and window side by side, 24 px apart (prototype .hero-row):
+  // the window keeps its 6 grid columns, the text column fills the rest.
+  @include from(tablet) {
+    align-items: center;
+    display: flex;
+    gap: 1.5rem;
+  }
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  grid-row: 2;
+  min-inline-size: 0;
+
+  @include from(tablet) {
+    flex: 1 1 0;
+  }
+}
+
+.benefits {
+  margin-block-end: var(--space-6);
+
+  > li {
+    @include enter-small(calc(0.14s + var(--i, 0) * var(--motion-duration-stagger)), $on: null);
+  }
+}
+
+.title {
+  @include typ('display-h1');
+  @include enter-heading(0.1s, $on: null);
+
+  color: var(--theme-text-primary);
+  // A line break in the translation (\n, editable in Loco) is kept.
+  white-space: pre-line;
+}
+
+// Display/H1 is two-tone: the statement in text/primary, the rest in
+// text/secondary, never split over two lines.
+.titleEnd {
+  color: var(--theme-text-secondary);
+  white-space: nowrap;
+}
+
+.lead {
+  @include typ('body-lg');
+  @include enter-lead(0.46s, $on: null);
+
+  color: var(--theme-text-primary);
+  margin-block-start: var(--space-12);
+  // Figma: 600 px at 1024, 648 at 1440, 721 from 1920.
+  max-inline-size: 37.5rem;
+
+  @include from(desktop) {
+    max-inline-size: 40.5rem;
+  }
+
+  @include from(wide) {
+    max-inline-size: 45.0625rem;
+  }
+}
+
+.place {
+  // Generator window: X +88 → 0 on the spring, opacity 0.45 s.
+  @include enter(0.4s, $x: 5.5rem, $move: (entrance, spring), $on: null);
+
+  display: flex;
+  grid-row: 1;
+  min-inline-size: 0;
+
+  > * {
+    flex: 1;
+  }
+
+  // 6 of the 12 columns from the layout tokens (IMPLEMENTATION-PATTERNS 5).
+  @include from(tablet) {
+    flex: none;
+    inline-size: calc((100% - 11 * var(--space-page-gutter)) / 12 * 6 + 5 * var(--space-page-gutter));
+>>>>>>> origin/develop
   }
 }

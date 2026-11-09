@@ -7,12 +7,13 @@
 
 import FieldRow from './FieldRow';
 import WifiQr from './WifiQr';
+import S from './ContentTypes.module.scss';
 import { t } from '@/i18n';
 
 /**
  * Wifi content type view - displays a QR code and network credentials as field rows.
- * @param {Object} props - Component props.
- * @param {Object} props.content - Wifi data.
+ * @param {object} props - Component props.
+ * @param {object} props.content - Wifi data.
  * @param {string} [props.content.name] - Network label.
  * @param {string} [props.content.ssid] - Network SSID.
  * @param {string} [props.content.password] - Network password.
@@ -23,7 +24,7 @@ import { t } from '@/i18n';
  */
 export default function ContentWifi ({ content }) {
   return (
-    <>
+    <div className={S.fields}>
       <WifiQr content={content} />
       <FieldRow label={t('content.name')} value={content.name} />
       <FieldRow label={t('content.ssid')} value={content.ssid} />
@@ -39,7 +40,7 @@ export default function ContentWifi ({ content }) {
         <FieldRow label={t('content.hiddenNetwork')} value={t('common.yes')} />
       )}
 
-      <FieldRow label={t('content.notes')} value={content.notes} />
-    </>
+      <FieldRow label={t('content.notes')} value={content.notes} multiline />
+    </div>
   );
 }

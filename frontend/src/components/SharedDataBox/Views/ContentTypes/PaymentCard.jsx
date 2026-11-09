@@ -6,6 +6,7 @@
 // See the LICENSE file for details.
 
 import FieldRow from './FieldRow';
+import S from './ContentTypes.module.scss';
 import formatCardNumber from '@/utils/formatCardNumber';
 import { t } from '@/i18n';
 
@@ -41,8 +42,8 @@ function maskCardNumber (formatted) {
 
 /**
  * Payment card content type view - displays card details as field rows.
- * @param {Object} props - Component props.
- * @param {Object} props.content - Payment card data.
+ * @param {object} props - Component props.
+ * @param {object} props.content - Payment card data.
  * @param {string} [props.content.name] - Card label / display name.
  * @param {string} [props.content.cardHolder] - Cardholder name.
  * @param {string} [props.content.cardNumber] - Card number.
@@ -56,7 +57,7 @@ export default function ContentPaymentCard ({ content }) {
   const maskedCardNumber = maskCardNumber(formattedCardNumber);
 
   return (
-    <>
+    <div className={S.fields}>
       <FieldRow label={t('content.name')} value={content.name} />
       <FieldRow label={t('content.cardholder')} value={content.cardHolder} />
       <FieldRow
@@ -67,7 +68,7 @@ export default function ContentPaymentCard ({ content }) {
       />
       <FieldRow label={t('content.expirationDate')} value={content.expirationDate} />
       <FieldRow label={t('content.securityCode')} value={content.securityCode} sensitive />
-      <FieldRow label={t('content.notes')} value={content.notes} />
-    </>
+      <FieldRow label={t('content.notes')} value={content.notes} multiline />
+    </div>
   );
 }

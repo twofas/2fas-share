@@ -2,7 +2,7 @@
   "name": "2fas-share-frontend",
   "private": true,
   "type": "module",
-  "packageManager": "yarn@4.11.0",
+  "packageManager": "yarn@4.18.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/twofas/2fas-share.git"
@@ -25,14 +25,17 @@
     "build": "yarn generate-license-info && vite build",
     "build-ci": "vite build",
     "preview": "vite preview",
+<<<<<<< HEAD
     "test": "node --test 'src/**/*.test.js'",
+=======
+    "test": "node --test 'src/**/*.test.js' 'scripts/**/*.test.mjs'",
+>>>>>>> origin/develop
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "generate-license-info-html": "npx -y license-report --output=html >> open-source-licenses.html",
-    "generate-license-info-json": "npx -y license-report --output=json >> open-source-licenses.json",
-    "generate-license-info": "yarn generate-license-info-html && yarn generate-license-info-json"
+    "generate-license-info": "yarn node scripts/generate-license-info.mjs format=json"
   },
   "dependencies": {
+<<<<<<< HEAD
     "canvas-confetti": "^1.9.4",
     "preact": "^10.29.8",
     "qrcode": "^1.5.4",
@@ -49,11 +52,32 @@
     "sass-embedded": "^1.104.1",
     "vite": "^8.3.0",
     "vite-plugin-compression2": "^2.5.3",
+=======
+    "preact": "^11.1.1",
+    "qrcode": "^1.5.4",
+    "wouter-preact": "^3.13.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^8.1.0",
+    "@eslint/js": "^10.0.1",
+    "@preact/preset-vite": "^2.10.6",
+    "eslint": "^10.14.0",
+    "eslint-plugin-jsdoc": "^65.4.3",
+    "globals": "^17.14.0",
+    "sass-embedded": "^1.107.1",
+    "vite": "^8.3.5",
+    "vite-plugin-compression2": "^2.5.4",
+>>>>>>> origin/develop
     "vite-plugin-svgr": "^5.2.0"
   },
   "resolutions": {
     "picomatch@^2.2.2": "^2.3.2",
     "flatted": "^3.4.4",
+<<<<<<< HEAD
     "tar": "^7.5.22"
+=======
+    "tar": "^7.5.22",
+    "minimatch": "^11.0.4"
+>>>>>>> origin/develop
   }
 }

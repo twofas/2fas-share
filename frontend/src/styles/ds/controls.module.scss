@@ -1,0 +1,276 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Switch and Segmented (expiry / option). Both are styled native inputs:
+// a checkbox with role="switch" and a radio group, so state, keyboard
+// handling and the click on the whole row come for free.
+
+@use '../variables' as *;
+
+// ── Switch ──────────────────────────────────────────────────
+// <label class={ctl.switchRow}> … <input type="checkbox" role="switch"
+// class={ctl.switch} aria-labelledby aria-describedby /></label>
+// 48 × 27 px track, 23 px knob with a 2 px gap, toggle 320 ms.
+.switch {
+  appearance: none;
+  background: var(--theme-control-track-off);
+  block-size: 1.6875rem;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  flex-shrink: 0;
+  inline-size: 3rem;
+  position: relative;
+  // Creating greys the switch out in toggle too (M-27), not at once.
+  transition:
+    background-color var(--motion-duration-toggle) var(--motion-easing-standard),
+    opacity var(--motion-duration-toggle) var(--motion-easing-standard);
+
+  &::before {
+    background: var(--theme-control-knob);
+    block-size: 1.4375rem;
+    border-radius: var(--radius-full);
+    box-shadow: var(--elevation-sm);
+    content: '';
+    inline-size: 1.4375rem;
+    inset-block-start: 2px;
+    inset-inline-start: 2px;
+    position: absolute;
+    transition: translate var(--motion-duration-toggle) var(--motion-easing-standard);
+  }
+
+  &:checked {
+    background: var(--theme-control-track-on);
+
+    &::before {
+      translate: 1.3125rem 0;
+    }
+  }
+
+  @include focus-ring;
+  @include disabled;
+}
+
+// Hover lights the track from anywhere on the option row, never on a
+// disabled switch (Creating).
+.switchRow {
+  cursor: pointer;
+
+  &:not(:has(.switch:disabled)) {
+    @include hover {
+      .switch:not(:checked) {
+        background: var(--theme-control-track-off-hover);
+      }
+
+      .switch:checked {
+        background: var(--theme-control-track-on-hover);
+      }
+    }
+  }
+
+  &:has(.switch:disabled) {
+    cursor: not-allowed;
+  }
+}
+
+// ── Segmented / expiry ──────────────────────────────────────
+// <fieldset class={ctl.segmented}><legend class="visually-hidden">…</legend>
+//   <input type="radio" class={ctl.radio} id … /><label class={ctl.option} for …>
+// One Tab stop, arrows move the selection, selection change 320 ms.
+.segmented {
+  --seg-gap: var(--space-2);
+
+  background: var(--theme-control-track);
+  border: 0;
+  border-radius: var(--radius-lg);
+  display: flex;
+  gap: var(--seg-gap);
+  min-inline-size: 0;
+  padding: var(--space-1);
+  transition: opacity var(--motion-duration-toggle) var(--motion-easing-standard);
+
+  &:disabled {
+    opacity: var(--opacity-disabled);
+  }
+}
+
+.radio {
+  @include visually-hidden;
+}
+
+// Sliding selection: one raised pill moves between the options in 320 ms
+// instead of each option switching its own background. Add `segmentedSliding`
+// to the track and render `<span class={ctl.indicator} aria-hidden="true"
+// style={{ '--index': i, '--count': n }} />` as its first child. A track with
+// another gap sets it through `--seg-gap`.
+.segmentedSliding {
+  isolation: isolate;
+  position: relative;
+
+  .radio:checked + .option {
+    background: transparent;
+    box-shadow: none;
+  }
+}
+
+.indicator {
+  background: var(--theme-bg-raised);
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevation-sm);
+  inline-size: calc((100% - 2 * var(--space-1) - (var(--count) - 1) * var(--seg-gap)) / var(--count));
+  inset-block: var(--space-1);
+  inset-inline-start: var(--space-1);
+  pointer-events: none;
+  position: absolute;
+  transition: translate var(--motion-duration-toggle) var(--motion-easing-standard);
+  translate: calc(var(--index) * (100% + var(--seg-gap))) 0;
+  z-index: -1;
+}
+
+// ── Segmented / option ──────────────────────────────────────
+.option {
+  @include typ('label-sm');
+
+  align-items: center;
+  border-radius: var(--radius-md);
+  color: var(--theme-text-subtle);
+  cursor: pointer;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  min-block-size: 2.75rem;
+  padding: var(--space-1) var(--space-3);
+  text-align: center;
+  transition:
+    color var(--motion-duration-hover) var(--motion-easing-standard),
+    background-color var(--motion-duration-toggle) var(--motion-easing-standard),
+    box-shadow var(--motion-duration-toggle) var(--motion-easing-standard);
+  white-space: nowrap;
+
+  @include from(tablet) {
+    min-block-size: 2rem;
+  }
+
+  // No hover on a disabled pill (Creating).
+  @media (hover: hover) and (pointer: fine) {
+    .radio:not(:disabled) + &:hover {
+      color: var(--theme-text-primary);
+    }
+  }
+
+  // The selected pill: a fill and a shadow, no border.
+  .radio:checked + & {
+    background: var(--theme-bg-raised);
+    box-shadow: var(--elevation-sm);
+    color: var(--theme-text-primary);
+  }
+
+  // Ring drawn by the label for the visually hidden radio: an outline, so it
+  // appears at once and stays in forced colors.
+  .radio:focus-visible + & {
+    outline: var(--stroke-2) solid var(--theme-border-focus);
+    outline-offset: 2px;
+  }
+
+  .radio:disabled + & {
+    cursor: not-allowed;
+  }
+}
+
+// ── Chip / fact ─────────────────────────────────────────────
+// <ul class={ctl.chips}><li class={ctl.chip}>…</li></ul>; not a control.
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.chip {
+  @include typ('label-sm');
+
+  align-items: center;
+  background: var(--theme-bg-surface);
+  border: var(--stroke-1) solid var(--theme-border-subtle);
+  border-radius: var(--radius-full);
+  color: var(--theme-text-primary);
+  display: inline-flex;
+  gap: 0.375rem;
+  // 32 px with a 24 px line; grows with enlarged text or a second line.
+  min-block-size: 2rem;
+  padding-inline: 0.625rem 0.75rem;
+
+  svg {
+    block-size: 1rem;
+    flex-shrink: 0;
+    inline-size: 1rem;
+  }
+}
+
+// Tone=Accent: a setting that needs action from the sender.
+.chipAccent {
+  background: var(--theme-feedback-info-surface);
+  border-color: var(--theme-feedback-info-border);
+  color: var(--theme-text-accent);
+}
+
+// ── Forced colors (Windows high contrast) ───────────────────
+// The system drops backgrounds and shadows, which carry the switch state and
+// the selected pill. Redraw them in system colors (BEHAVIOR-SPEC 2644).
+@media (forced-colors: active) {
+  .switch {
+    background: Canvas;
+    border: var(--stroke-1) solid ButtonText;
+    forced-color-adjust: none;
+
+    &::before {
+      background: ButtonText;
+      box-shadow: none;
+      inset-block-start: 1px;
+      inset-inline-start: 1px;
+    }
+
+    &:checked {
+      background: Highlight;
+      border-color: Highlight;
+
+      &::before {
+        background: HighlightText;
+      }
+    }
+
+    &:disabled {
+      border-color: GrayText;
+
+      &::before {
+        background: GrayText;
+      }
+    }
+  }
+
+  .segmented {
+    border: var(--stroke-1) solid ButtonText;
+  }
+
+  .indicator {
+    background: Highlight;
+    box-shadow: none;
+    forced-color-adjust: none;
+  }
+
+  .option {
+    .radio:checked + & {
+      background: Highlight;
+      color: HighlightText;
+      forced-color-adjust: none;
+    }
+
+    .radio:focus-visible + & {
+      outline: var(--stroke-2) solid CanvasText;
+      outline-offset: 2px;
+    }
+  }
+}
