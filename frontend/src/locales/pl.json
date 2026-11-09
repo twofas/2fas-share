@@ -5,7 +5,7 @@
   },
   "addNew": {
     "title": "2FAS Share",
-    "subtitle": "Udostępnij swoje dane bezpiecznie"
+    "subtitle": "Bezpiecznie udostępniaj swoje dane"
   },
   "sharedData": {
     "subtitle1": "Bezpiecznie udostępnione.",
@@ -16,15 +16,16 @@
   "header": {
     "logoAlt": "Logo 2FAS Share",
     "shareSecurely": "Użyj 2FAS Share",
-    "aboutShare": "Więcej o SHARE"
+    "aboutShare": "O 2FAS Share"
   },
   "footer": {
-    "copyright": "© {year} Two Factor Authentication Service, Inc. Wszelkie prawa zastrzeżone.",
-    "termsTitle": "Regulamin i polityka prywatności",
+    "copyright": "© {year} Two Factor Authentication Service, Inc.\nWszelkie prawa zastrzeżone.",
+    "termsTitle": "Warunki korzystania i Polityka prywatności",
     "privacyPolicy": "Polityka prywatności",
     "termsOfUse": "Warunki korzystania",
     "githubRepository": "Repozytorium GitHub",
-    "openSourceLicenses": "Licencje Open Source"
+    "openSourceLicenses": "Licencje open source",
+    "legalNav": "Informacje prawne"
   },
   "linkExpiry": {
     "oneTimeAccess": "Jednorazowy dostęp",
@@ -39,20 +40,20 @@
     "daySat": "Sob"
   },
   "qr": {
-    "title": "Sprawdź na urządzeniu mobilnym",
-    "description": "Zeskanuj kod QR, aby zobaczyć szczegóły elementu na swoim urządzeniu mobilnym."
+    "title": "Otwórz na telefonie",
+    "description": "Zeskanuj kod QR, aby otworzyć ten link na telefonie."
   },
   "first": {
     "description": "Ten link zawiera dane z 2FAS Pass",
-    "instruction": "Naciśnij kontynuuj, aby uzyskać dostęp do danych",
+    "instruction": "Naciśnij „Kontynuuj”, aby zobaczyć dane",
     "loading": "Ładowanie...",
     "continue": "Kontynuuj",
     "openInApp": "Otwórz w aplikacji 2FAS Pass"
   },
   "password": {
     "description": "Ten link zawiera dane z 2FAS Pass",
-    "instruction": "Wprowadź hasło ustawione przez wysyłającego",
-    "placeholder": "Wprowadź hasło",
+    "instruction": "Wpisz hasło ustawione przez nadawcę",
+    "placeholder": "Wpisz hasło",
     "errorRequired": "Hasło jest wymagane",
     "errorMinLength": "Hasło musi mieć co najmniej 8 znaków",
     "errorWrong": "Nieprawidłowe hasło. Spróbuj ponownie",
@@ -64,7 +65,7 @@
     "description": "Skopiuj szczegóły elementu lub dodaj go \ndo sejfu 2FAS Pass.",
     "contentType": {
       "custom": "Bezpieczna notatka",
-      "login": "Login",
+      "login": "Dane logowania",
       "paymentCard": "Karta płatnicza",
       "secureNote": "Bezpieczna notatka",
       "wifi": "Sieć Wi-Fi",
@@ -77,9 +78,10 @@
   "common": {
     "copied": "Skopiowano!",
     "copyToClipboard": "Kopiuj do schowka",
-    "toggleVisibility": "Widoczność hasła",
-    "togglePasswordVisibility": "Włącz/wyłącz widoczność hasła",
-    "yes": "Tak"
+    "toggleVisibility": "Pokaż wartość",
+    "togglePasswordVisibility": "Pokaż hasło",
+    "yes": "Tak",
+    "errorPrefix": "Błąd:"
   },
   "content": {
     "name": "Nazwa",
@@ -87,11 +89,11 @@
     "password": "Hasło",
     "urls": "Adresy URL",
     "notes": "Notatki",
-    "note": "Notatka",
+    "note": "Wiadomość",
     "cardholder": "Posiadacz karty",
     "cardNumber": "Numer karty",
     "expirationDate": "Data ważności",
-    "securityCode": "Kod bezpieczeństwa",
+    "securityCode": "Kod zabezpieczający",
     "ssid": "SSID",
     "securityType": "Typ zabezpieczeń",
     "hiddenNetwork": "Ukryta sieć",
@@ -99,18 +101,18 @@
   },
   "addForm": {
     "secureNote": "Bezpieczna notatka",
-    "notePlaceholder": "Napisz swoją notatkę tutaj...",
+    "notePlaceholder": "Wpisz tutaj swoją notatkę...",
     "errorContentRequired": "Notatka jest pusta",
     "errorPasswordMinLength": "Hasło musi mieć co najmniej 8 znaków",
-    "expirationTitle": "Wygaśnięcie linku",
+    "expirationTitle": "Wygasanie linku",
     "expirationDesc": "Link automatycznie wygaśnie po tym czasie.",
     "oneTimeAccessTitle": "Jednorazowy dostęp",
-    "oneTimeAccessDesc": "Link wygaśnie po pierwszym dostępie do danych.",
-    "passwordTitle": "Ustaw hasło dla większego bezpieczeństwa",
+    "oneTimeAccessDesc": "Link wygaśnie po pierwszym otwarciu.",
+    "passwordTitle": "Ustaw hasło, aby zwiększyć bezpieczeństwo",
     "passwordDesc": "Odbiorca będzie potrzebował tego hasła, aby otworzyć link.",
-    "passwordPlaceholder": "Wprowadź hasło",
+    "passwordPlaceholder": "Wpisz hasło",
     "errorSubmit": "Nie udało się wygenerować linku. Spróbuj ponownie.",
-    "submitting": "Udostępnianie...",
+    "submitting": "Tworzenie",
     "submit": "Udostępnij"
   },
   "expiry": {
@@ -125,66 +127,343 @@
     "title": "Link jest gotowy do użycia",
     "copyShareLink": "Kopiuj link",
     "settingsTitle": "Ustawienia udostępniania",
-    "expirationTitle": "Wygaśnięcie linku",
+    "expirationTitle": "Wygasanie linku",
     "expirationDesc": "Link automatycznie wygaśnie po tym czasie.",
     "oneTimeAccessTitle": "Jednorazowy dostęp",
-    "oneTimeAccessDesc": "Link wygaśnie po pierwszym dostępie do danych.",
+    "oneTimeAccessDesc": "Link wygaśnie po pierwszym otwarciu.",
     "passwordTitle": "Hasło",
-    "copyPassword": "Kopiuj hasło"
+    "copyPassword": "Kopiuj hasło",
+    "linkCopied": "Link skopiowany"
   },
   "welcome": {
     "title": "Bezpieczne udostępnianie danych",
     "subtitle": "Wyślij swoje hasła, karty, notatki lub prywatne dane za pomocą bezpiecznego linku.",
     "noAccounts": "Bez kont",
     "freeToUse": "Darmowe i proste w użyciu",
-    "private": "Prywatne"
+    "private": "Prywatne",
+    "benefit1": "Za darmo dla wszystkich",
+    "benefit2": "Bez konta",
+    "benefit3": "Otwarty kod źródłowy",
+    "titleEnd": "Bezpiecznie.",
+    "titleStart": "Wyślij hasło lub wiadomość.",
+    "titleTail": "Ty decydujesz, kiedy link wygaśnie."
   },
   "howToUse": {
     "pill": "Prosty proces",
-    "subtitle": "Użyj 2FAS Share, aby łatwo i bezpiecznie wysyłać poufne dane bez zewnętrznego dostępu i z pełną kontrolą po twojej stronie.",
-    "step1Title": "Utwórz wiadomość",
-    "step1Desc": "Wpisz hasło, notatkę lub prywatne dane, które chcesz udostępnić.",
+    "subtitle": "Dzięki 2FAS Share łatwo i bezpiecznie wyślesz poufne dane – bez dostępu osób trzecich i z pełną kontrolą po Twojej stronie.",
+    "step1Title": "Stwórz wiadomość",
+    "step1Desc": "Dodaj hasła, notatki lub prywatne dane, które chcesz udostępnić.",
     "step2Title": "Dostosuj zabezpieczenia",
     "step2Desc": "Zwiększ bezpieczeństwo udostępnianych danych.",
     "step3Title": "Ustaw bezpieczne hasło",
-    "step3Desc": "To gwarantuje, że tylko zaufane osoby uzyskają dostęp do danych.",
+    "step3Desc": "Dzięki temu tylko zaufane osoby uzyskają dostęp do danych.",
     "step4Title": "Udostępnij dane",
-    "step4Desc": "Wygeneruj link z danymi i wyślij go do innych.",
-    "title": "Jak to\ndziała?"
+    "step4Desc": "Wygeneruj link z danymi i wyślij go innym.",
+    "title": "Jak to\ndziała?",
+    "optional": "Opcjonalne",
+    "stepsNoteEmphasis": "Twojej przeglądarce"
   },
   "banner": {
     "title": "Udostępnij teraz",
-    "subtitle": "Udostępnij dane za pomocą bezpiecznego linku bez zewnętrznego dostępu."
+    "subtitle": "Udostępniaj dane za pomocą bezpiecznego linku, bez dostępu osób trzecich."
   },
   "securityPrivacy": {
     "title": "Funkcje bezpieczeństwa",
-    "subtitle": "Oparte na fundamencie zaufania, przejrzystości i podejścia zero-knowledge.",
-    "e2e": "Szyfrowanie End-to-End",
+    "subtitle": "Zbudowane na zaufaniu, przejrzystości i architekturze zero-knowledge.",
+    "e2e": "Szyfrowanie end-to-end",
     "autoExpiry": "Automatyczne wygasanie linku",
-    "oneTime": "Jednorazowe linki dostępu",
+    "oneTime": "Linki jednorazowego dostępu",
     "password": "Ochrona hasłem",
-    "openSource": "Open-source",
+    "openSource": "Otwarty kod źródłowy",
     "zeroKnowledge": "Zero-knowledge",
     "selfHosted": "Obraz Dockera",
-    "noExternalAccess": "Brak zewnętrznego dostępu",
+    "noExternalAccess": "Brak dostępu osób trzecich",
     "selfHostedSuffix": "(wkrótce)"
   },
   "legal": {
-    "continue": "Klikając Kontynuuj, akceptujesz nasze Warunki korzystania oraz Politykę prywatności.",
-    "share": "Klikając Udostępnij, akceptujesz nasze Warunki korzystania oraz Politykę prywatności.",
+    "continue": "Klikając „Kontynuuj”, akceptujesz nasze Warunki korzystania i Politykę prywatności.",
+    "share": "Klikając „Udostępnij”, akceptujesz nasze Warunki korzystania i Politykę prywatności.",
     "termsOfUse": "Warunki korzystania",
     "privacyPolicy": "Politykę prywatności"
   },
   "openSourceLicenses": {
-    "title": "Licencje Open Source",
-    "intro": "2FAS Share opiera się na pracy społeczności open-source. \nDziękujemy autorom i opiekunom poniższych bibliotek.",
+    "title": "Licencje\nopen source",
+    "intro": "2FAS Share opiera się na pracy społeczności open source. \nDziękujemy autorom i opiekunom poniższych bibliotek.",
     "frontendSection": "Zależności frontendu",
-    "frontendDesc": "Pakiety JavaScript używane w kliencie webowym (npm).",
+    "frontendDesc": "Pakiety JavaScript użyte do zbudowania klienta webowego (npm).",
     "backendSection": "Zależności backendu",
     "backendDesc": "Moduły Go używane przez serwer.",
     "colPackage": "Pakiet",
     "colVersion": "Wersja",
     "colSource": "Źródło",
     "viewSource": "Zobacz źródło"
+  },
+  "about": {
+    "back": "Wróć do wiadomości",
+    "close": "Zamknij",
+    "lead": "2FAS Share pozwala udostępniać hasła i wiadomości przez zaszyfrowany link, bez konta i instalacji. Zamknięcie tego okna nie zużywa linku.",
+    "step1": "Nadawca wpisuje treść, która jest szyfrowana w jego przeglądarce.",
+    "step2": "Klucz do odszyfrowania zostaje w samym linku, po znaku #. Ta część linku nigdy nie trafia na serwer.",
+    "step3": "Na nasz serwer trafia tylko zaszyfrowana treść, której nie da się tam odszyfrować.",
+    "step4": "Gdy otwierasz link, treść jest odszyfrowywana na Twoim urządzeniu. Link wygasa po czasie wybranym przez nadawcę albo po pierwszym otwarciu, jeśli ta opcja jest włączona.",
+    "title": "Jak to działa",
+    "warningBody": "Każdy, kto ma pełny link, może otworzyć wiadomość, więc wysyłaj go tylko zaufanym osobom.",
+    "warningTitle": "Link działa jak klucz."
+  },
+  "documents": {
+    "label": "Dokumenty"
+  },
+  "encryption": {
+    "eyebrow": "Od Ciebie do odbiorcy",
+    "lead": "Klucz, którym ją zaszyfrowano, zostaje w samym linku, po znaku #. Przeglądarki nigdy nie wysyłają tej części na serwer.",
+    "leadNote": "Bez pełnego linku nikt nie odczyta wiadomości, nawet my.",
+    "note": "Pamiętaj, że każdy, kto dostanie pełny link, może otworzyć wiadomość, więc wysyłaj go tylko zaufanym osobom.",
+    "step1Desc": "Po wpisaniu treść od razu zostaje zaszyfrowana w Twojej przeglądarce.",
+    "step1Title": "Po Twojej stronie",
+    "step2Desc": "Klucz do odszyfrowania zostaje w samym linku, po znaku #.",
+    "step2Title": "Klucz w linku",
+    "step3Desc": "Dostaje tylko zaszyfrowane dane. Nigdy nie widzi klucza.",
+    "step3Title": "Nasz serwer",
+    "step4Desc": "Klucz z linku odszyfrowuje treść w przeglądarce odbiorcy.",
+    "step4Title": "Po stronie odbiorcy",
+    "stepsNote": "Treść jest szyfrowana w Twojej przeglądarce, a klucz zostaje w samym linku, nigdy na naszym serwerze.",
+    "title": "Szyfrowane jeszcze na Twoim urządzeniu"
+  },
+  "faq": {
+    "a1": "Treść jest szyfrowana w przeglądarce, zanim opuści Twoje urządzenie. Klucz zostaje w samym linku (po znaku #), a przeglądarki nie wysyłają tej części na nasz serwer. Treść trafia do nas tylko w postaci zaszyfrowanej, a my nie mamy klucza, żeby ją odczytać.\n\nDla dodatkowej ochrony możesz też dodać hasło.",
+    "a2": "Ty decydujesz, kto dostanie link. Do otwarcia potrzebny jest pełny link oraz hasło, jeśli je ustawisz. Przy włączonym jednorazowym dostępie link przestaje działać po pierwszym otwarciu.",
+    "a3": "E-mail lub SMS może przez lata pozostawać w skrzynkach odbiorczych, kopiach zapasowych i historiach rozmów. Link 2FAS Share przestaje działać po pierwszym otwarciu lub po upływie wybranego czasu, a jego zawartość jest szyfrowana end-to-end.",
+    "a4": "Tak. 2FAS Share jest darmowy dla wszystkich. Kod jest otwarty, więc każdy może sprawdzić, jak działa.",
+    "a5": "Nie. Ani Ty, ani odbiorca nie musicie zakładać konta ani niczego instalować. Wpisz wiadomość, ustaw zasady i stwórz link.",
+    "a6": "Link przestaje działać, a zaszyfrowana treść jest usuwana z naszego serwera. Każdy, kto otworzy link później, zobaczy tylko informację, że link już nie działa.",
+    "a7": "Link został już otwarty albo minął jego czas. W ten sposób 2FAS Share chroni Twoją treść. Wystarczy stworzyć nowy link i wysłać go ponownie.",
+    "eyebrow": "Najczęstsze pytania",
+    "q1": "Jak chroniona jest moja treść?",
+    "q2": "Kto może otworzyć link?",
+    "q3": "Czym to się różni od e-maila lub SMS-a?",
+    "q4": "Czy to naprawdę jest za darmo?",
+    "q5": "Czy potrzebuję konta?",
+    "q6": "Co się dzieje, gdy link wygaśnie?",
+    "q7": "Co zrobić, gdy odbiorca widzi błąd „Ten link już nie działa”?",
+    "title": "Dobrze wiedzieć"
+  },
+  "features": {
+    "expiryDesc": "Wybierz czas, po którym link automatycznie wygaśnie.",
+    "expiryTitle": "Ważność linku",
+    "eyebrow": "Co dostajesz",
+    "oneTimeDesc": "Link przestaje działać po pierwszym otwarciu. Kolejna osoba już go nie otworzy.",
+    "oneTimeTitle": "Jednorazowy dostęp",
+    "openSourceDesc": "Każdy może sprawdzić bezpieczeństwo i szyfrowanie udostępnianych danych.",
+    "openSourceLink": "Zobacz na GitHubie",
+    "openSourceTitle": "Otwarty kod źródłowy",
+    "passwordDesc": "Hasło przekazujesz osobno. Sam link nie wystarczy, żeby otworzyć wiadomość.",
+    "passwordTitle": "Ochrona hasłem",
+    "title": "Główne funkcje\ni opcje"
+  },
+  "generator": {
+    "createNewLink": "Stwórz nowy link",
+    "dayShort": "24 h",
+    "disappearsAfterValue": {
+      "300": "Wygasa po 5 minutach",
+      "1800": "Wygasa po 30 minutach",
+      "3600": "Wygasa po 1 godzinie",
+      "86400": "Wygasa po 1 dniu",
+      "604800": "Wygasa po 1 tygodniu",
+      "2592000": "Wygasa po 30 dniach"
+    },
+    "hourShort": "1 h",
+    "moreAbout": "Więcej o 2FAS Share",
+    "noPassword": "Bez hasła",
+    "other": "Inny",
+    "otherDuration": "Dodatkowe opcje",
+    "readyCaption": "Skopiuj i wyślij go odbiorcy.",
+    "sendPasswordSeparately": "Wyślij hasło osobno",
+    "week": "1 tydzień"
+  },
+  "meta": {
+    "homeTitle": "2FAS Share – Wyślij hasło lub wiadomość. Bezpiecznie.",
+    "note": "Prywatna wiadomość",
+    "pageTitle": "{page} – 2FAS Share"
+  },
+  "nav": {
+    "closeMenu": "Zamknij menu",
+    "darkMode": "Tryb ciemny",
+    "faq": "FAQ",
+    "github": "GitHub",
+    "howItWorks": "Jak to działa",
+    "main": "Główna",
+    "newTab": "(otwiera się w nowej karcie)",
+    "openMenu": "Otwórz menu",
+    "security": "Bezpieczeństwo",
+    "skip": "Przejdź do treści",
+    "theme": "Motyw"
+  },
+  "recipient": {
+    "askSenderBody": "Tylko tak zobaczysz tę wiadomość.",
+    "askSenderTitle": "Poproś nadawcę o nowy link.",
+    "brokenBody": "Mógł zostać ucięty przy kopiowaniu, na przykład w wiadomości SMS.",
+    "brokenTitle": "Brakuje części linku.",
+    "consentOpenNote": "Klikając „Otwórz wiadomość”, akceptujesz nasze Warunki korzystania oraz Politykę prywatności.",
+    "contentCopied": "Treść skopiowana",
+    "copy": "Kopiuj",
+    "copyAgainBody": "Najlepiej otwórz go bezpośrednio tam, gdzie do Ciebie dotarł.",
+    "copyAgainTitle": "Skopiuj cały link jeszcze raz.",
+    "copyContent": "Kopiuj treść",
+    "copyFailedBody": "Skopiuj ją samodzielnie: naciśnij Ctrl+C (⌘C na Macu) albo przytrzymaj palec na tekście, zaznacz całość i wybierz „Kopiuj”.",
+    "copyFailedTitle": "Nie udało się skopiować treści.",
+    "copyField": "Kopiuj: {field}",
+    "createOwnLink": "Stwórz własny link",
+    "didntHelpBody": "Poproś nadawcę o ponowne wysłanie linku.",
+    "didntHelpTitle": "Nie pomogło?",
+    "encryptedNote": "Zaszyfrowana wiadomość",
+    "errorPrefix": "Błąd:",
+    "expired": "Link wygasł",
+    "expiresAt": "{day} o {time}.",
+    "expiresIn": "Link wygaśnie {relative}.",
+    "headingBroken1": "Ten link",
+    "headingBroken2": "jest niepełny.",
+    "headingIntro1": "Udostępniono Ci",
+    "headingIntro2": "prywatną wiadomość.",
+    "headingOnce1": "Skopiuj treść,",
+    "headingOnce2": "zanim wyjdziesz.",
+    "headingPassword1": "Wpisz hasło",
+    "headingPassword2": "do wiadomości.",
+    "headingRevealed1": "Wiadomość",
+    "headingRevealed2": "od nadawcy.",
+    "headingType": {
+      "login": "Dane logowania",
+      "paymentCard": "Karta płatnicza",
+      "secureNote": "Bezpieczna notatka",
+      "wifi": "Sieć Wi-Fi"
+    },
+    "headingUnavailable1": "Ten link",
+    "headingUnavailable2": "już nie działa.",
+    "hideCode": "Ukryj kod",
+    "infoPrefix": "Informacja:",
+    "introCaption": "Kliknij „Otwórz wiadomość”, aby ją zobaczyć.",
+    "keepTabBody": "To był link jednorazowy. Nie otworzysz już tej wiadomości, jeśli z niej wyjdziesz.",
+    "keepTabTitle": "Nie zamykaj ani nie odświeżaj tej karty.",
+    "onceAlertBody": "Po opuszczeniu tej strony nie będzie można jej ponownie otworzyć.",
+    "onceAlertTitle": "Ta wiadomość otwiera się tylko raz.",
+    "oneTimeNote": "Wiadomość jednorazowa",
+    "openNote": "Otwórz wiadomość",
+    "passwordCaption": "Nadawca przekazuje je osobno, na przykład SMS-em lub telefonicznie.",
+    "passwordHint": "Hasło nigdy nie opuszcza Twojej przeglądarki.",
+    "passwordLabel": "Hasło od nadawcy",
+    "phoneCodeAlt": "Kod QR z linkiem do tej wiadomości",
+    "phoneCodeBody": "Każdy, kto zeskanuje ten kod, może otworzyć wiadomość, więc nie pokazuj go na udostępnianym ekranie.",
+    "phoneCodeTitle": "Zeskanuj kod QR telefonem.",
+    "privacyBody": "Klucz jest tylko w Twoim linku, nie na naszym serwerze.",
+    "privacyTitle": "Ten link jest szyfrowany end-to-end.",
+    "revealedCaption": "Skopiuj treść i zapisz ją w bezpiecznym miejscu, na przykład w menedżerze haseł.",
+    "showCode": "Pokaż kod QR",
+    "showPassword": "Pokaż hasło",
+    "someoneElseBody": "Daj znać nadawcy, a jeśli było to hasło, niech je zmieni.",
+    "someoneElseTitle": "Czy ktoś inny otworzył link?",
+    "trustNote": "2FAS Share ma otwarty kod źródłowy.",
+    "unavailableBody": "Ktoś mógł ją już otworzyć albo minął czas ustawiony przez nadawcę.",
+    "unavailableTitle": "Nie ma tu wiadomości.",
+    "warningPrefix": "Ostrzeżenie:",
+    "wrongPasswordBody": "Sprawdź wielkość liter albo poproś nadawcę o ponowne przesłanie hasła.",
+    "wrongPasswordTitle": "Nieprawidłowe hasło."
+  },
+  "stepPreview": {
+    "noteCaption": "Wpisz dane, które chcesz wysłać.",
+    "optionalSuffix": "(opcjonalnie)",
+    "typedLine1": "Wi-Fi „Biuro-Goście”",
+    "typedLine2": "Hasło: Coffee{year}Buzz!"
+  },
+  "v2": {
+    "addForm": {
+      "contentLeft": {
+        "one": "Został {count} znak.",
+        "other": "Zostało około {count} znaków.",
+        "few": "Zostały około {count} znaki.",
+        "many": "Zostało około {count} znaków."
+      },
+      "errorContentRequired": "Wpisz wiadomość, aby stworzyć link.",
+      "errorContentTooLong": {
+        "one": "Wiadomość jest za długa. Skróć ją o {count} znak.",
+        "other": "Wiadomość jest za długa. Skróć ją o {count} znaków.",
+        "few": "Wiadomość jest za długa. Skróć ją o {count} znaki.",
+        "many": "Wiadomość jest za długa. Skróć ją o {count} znaków."
+      },
+      "expirationTitle": "Link wygaśnie po",
+      "notePlaceholder": "Hasło, kod lub krótki tekst",
+      "oneTimeAccessDesc": "Link przestanie działać po pierwszym otwarciu.",
+      "oneTimeAccessTitle": "Jednorazowy dostęp",
+      "passwordDesc": "Wyślij hasło osobno.",
+      "passwordTitle": "Dodaj hasło",
+      "secureNote": "Twoja wiadomość",
+      "submit": "Stwórz link"
+    },
+    "addNew": {
+      "subtitle": "Wpisz treść, ustaw zasady i skopiuj link.",
+      "title": "Stwórz link"
+    },
+    "banner": {
+      "subtitle": "Jedno pole, jedno kliknięcie. Bez instalacji.",
+      "title": "Wyślij swoją pierwszą wiadomość"
+    },
+    "expiry": {
+      "30min": "30 minut",
+      "5min": "5 minut"
+    },
+    "footer": {
+      "githubRepository": "Kod źródłowy na GitHubie"
+    },
+    "header": {
+      "shareSecurely": "Stwórz link"
+    },
+    "howToUse": {
+      "pill": "Cztery proste kroki",
+      "step1Desc": "Hasło, kod lub krótki tekst.",
+      "step1Title": "Stwórz wiadomość",
+      "step2Desc": "Wybierz, kiedy link wygaśnie i czy zadziała tylko raz.",
+      "step2Title": "Ustaw zasady",
+      "step3Desc": "Odbiorca potrzebuje też hasła, które przekazujesz osobno.",
+      "step3Title": "Dodaj hasło",
+      "step4Desc": "Skopiuj go i wklej do SMS-a, e-maila albo czatu.",
+      "step4Title": "Wyślij link",
+      "stepsTitle": "Cztery kroki",
+      "title": "Jak to\ndziała?"
+    },
+    "legal": {
+      "share": "Klikając „Stwórz link”, akceptujesz nasze Warunki korzystania oraz Politykę prywatności."
+    },
+    "openSourceLicenses": {
+      "colLicense": "Licencja",
+      "frontendDesc": "Pakiety JavaScript używane w kliencie webowym (npm).",
+      "intro": "2FAS Share opiera się na pracy społeczności open source. Dziękujemy autorom i opiekunom poniższych bibliotek.",
+      "licenseText": "Tekst licencji ({file})"
+    },
+    "result": {
+      "copyFailedBody": "Skopiuj go samodzielnie: naciśnij Ctrl+C (⌘C na Macu) albo przytrzymaj palec na linku, zaznacz całość i wybierz „Kopiuj”.",
+      "copyFailedTitle": "Nie udało się skopiować linku.",
+      "hideLink": "Ukryj link",
+      "linkHidden": "(reszta linku ukryta)",
+      "oneTimeAccessTitle": "Jednorazowy dostęp",
+      "passwordCopied": "Hasło skopiowane",
+      "passwordCopyFailedBody": "Wpisz je samodzielnie, gdy będziesz je wysyłać osobno.",
+      "passwordCopyFailedTitle": "Nie udało się skopiować hasła.",
+      "showLink": "Pokaż link",
+      "title": "Link jest gotowy do użycia"
+    },
+    "welcome": {
+      "subtitle": "Szyfrowane na Twoim urządzeniu, udostępniane linkiem. Bez instalacji."
+    }
+  },
+  "seo": {
+    "description": "2FAS Share szyfruje treść na Twoim urządzeniu i tworzy link do wysłania. Ty decydujesz, kiedy wygaśnie. Bez konta, bez instalacji.",
+    "encryptionBody": "Treść jest szyfrowana w przeglądarce, a klucz zostaje w samym linku, nigdy na naszym serwerze. Bez pełnego linku nikt nie odczyta wiadomości, nawet my.",
+    "expiry": "Ważność linku: wybierz okres od 5 minut do 30 dni.",
+    "heading": "Wyślij hasło lub wiadomość. Bezpiecznie.",
+    "jsRequiredBody": "Aby stworzyć lub otworzyć link, włącz JavaScript w przeglądarce.",
+    "jsRequiredTitle": "2FAS Share wymaga JavaScriptu.",
+    "learnMore": "Dowiedz się więcej na {site} albo zobacz kod źródłowy na {github}.",
+    "legalNote": "Polityka prywatności, Warunki korzystania i licencje open source są dostępne w aplikacji. Włącz JavaScript, aby je zobaczyć.",
+    "oneTime": "Jednorazowy dostęp: link przestaje działać po pierwszym otwarciu.",
+    "openSource": "Otwarty kod źródłowy: każdy może sprawdzić bezpieczeństwo i szyfrowanie udostępnianych danych.",
+    "password": "Ochrona hasłem: hasło przekazujesz osobno."
   }
 }

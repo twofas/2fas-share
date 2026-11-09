@@ -1,0 +1,385 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Preview / generator step (833:2904, BEHAVIOR-SPEC 41): the real generator
+// window at the 1440 scale, shrunk by one scale variable, --steps-mini, that
+// multiplies the tokens (IMPLEMENTATION-PATTERNS 5, TYPOGRAPHY "texts without
+// a style"). The thumbnail is drawn at its 1440 width, 312 px, and the whole
+// picture follows the column with a container-unit zoom, as in the prototype:
+// the zoom takes the height along in the layout, which a transform would not.
+//
+// --steps-mini is 0.74, the `rescale` of the window in the Figma base
+// variants (421.6 × 324.3 → 312 × 240; label 10.36 px = 14 × 0.74). The
+// 0.58575 of the prototype belongs to its older thumbnail (157 px white
+// window), which the current Figma set no longer has.
+
+@use '@/styles/variables' as *;
+@use '@/pages/Home/sections' as *;
+
+@include motion-keyframes;
+
+// Token values of the 1440 window, frozen: the thumbnail keeps the same
+// proportions at every width (312 × 240, 342 × 263, 464 × 357: 1.30), so its
+// inside does not follow the frame mode.
+$steps-tokens: (
+  space-1: 0.25rem,
+  space-2: 0.5rem,
+  space-3: 0.75rem,
+  space-4: 1rem,
+  space-5: 1.25rem,
+  space-6: 1.5rem,
+  space-8: 2rem,
+  space-10: 2.5rem,
+  space-12: 3rem,
+  space-16: 4rem,
+  space-20: 5rem,
+  space-24: 6rem,
+  space-32: 8rem,
+  size-body-lg: 1.125rem,
+  line-height-body-lg: 1.75rem,
+  size-body-base: 1rem,
+  line-height-body-base: 1.5rem,
+  size-body-sm: 0.875rem,
+  line-height-body-sm: 1.25rem,
+  size-body-xs: 0.75rem,
+  line-height-body-xs: 1rem,
+  size-caption: 0.75rem,
+  line-height-control: 1.5rem,
+  size-title-lg: 1.25rem,
+  line-height-title-lg: 1.75rem,
+  radius-xs: 0.25rem,
+  radius-sm: 0.5rem,
+  radius-base: 1rem,
+  radius-md: 1.5rem,
+  radius-lg: 2rem,
+  radius-xl: 2.25rem,
+  radius-2xl: 3rem,
+  radius-nested-dialog: 2rem,
+  stroke-1: 1px,
+  stroke-2: 2px,
+  blur-dialog: 4px
+);
+
+// The thumbnail's column: the container the zoom is measured against.
+.preview {
+  container-type: inline-size;
+  inline-size: 100%;
+  pointer-events: none;
+  user-select: none;
+
+  // A picture of the interface, not content (ACCEPTANCE-CHECKLIST 16, 50).
+  @media print {
+    display: none;
+  }
+}
+
+// Doubled with .preview so the size wins over the shared Window rule.
+.preview > .window {
+  --steps-mini: 0.74;
+  // The 1440 thumbnail width: the picture is drawn 1:1 at it.
+  --steps-preview: 19.5rem;
+
+  @each $name, $value in $steps-tokens {
+    --#{$name}: calc(#{$value} * var(--steps-mini));
+  }
+
+  --elevation-sm: 0 0 calc(4px * var(--steps-mini)) var(--theme-shadow-color);
+  --elevation-dialog: 0 calc(32px * var(--steps-mini)) calc(56px * var(--steps-mini)) var(--theme-shadow-color);
+
+  // 312 × 240, the frame of the Figma base variant.
+  aspect-ratio: 13 / 10;
+  box-shadow: var(--elevation-dialog);
+  inline-size: var(--steps-preview);
+  max-inline-size: 100%;
+  // Where lengths cannot be divided in calc() the picture stays at 312 px,
+  // clipped to the column by max-inline-size.
+  zoom: 1;
+  zoom: calc(100cqw / var(--steps-preview));
+}
+
+.card {
+  flex: 1;
+  min-block-size: 0;
+}
+
+// Content step: the field takes the free height of the card.
+.grow {
+  flex: 1;
+  min-block-size: 0;
+}
+
+// Password step: the bottom of the dialog shows, the top is cut off.
+.cardEnd {
+  justify-content: flex-end;
+}
+
+// Sizes the shared controls set as fixed rem values, times --steps-mini.
+.preview .window svg {
+  block-size: calc(1.5rem * var(--steps-mini));
+  inline-size: calc(1.5rem * var(--steps-mini));
+}
+
+.preview .window .eye {
+  block-size: calc(1.5rem * var(--steps-mini));
+  inline-size: calc(1.5rem * var(--steps-mini));
+}
+
+.preview .window .control {
+  min-block-size: calc(3rem * var(--steps-mini));
+}
+
+.preview .window .option {
+  min-block-size: calc(2rem * var(--steps-mini));
+}
+
+// Switch picture: 48 × 27 px track, 23 px knob with a 2 px gap.
+.preview .window .switch {
+  block-size: calc(1.6875rem * var(--steps-mini));
+  inline-size: calc(3rem * var(--steps-mini));
+
+  &::before {
+    block-size: calc(1.4375rem * var(--steps-mini));
+    inline-size: calc(1.4375rem * var(--steps-mini));
+    inset-block-start: calc(2px * var(--steps-mini));
+    inset-inline-start: calc(2px * var(--steps-mini));
+  }
+}
+
+// Grey mock of Button / CTA (Preview / generator step 833:2904): the
+// thumbnail is a picture, so the button is neither violet nor reactive.
+.cta {
+  @include typ('label-button');
+
+  align-items: center;
+  background: var(--theme-border-default);
+  border-radius: var(--radius-lg);
+  color: var(--theme-text-subtle);
+  display: flex;
+  inline-size: 100%;
+  justify-content: center;
+  padding: var(--space-4) var(--space-6);
+}
+
+.switchRow {
+  align-items: center;
+  display: flex;
+  gap: var(--space-4);
+
+  > :first-child {
+    flex: 1;
+    min-inline-size: 0;
+  }
+}
+
+// Switch picture (a <span>, never focusable): the on state as a class.
+.fakeSwitchOn {
+  background: var(--theme-control-track-on);
+
+  &::before {
+    translate: calc(1.3125rem * var(--steps-mini)) 0;
+  }
+}
+
+// Selected segment picture (Segmented / option Selected=True).
+.optionSelected {
+  background: var(--theme-bg-raised);
+  box-shadow: var(--elevation-sm);
+  color: var(--theme-text-primary);
+}
+
+.segment {
+  display: contents;
+}
+
+.textarea {
+  // Field / textarea in the Filled state (Link step); the Content step grows it.
+  min-block-size: calc(5rem * var(--steps-mini));
+  position: relative;
+  resize: none;
+
+  .grow & {
+    flex: 1;
+  }
+}
+
+// "(optional)" after the password row title: text/secondary, same style.
+.titleSuffix {
+  color: var(--theme-text-secondary);
+}
+
+.placeholder {
+  color: var(--theme-text-subtle);
+}
+
+// Typed text: one line each, revealed left to right by the clip.
+.typed {
+  color: var(--theme-text-primary);
+  display: block;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.typedField {
+  position: relative;
+}
+
+// Placeholder under the typed text: gone in the final state, shown while
+// the sequence waits for the typing.
+.ghost {
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  opacity: 0;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.noteGhost {
+  inset-block-start: var(--space-4);
+  inset-inline-start: var(--space-4);
+}
+
+// ── Micro-sequence (Figma E · Motion, 03 four steps) ────────
+// Times from the trigger of the step cards (Figma 3.05 s = 0). Runs once,
+// only without prefers-reduced-motion; the static markup is the final state.
+@media (prefers-reduced-motion: no-preference) {
+  .play {
+    // Preview 1: placeholder out 0.40-0.55 s, two lines typed in 10 steps of
+    // 0.06 s (0.60 s and 1.25 s), then the CTA press 1 → 0.96 → 1 at 1.95 s.
+    .noteGhost {
+      animation: ghostOut 0.15s var(--motion-easing-out) 0.4s backwards;
+    }
+
+    .typedLine1 {
+      animation: typeIn 0.6s steps(10, end) 0.6s backwards;
+    }
+
+    .typedLine2 {
+      animation: typeIn 0.6s steps(10, end) 1.25s backwards;
+    }
+
+    .ctaPress {
+      animation: ctaPress 0.28s 1.95s;
+    }
+
+    // Preview 2: the selected pill presses 1 → 0.93 → 1 at 2.10 s.
+    .pillPress {
+      animation: pillPress 0.25s 2.1s;
+    }
+
+    // Preview 3: the switch turns on (0.16 s at 2.40 s), the field drops in
+    // (Y −8, 0.2 s at 2.55 s), the eye pops at 2.75 s, the password is typed
+    // in 8 steps of 0.05 s from 2.80 s.
+    .switchOn {
+      animation: trackOn 0.16s var(--motion-easing-in-out) 2.4s backwards;
+
+      &::before {
+        animation: knobOn 0.16s var(--motion-easing-in-out) 2.4s backwards;
+      }
+    }
+
+    .passwordGhost {
+      animation: ghostOut 0.01s linear 2.8s backwards;
+    }
+
+    .typedPassword {
+      animation: typeIn 0.4s steps(8, end) 2.8s backwards;
+    }
+
+    // Preview 4: "Link ready" at 3.05 s (caption +0.08 s), the star turns and
+    // grows, the link is typed from 3.15 s, the CTA appears at 3.55 s.
+    .typedLink {
+      animation: typeIn 0.4s steps(10, end) 3.15s backwards;
+    }
+  }
+}
+
+.fieldDrop {
+  @include enter(2.55s, $y: -0.5rem, $move: (0.2s, out), $fade: 0.2s, $on: '.play', $hide: false);
+}
+
+.eyePop {
+  @include enter(2.75s, $scale: 0.6, $fade: 0.2s, $on: '.play', $hide: false);
+}
+
+.readyTitle {
+  @include enter(3.05s, $on: '.play', $hide: false);
+}
+
+.readyCaption {
+  @include enter(3.13s, $on: '.play', $hide: false);
+}
+
+.readyStar {
+  @include enter(3.05s, $scale: 0.6, $rotate: -45deg, $fade: false, $on: '.play', $hide: false);
+}
+
+.ctaAppear {
+  @include enter(3.55s, $scale: 0.9, $scale-motion: (reveal, overshoot), $fade: 0.2s, $on: '.play', $hide: false);
+}
+
+@keyframes ghostOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes typeIn {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+@keyframes ctaPress {
+  0% {
+    animation-timing-function: var(--motion-easing-out);
+    scale: 1;
+  }
+
+  28.5714% {
+    animation-timing-function: var(--motion-easing-spring);
+    scale: 0.96;
+  }
+
+  100% {
+    scale: 1;
+  }
+}
+
+@keyframes pillPress {
+  0% {
+    animation-timing-function: var(--motion-easing-out);
+    scale: 1;
+  }
+
+  40% {
+    animation-timing-function: var(--motion-easing-out);
+    scale: 0.93;
+  }
+
+  100% {
+    scale: 1;
+  }
+}
+
+@keyframes trackOn {
+  from {
+    background-color: var(--theme-control-track-off);
+  }
+}
+
+@keyframes knobOn {
+  from {
+    translate: 0 0;
+  }
+}

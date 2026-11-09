@@ -1,0 +1,42 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Copyright © 2026 Two Factor Authentication Service, Inc.
+//
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file for details.
+
+// Registered custom properties. A gradient set through `background` cannot be
+// transitioned, so the CTA animates its typed end colors instead (Figma:
+// 07 Motion, rules). Registration is global, which is why this file is loaded
+// by global.scss and not by the component module.
+
+@property --cta-bg-start {
+  inherits: false;
+  initial-value: #931aff;
+  syntax: '<color>';
+}
+
+@property --cta-bg-end {
+  inherits: false;
+  initial-value: #7400da;
+  syntax: '<color>';
+}
+
+@property --cta-border-start {
+  inherits: false;
+  initial-value: #931aff;
+  syntax: '<color>';
+}
+
+@property --cta-border-end {
+  inherits: false;
+  initial-value: #5e00b0;
+  syntax: '<color>';
+}
+
+// Position of the light arc that runs around the CTA border on hover.
+@property --cta-arc-angle {
+  inherits: false;
+  initial-value: 0deg;
+  syntax: '<angle>';
+}
