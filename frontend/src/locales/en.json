@@ -28,7 +28,7 @@
     "legalNav": "Legal information"
   },
   "linkExpiry": {
-    "oneTimeAccess": "One time access",
+    "oneTimeAccess": "One-time access",
     "oneTimeAccessDesc": "Once you close this tab, you will lose access to the shared data",
     "willExpire": "This link will expire",
     "daySun": "Sun",
@@ -129,7 +129,7 @@
     "settingsTitle": "Share settings",
     "expirationTitle": "Link expiration",
     "expirationDesc": "The link will automatically expire after this time.",
-    "oneTimeAccessTitle": "One time access",
+    "oneTimeAccessTitle": "One-time access",
     "oneTimeAccessDesc": "The link will expire after the first data access.",
     "passwordTitle": "Password",
     "copyPassword": "Copy password",
@@ -170,7 +170,7 @@
   "securityPrivacy": {
     "title": "Security features",
     "subtitle": "Built on a foundation of trust, transparency and zero-knowledge design.",
-    "e2e": "End-to-End encryption",
+    "e2e": "End-to-end encryption",
     "autoExpiry": "Automatic link expiration",
     "oneTime": "One-time access links",
     "password": "Password protection",
@@ -188,7 +188,7 @@
   },
   "openSourceLicenses": {
     "title": "Open Source\nLicenses",
-    "intro": "2FAS Share is built on the work of the open-source community. \nWe thank the authors and maintainers of the libraries listed below.",
+    "intro": "2FAS Share is built on the work of the open source community. \nWe thank the authors and maintainers of the libraries listed below.",
     "frontendSection": "Frontend dependencies",
     "frontendDesc": "JavaScript packages used to build the web client (npm).",
     "backendSection": "Backend dependencies",
@@ -215,9 +215,9 @@
   },
   "encryption": {
     "eyebrow": "From you to the recipient",
-    "lead": "The key used to encrypt it stays in the link itself, in after the # sign. Browsers never send this part to the server.",
-    "leadNote": "Without the full link, no one can read it, not even us.",
-    "note": "Keep in mind that anyone who has access the full link can open the message, so only send it to the people you trust.",
+    "lead": "The key used to encrypt it stays in the link itself, after the # sign. Browsers never send this part to the server.",
+    "leadNote": "Without the full link, no one can read the message, not even us.",
+    "note": "Keep in mind that anyone who has access to the full link can open the message, so only send it to the people you trust.",
     "step1Desc": "You enter the content. It is encrypted right away in your browser.",
     "step1Title": "Your side",
     "step2Desc": "The decryption key stays in the link itself, after the # sign.",
@@ -332,8 +332,8 @@
     "headingRevealed2": "from the sender.",
     "headingType": {
       "login": "Login",
-      "paymentCard": "Payment card",
-      "secureNote": "Secure note",
+      "paymentCard": "Credit card",
+      "secureNote": "Secure Note",
       "wifi": "Wi-Fi network"
     },
     "headingUnavailable1": "This link",
@@ -463,7 +463,7 @@
     "learnMore": "Learn more at {site} or view the source code on {github}.",
     "legalNote": "Privacy Policy, Terms of Use and Open Source Licenses are available inside the application; turn on JavaScript to view them.",
     "oneTime": "One-time access: the link stops working after it is opened for the first time.",
-    "openSource": "Open-source code: anyone can verify the security and encryption of the shared data.",
+    "openSource": "Open source code: anyone can verify the security and encryption of the shared data.",
     "password": "Password protection: you share the password separately."
   }
 }
