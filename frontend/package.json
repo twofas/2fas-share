@@ -36,14 +36,14 @@
     "wouter-preact": "^3.13.0"
   },
   "devDependencies": {
-    "@babel/core": "^8.1.0",
+    "@babel/core": "^8.1.2",
     "@eslint/js": "^10.0.1",
     "@preact/preset-vite": "^2.10.6",
-    "eslint": "^10.14.0",
-    "eslint-plugin-jsdoc": "^65.4.3",
+    "eslint": "^10.15.0",
+    "eslint-plugin-jsdoc": "^65.4.6",
     "globals": "^17.14.0",
-    "sass-embedded": "^1.107.1",
-    "vite": "^8.3.5",
+    "sass-embedded": "^1.108.2",
+    "vite": "^8.3.8",
     "vite-plugin-compression2": "^2.5.4",
     "vite-plugin-svgr": "^5.2.0"
   },
